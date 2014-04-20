@@ -69,6 +69,18 @@
 					<version>2.5</version>
 				</plugin>
 				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>cobertura-maven-plugin</artifactId>
+					<version>2.6</version>
+					<configuration>
+						<aggregate>true</aggregate>
+						<formats>
+							<format>html</format>
+							<format>xml</format>
+						</formats>
+					</configuration>
+				</plugin>
+				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.1</version>
