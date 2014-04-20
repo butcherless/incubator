@@ -14,16 +14,16 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-context</artifactId>
-            </dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
 		</dependency>
 		<dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-            </dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
 	</dependencies>
 </project>

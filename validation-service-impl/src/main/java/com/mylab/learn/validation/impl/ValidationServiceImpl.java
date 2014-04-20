@@ -28,25 +28,25 @@ public class ValidationServiceImpl implements ValidationService {
             ValidateBankAccountRequest validateBankAccountRequest)
             throws ValidationServiceException {
 	    // TODO Auto-generated method stub
-	    return null;
+	    return new ValidateBankAccountResponse();
     }
 
 	public ValidateTelephoneResponse validateTelephone(
             ValidateTelephoneRequest validateTelephoneRequest) throws ValidationServiceException {
 	    // TODO Auto-generated method stub
-	    return null;
+	    return new ValidateTelephoneResponse();
     }
 
 	public ValidateDateResponse validateDate(ValidateDateRequest validateDateRequest)
             throws ValidationServiceException {
 	    // TODO Auto-generated method stub
-	    return null;
+	    return new ValidateDateResponse();
     }
 
 	public ValidateSQLStringResponse validateSQLString(
             ValidateSQLStringRequest validateSQLStringRequest) throws ValidationServiceException {
 	    // TODO Auto-generated method stub
-	    return null;
+	    return new ValidateSQLStringResponse();
     }
 
 
