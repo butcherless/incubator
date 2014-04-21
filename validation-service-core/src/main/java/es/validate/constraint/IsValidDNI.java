@@ -1,4 +1,4 @@
-package es.validate;
+package es.validate.constraint;
 
 
 
@@ -11,6 +11,8 @@ import java.lang.annotation.Target;
 
 import javax.validation.Constraint;
 
+import es.validate.constraintValidator.IsValidDNIValidator;
+
 @Documented
 @Constraint(validatedBy = IsValidDNIValidator.class)
 @Target({ FIELD })
@@ -19,10 +21,7 @@ public @interface IsValidDNI {
 
 	// claves i18n para todos los errores de validacion
 	String message() default "{com.acme.constraint.inValidDNI.invalidDNI}";
-//	String messag1e() default "{com.acme.constraint.inValidDNI.invalidDNI2}";
     Class<?>[] groups() default {};
-//    Class<? extends Payload>[] payload() default {};
-//	 public Class<? extends ConstraintValidator<?, ?>>[] validatedBy();
 }
 
 

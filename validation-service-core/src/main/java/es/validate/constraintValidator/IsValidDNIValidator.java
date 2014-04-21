@@ -1,7 +1,9 @@
-package es.validate;
+package es.validate.constraintValidator;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+
+import es.validate.constraint.IsValidDNI;
 
 
 public class IsValidDNIValidator  implements ConstraintValidator<IsValidDNI, String> {
