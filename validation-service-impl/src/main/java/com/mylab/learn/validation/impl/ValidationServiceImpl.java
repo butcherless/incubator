@@ -17,12 +17,26 @@ import com.mylab.learn.validation.api.ValidationServiceException;
 
 @Service
 public class ValidationServiceImpl implements ValidationService {
-
-	public ValidateDNIResponse validateDNI(ValidateDNIRequest validateDNIRequest)
+	
+	public ValidateDNIResponse validateDNI(final ValidateDNIRequest validateDNIRequest)
             throws ValidationServiceException {
 	    // TODO Auto-generated method stub
+		// llamar al servicio de auditoria
+		// auditRegistry = this.newAuditRegistry(validateDNIRequest);
+		// this.auditRegistryRepository.save(auditRegistry);
+
+		this.myMethod();
+		
+		
+		
+		
 	    return new ValidateDNIResponse();
     }
+
+	private void myMethod() {
+		// TODO Auto-generated method stub
+		
+	}
 
 	public ValidateBankAccountResponse validateBankAccount(
             ValidateBankAccountRequest validateBankAccountRequest)
@@ -51,6 +65,15 @@ public class ValidationServiceImpl implements ValidationService {
 
 
 	
+	//// HELPERS
+	
+	//TODO
+	//  AuditRegistry newAuditRegistry(...) {
+	// AuditRegistry ar = new ....
+	// ar.setTTTT(request.getXXX();
+	// ar.setTime(new Date());
+	// return ar;
+	//}
 	
 
 }
