@@ -17,6 +17,8 @@ public class IsNotSQLInyectionValidator  implements ConstraintValidator<IsNotSQL
 	public boolean isValid(String arg0, ConstraintValidatorContext arg1) {
 		// TODO Auto-generated method stub
 		boolean _return= false;
+		System.out.println("Movida del validador " 
+				 + arg0);
 		if(arg0.contentEquals("validado")) 
 		_return= true;
 		

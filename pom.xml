@@ -9,7 +9,7 @@
 	<modules>
 		<module>validation-service-api</module>
 		<module>validation-service-impl</module>
-		<module>validation-service-core</module>
+		<module>validation-core</module>
 	</modules>
 
 	<properties>
