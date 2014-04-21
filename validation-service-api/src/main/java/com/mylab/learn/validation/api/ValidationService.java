@@ -1,5 +1,6 @@
 package com.mylab.learn.validation.api;
 
+
 public interface ValidationService {
 
 	ValidateDNIResponse validateDNI(ValidateDNIRequest validateDNIRequest)

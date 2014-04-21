@@ -17,17 +17,12 @@ public class ValidateDNIRequest implements Serializable{
 	 */
     private static final long serialVersionUID = -8808387409187470368L;
     
-   @NotNull
-   @Min(1)
-   @Max(9)
-    private String numero;
-   
-   @NotNull
-   @Min(1)
-   @Max(1)
-    private String letra;
-    
-   @IsValidDNI
-   private String identificador;
+
+//    private String numero;
+//   
+//
+//    private String letra;
+//    
+//   private String identificador;
 
 }
