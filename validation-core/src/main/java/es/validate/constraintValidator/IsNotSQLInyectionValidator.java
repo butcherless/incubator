@@ -3,26 +3,34 @@ package es.validate.constraintValidator;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+import org.springframework.stereotype.Component;
+
 import es.validate.constraint.IsNotSQLInyection;
 
-public class IsNotSQLInyectionValidator  implements ConstraintValidator<IsNotSQLInyection, String>{
+@Component
+public class IsNotSQLInyectionValidator implements
+		ConstraintValidator<IsNotSQLInyection, String> {
 
 	@Override
-	public void initialize(IsNotSQLInyection arg0) {
+	public void initialize(IsNotSQLInyection constraintAnnotation) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
-	public boolean isValid(String arg0, ConstraintValidatorContext arg1) {
+	public boolean isValid(String value, ConstraintValidatorContext context) {
 		// TODO Auto-generated method stub
-		boolean _return= false;
+		boolean result = true;
+
+		//TODO mejorar la expresión regular.
+		if(!value.matches("[^=&|*ø?#@%$]*$")){
+			result = false;
+		}
+			
+
 		
-		if(arg0.contentEquals("validado")) 
-		_return= true;
-		
-		
-		return _return;
+
+		return result;
 	}
 
 }

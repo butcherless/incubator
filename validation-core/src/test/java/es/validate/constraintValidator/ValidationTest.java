@@ -2,7 +2,12 @@ package es.validate.constraintValidator;
 
 import static org.junit.Assert.*;
 
+import java.util.Set;
+
+import javax.validation.ConstraintViolation;
+
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,14 +26,40 @@ import es.validate.constraint.IsNotSQLInyection;
 
 public class ValidationTest {
 	
-	@Autowired
-	private IsNotSQLInyection isNotSQLInyection;
+	private static final String SELECT_SENTENCE = "Texto sin violaciones";
+
+	private static final String SELECT_QUOTE_SENTENCE = "SELECT * FROM ' TABLA";
 	
-    @Ignore
+	private IsNotSQLInyectionValidator isNotSQLInyectionValidator;
+	
+	@Autowired
+	protected javax.validation.Validator validator;
+	
+	@Before
+	public void setup(){
+		this.isNotSQLInyectionValidator = new IsNotSQLInyectionValidator();
+	}
+	
+	
 	@Test
-	public void isNotSQLInyectionTest() {
+	public void isNotSQLInyectionTestOk() {
 		
-		Assert.assertTrue(true);
+		
+		MySQLClass mySQLClass = new MySQLClass();
+		mySQLClass.setSQLString(SELECT_SENTENCE);
+		Set<ConstraintViolation<MySQLClass>> violations = this.validator.validate(mySQLClass);
+		Assert.assertTrue(violations.isEmpty());
+		
+	}
+	
+	@Test
+	public void isNotSQLInyectionTestKO() {
+		
+		
+		MySQLClass mySQLClass = new MySQLClass();
+		mySQLClass.setSQLString(SELECT_QUOTE_SENTENCE);
+		Set<ConstraintViolation<MySQLClass>> violations = this.validator.validate(mySQLClass);
+		Assert.assertFalse("no deben existir violaciones",violations.isEmpty());
 		
 	}
 

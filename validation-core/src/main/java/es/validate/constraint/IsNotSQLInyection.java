@@ -8,6 +8,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import javax.validation.Constraint;
+import javax.validation.Payload;
 
 import es.validate.constraintValidator.IsNotSQLInyectionValidator;
 
@@ -17,5 +18,8 @@ import es.validate.constraintValidator.IsNotSQLInyectionValidator;
 @Target({ FIELD })
 @Retention(RUNTIME)
 public @interface IsNotSQLInyection {
-
+	// claves i18n para todos los errores de validacion
+		String message() default "{es.validate.constraint.SQLInyection}";
+	    Class<?>[] groups() default {};
+	    Class<? extends Payload>[] payload() default {};
 }

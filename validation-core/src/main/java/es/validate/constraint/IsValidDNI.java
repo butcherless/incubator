@@ -10,6 +10,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import javax.validation.Constraint;
+import javax.validation.Payload;
 
 import es.validate.constraintValidator.IsValidDNIValidator;
 
@@ -22,6 +23,7 @@ public @interface IsValidDNI {
 	// claves i18n para todos los errores de validacion
 	String message() default "{com.acme.constraint.inValidDNI.invalidDNI}";
     Class<?>[] groups() default {};
+    Class<? extends Payload>[] payload() default {};
 }
 
 
