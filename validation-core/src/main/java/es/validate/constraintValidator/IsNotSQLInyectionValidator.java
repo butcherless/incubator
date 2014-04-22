@@ -19,7 +19,7 @@ public class IsNotSQLInyectionValidator implements
 
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext context) {
-		// TODO Auto-generated method stub
+	
 		boolean result = true;
 
 		//TODO mejorar la expresión regular.
@@ -27,9 +27,6 @@ public class IsNotSQLInyectionValidator implements
 			result = false;
 		}
 			
-
-		
-
 		return result;
 	}
 

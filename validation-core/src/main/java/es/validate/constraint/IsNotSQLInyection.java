@@ -19,7 +19,7 @@ import es.validate.constraintValidator.IsNotSQLInyectionValidator;
 @Retention(RUNTIME)
 public @interface IsNotSQLInyection {
 	// claves i18n para todos los errores de validacion
-		String message() default "{es.validate.constraint.SQLInyection}";
+		String message() default "{Contiene alguno de los carácteres no válidos: =&|*ø?#@%$}";
 	    Class<?>[] groups() default {};
 	    Class<? extends Payload>[] payload() default {};
 }
