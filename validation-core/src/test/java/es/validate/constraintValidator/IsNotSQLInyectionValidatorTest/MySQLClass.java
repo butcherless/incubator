@@ -1,4 +1,4 @@
-package es.validate.constraintValidator;
+package es.validate.constraintValidator.IsNotSQLInyectionValidatorTest;
 
 import es.validate.constraint.IsNotSQLInyection;
 

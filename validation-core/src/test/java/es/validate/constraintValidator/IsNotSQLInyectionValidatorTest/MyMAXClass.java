@@ -1,8 +1,9 @@
-package es.validate.constraintValidator;
+package es.validate.constraintValidator.IsNotSQLInyectionValidatorTest;
 
 import javax.validation.constraints.Size;
 
 public class MyMAXClass {
+	
 	@Size(max = 15)
 	private String MAXString;
 

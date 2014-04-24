@@ -10,6 +10,7 @@
 		<module>validation-service-api</module>
 		<module>validation-service-impl</module>
 		<module>validation-core</module>
+		<module>validation-auditoria</module>
 	</modules>
 
 	<properties>

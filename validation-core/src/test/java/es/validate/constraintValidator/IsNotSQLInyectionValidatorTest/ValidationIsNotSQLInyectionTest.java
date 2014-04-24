@@ -1,4 +1,4 @@
-package es.validate.constraintValidator;
+package es.validate.constraintValidator.IsNotSQLInyectionValidatorTest;
 
 import static org.junit.Assert.*;
 
@@ -26,11 +26,11 @@ import es.validate.constraint.IsNotSQLInyection;
 
 
 
-public class ValidationTest {
+public class ValidationIsNotSQLInyectionTest {
 	
-	static Logger log = Logger.getLogger(ValidationTest.class.getName());
+	static Logger log = Logger.getLogger(ValidationIsNotSQLInyectionTest.class.getName());
 	
-	private static final String SELECT_SENTENCE = "Texto sin violaciones";
+	private static final String SELECT_SENTENCE = "Texto sin inyección sql";
 
 	private static final String SELECT_QUOTE_SENTENCE = "SELECT * FROM TABLA";
 	
@@ -38,14 +38,14 @@ public class ValidationTest {
 
 	private static final String SELECT_MAYOR_15= "Texto mayor de 15 caracteres";
 	
-	private IsNotSQLInyectionValidator isNotSQLInyectionValidator;
+	//private IsNotSQLInyectionValidator isNotSQLInyectionValidator;
 	
 	@Autowired
 	protected javax.validation.Validator validator;
 	
 	@Before
 	public void setup(){
-		this.isNotSQLInyectionValidator = new IsNotSQLInyectionValidator();
+		//this.isNotSQLInyectionValidator = new IsNotSQLInyectionValidator();
 	}
 	
 	
@@ -56,7 +56,7 @@ public class ValidationTest {
 		MySQLClass mySQLClass = new MySQLClass();
 		mySQLClass.setSQLString(SELECT_SENTENCE);
 		Set<ConstraintViolation<MySQLClass>> violations = this.validator.validate(mySQLClass);
-		Assert.assertTrue("no deben existir violaciones",violations.isEmpty());
+		Assert.assertTrue("no deben existir violaciones SQLInyection",violations.isEmpty());
 		log.info("TRUE" + violations.size()+" "+violations);
 
 	}
@@ -68,7 +68,7 @@ public class ValidationTest {
 		MySQLClass mySQLClass = new MySQLClass();
 		mySQLClass.setSQLString(SELECT_QUOTE_SENTENCE);
 		Set<ConstraintViolation<MySQLClass>> violations = this.validator.validate(mySQLClass);
-		Assert.assertFalse("deben existir violaciones",violations.isEmpty());
+		Assert.assertFalse("deben existir violaciones SQLInyection",violations.isEmpty());
 		log.info("TRUE" + violations.size()+" "+violations);
 		
 	}
@@ -79,7 +79,7 @@ public class ValidationTest {
 		MyMAXClass myMAXClass = new MyMAXClass();
 		myMAXClass.setMAXString(SELECT_MENOR_15);
 		Set<ConstraintViolation<MyMAXClass>> violations = this.validator.validate(myMAXClass);
-		Assert.assertTrue("NO deben existir violaciones",violations.isEmpty());
+		Assert.assertTrue("NO deben existir violaciones MAX",violations.isEmpty());
 		log.info("TRUE" + violations.size()+" "+violations);
 	}
 	
@@ -89,7 +89,7 @@ public class ValidationTest {
 		MyMAXClass myMAXClass = new MyMAXClass();
 		myMAXClass.setMAXString(SELECT_MAYOR_15);
 		Set<ConstraintViolation<MyMAXClass>> violations = this.validator.validate(myMAXClass);
-		Assert.assertFalse("deben existir violaciones",violations.isEmpty());
+		Assert.assertFalse("deben existir violaciones MAX",violations.isEmpty());
 		log.info("TRUE" + violations.size()+" "+violations);
 	}
 }
