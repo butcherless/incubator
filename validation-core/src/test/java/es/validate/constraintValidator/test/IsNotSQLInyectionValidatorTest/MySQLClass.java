@@ -1,6 +1,6 @@
-package es.validate.constraintValidator.IsNotSQLInyectionValidatorTest;
+package es.validate.constraintValidator.test.IsNotSQLInyectionValidatorTest;
 
-import es.validate.constraint.IsNotSQLInyection;
+import es.fega.comun.validate.constraints.IsNotSQLInyection;
 
 public class MySQLClass {
 

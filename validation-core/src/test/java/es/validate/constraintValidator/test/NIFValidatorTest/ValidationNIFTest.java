@@ -1,4 +1,4 @@
-package es.validate.constraintValidator.NIFValidatorTest;
+package es.validate.constraintValidator.test.NIFValidatorTest;
 
 import java.util.Set;
 import java.util.logging.Logger;
@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import es.validate.constraintValidator.NIFValidatorTest.MyNIFClass;
-import es.validate.constraintValidator.NIFValidatorTest.ValidationNIFTest;
+import es.validate.constraintValidator.test.NIFValidatorTest.MyNIFClass;
+import es.validate.constraintValidator.test.NIFValidatorTest.ValidationNIFTest;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:validation-core-unit-test.xml")

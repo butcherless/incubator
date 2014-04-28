@@ -1,4 +1,4 @@
-package es.validate.comun;
+package es.fega.comun.auxiliar;
 
 public class Cadena {
 	

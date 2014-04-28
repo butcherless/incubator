@@ -1,4 +1,4 @@
-package es.validate.constraintValidator.CIFValidatorTest;
+package es.validate.constraintValidator.test.CIFValidatorTest;
 
 import java.util.Set;
 import java.util.logging.Logger;
@@ -50,12 +50,11 @@ public class ValidationCIFTest {
 	@Test
 	public void validationCIFTestKO() {
 		
-		
 		MyCIFClass myCIFClass = new MyCIFClass();
 		myCIFClass.setCIF(CIF_KO);
 		Set<ConstraintViolation<MyCIFClass>> violations = this.validator.validate(myCIFClass);
 		Assert.assertFalse("deben existir violaciones CIFInyection",violations.isEmpty());
-		log.info("TRUE" + violations.size()+" "+violations);
+		log.info("False" + violations.size()+" "+violations);
 		
 	}
 }

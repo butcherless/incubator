@@ -1,18 +1,18 @@
-package es.validate.constraintValidator;
+package es.fega.comun.validate.constraintsValidator;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import org.springframework.stereotype.Component;
 
-import es.validate.comun.Cadena;
-import es.validate.constraint.NIF;
+import es.fega.comun.auxiliar.Cadena;
+import es.fega.comun.validate.constraints.CIF;
 
 @Component
-public class NIFValidator implements ConstraintValidator<NIF, String> {
+public class CIFValidator implements ConstraintValidator<CIF, String> {
 
 	@Override
-	public void initialize(NIF constraintAnnotation) {
+	public void initialize(CIF constraintAnnotation) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -21,7 +21,7 @@ public class NIFValidator implements ConstraintValidator<NIF, String> {
 	public boolean isValid(String value, ConstraintValidatorContext context) {
 		boolean result = false;
 		Cadena cadena = new Cadena();
-		if(cadena.isCadenaVacia(value) || cadena.esNif(value)){
+		if(Cadena.isCadenaVacia(value) || Cadena.esCif(value)){
 			result = true;
 		}
 		

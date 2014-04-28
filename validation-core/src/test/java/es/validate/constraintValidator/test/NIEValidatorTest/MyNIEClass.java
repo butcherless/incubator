@@ -1,6 +1,6 @@
-package es.validate.constraintValidator.NIEValidatorTest;
+package es.validate.constraintValidator.test.NIEValidatorTest;
 
-import es.validate.constraint.NIE;
+import es.fega.comun.validate.constraints.NIE;
 
 public class MyNIEClass {
 	

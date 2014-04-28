@@ -1,11 +1,11 @@
-package es.validate.constraintValidator;
+package es.fega.comun.validate.constraintsValidator;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import org.springframework.stereotype.Component;
 
-import es.validate.constraint.IsNotSQLInyection;
+import es.fega.comun.validate.constraints.IsNotSQLInyection;
 
 @Component
 public class IsNotSQLInyectionValidator implements

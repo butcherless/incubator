@@ -1,6 +1,6 @@
-package es.validate.constraintValidator.NIFValidatorTest;
+package es.validate.constraintValidator.test.NIFValidatorTest;
 
-import es.validate.constraint.NIF;
+import es.fega.comun.validate.constraints.NIF;
 
 public class MyNIFClass {
 	@NIF

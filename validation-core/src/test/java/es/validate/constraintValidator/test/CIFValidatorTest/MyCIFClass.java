@@ -1,6 +1,6 @@
-package es.validate.constraintValidator.CIFValidatorTest;
+package es.validate.constraintValidator.test.CIFValidatorTest;
 
-import es.validate.constraint.CIF;
+import es.fega.comun.validate.constraints.CIF;
 
 public class MyCIFClass {
 	

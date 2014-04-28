@@ -1,4 +1,4 @@
-package es.validate.constraint;
+package es.fega.comun.validate.constraints;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -10,17 +10,16 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-import es.validate.constraintValidator.NIFValidator;
+import es.fega.comun.validate.constraintsValidator.IsNotSQLInyectionValidator;
 
 
 @Documented
-@Constraint(validatedBy = NIFValidator.class)
+@Constraint(validatedBy = IsNotSQLInyectionValidator.class)
 @Target({ FIELD })
 @Retention(RUNTIME)
-public @interface NIF {
+public @interface IsNotSQLInyection {
 	// claves i18n para todos los errores de validacion
-			String message() default "{No es un NIF válido}";
-		    Class<?>[] groups() default {};
-		    Class<? extends Payload>[] payload() default {};
-
+		String message() default "{Contiene alguno de los carácteres no válidos: =&|*ø?#@%$}";
+	    Class<?>[] groups() default {};
+	    Class<? extends Payload>[] payload() default {};
 }

@@ -1,4 +1,4 @@
-package es.validate.constraintValidator.IsNotSQLInyectionValidatorTest;
+package es.validate.constraintValidator.test.IsNotSQLInyectionValidatorTest;
 
 import static org.junit.Assert.*;
 
@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import es.validate.constraint.IsNotSQLInyection;
+import es.fega.comun.validate.constraints.IsNotSQLInyection;
 
 
 

@@ -1,4 +1,4 @@
-package es.validate.constraintValidator.IsNotSQLInyectionValidatorTest;
+package es.validate.constraintValidator.test.IsNotSQLInyectionValidatorTest;
 
 import javax.validation.constraints.Size;
 
