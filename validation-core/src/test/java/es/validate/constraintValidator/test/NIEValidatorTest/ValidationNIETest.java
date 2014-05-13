@@ -1,16 +1,6 @@
 package es.validate.constraintValidator.test.NIEValidatorTest;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -18,14 +8,12 @@ import javax.validation.ConstraintViolation;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import es.validate.constraintValidator.test.IsNotSQLInyectionValidatorTest.MyMAXClass;
 import es.validate.constraintValidator.test.comun.cargarListTest;
 
 @RunWith(SpringJUnit4ClassRunner.class)

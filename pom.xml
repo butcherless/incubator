@@ -11,6 +11,7 @@
 		<module>validation-service-impl</module>
 		<module>validation-core</module>
 		<module>validation-auditoria</module>
+		
 	</modules>
 
 	<properties>
@@ -32,6 +33,12 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>1.2.15</version>
+			</dependency>
+
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
