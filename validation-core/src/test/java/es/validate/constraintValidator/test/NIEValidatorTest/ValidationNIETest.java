@@ -72,6 +72,7 @@ public class ValidationNIETest {
 	
 	
 	
+	@Ignore
 	@Test
 	public void validationNIETestAutomaticOk() {
 		
