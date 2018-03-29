@@ -1,9 +1,9 @@
 .DS_Store
+.gradle
 .idea
 .vscode/
 bin/
 build/
-gradle/
 out/
 target/
 *.iml
