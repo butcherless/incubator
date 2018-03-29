@@ -25,7 +25,7 @@ jobs:
           command: |
                    ls -la
                    ./gradlew -v
-                   ./gradlew clean build jacocoTestReport
+                   ./gradlew clean build
 
 #  test:
 #      post:
