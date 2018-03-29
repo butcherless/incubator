@@ -1,0 +1,7 @@
+= Project Incubator
+Research project through small concept tests
+
+
+== Links
+- spring data neo4j: https://docs.spring.io/spring-data/neo4j/docs/5.0.5.RELEASE/reference/html/
+- example: https://github.com/bijukunjummen/spring-boot-scala-web

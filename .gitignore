@@ -1,8 +1,10 @@
+.DS_Store
+.gradle
+.idea
+.vscode/
+bin/
+build/
+gradle/
+out/
 target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.next
-release.properties
-.classpath
-.project
-.settings
+*.iml
