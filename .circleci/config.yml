@@ -4,7 +4,7 @@
 #
 version: 2
 jobs:
-  build_app:
+  build:
     docker:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
@@ -25,13 +25,7 @@ jobs:
           command: |
                    ls -la
                    ./gradle -v
-                   ./gradle clean build jacocoTestReport
-
-workflows:
-  version: 2
-  build:
-    jobs:
-      - build_app
+                   ./gradlew clean build jacocoTestReport
 
 #  test:
 #      post:
