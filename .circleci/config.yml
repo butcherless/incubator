@@ -24,8 +24,8 @@ jobs:
           name: build app
           command: |
                    ls -la
-                   ./gradlew -v
-                   ./gradlew clean build jacocoTestReport
+                   ./gradle -v
+                   ./gradle clean build jacocoTestReport
 
 workflows:
   version: 2
