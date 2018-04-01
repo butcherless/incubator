@@ -3,8 +3,8 @@ package com.cmartin.research
 import java.time.LocalDate
 
 import org.slf4j.{Logger, LoggerFactory}
-import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
+import org.springframework.boot.{ApplicationRunner, SpringApplication}
 import org.springframework.context.annotation.{Bean, ComponentScan, Configuration}
 
 import scala.beans.BeanProperty
@@ -43,10 +43,11 @@ class ScalaApplication {
 
 // application runner
 object ScalaApplication extends App {
-  val log: Logger = LoggerFactory.getLogger(classOf[ScalaApplication])
+  SpringApplication.run(classOf[ScalaApplication], args: _*)
 
   // Onlu for debugging, remove when needed
   /*
+  val log: Logger = LoggerFactory.getLogger(classOf[ScalaApplication])
   val context = SpringApplication.run(classOf[ScalaApplication], args: _*)
   val beanList = context.getBeanDefinitionNames.toList
   beanList.foreach(log.debug(_))
