@@ -1,36 +1,49 @@
 buildscript {
+    ext {
+        springBootVersion = '2.0.0.RELEASE'
+    }
     repositories {
         mavenCentral()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.0.RELEASE")
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'scala'
-apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'scala'
 
-bootJar {
-    baseName = 'scala-neo4j-boot'
-    version = '0.1.0'
+jar {
+    baseName = 'scala-boot-neo4j-client'
+    version = '1.0.0'
 }
 
 repositories {
     mavenCentral()
-    maven { url "https://repo.spring.io/libs-release" }
+    maven {
+        url "https://repo.spring.io/libs-release"
+    }
 }
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+ext {
+    scalaVersion = "2.12.5"
+}
+
+//mainClassName = "com.cmartin.research.ScalaApplication"
+
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter")
-    //compile "org.springframework.data:spring-data-neo4j"
-    //compile "org.neo4j:neo4j-ogm-bolt-driver:3.1.0"
+    // standalone application
+    compile "org.springframework.boot:spring-boot-starter"
+    compile "org.scala-lang:scala-library:${scalaVersion}"
 
-    compile "org.scala-lang:scala-library:2.12.5"
+//    compile 'org.springframework.data:spring-data-neo4j:5.0.5.RELEASE'
+    //compile "org.springframework.boot:spring-boot-starter-data-neo4j"
 
+    // web application
+    //compile "org.springframework.boot:spring-boot-starter-web"
 }
 

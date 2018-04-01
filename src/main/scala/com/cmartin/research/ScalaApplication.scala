@@ -1,14 +1,55 @@
 package com.cmartin.research
 
-import org.slf4j.{Logger, LoggerFactory}
-import org.springframework.boot.autoconfigure.SpringBootApplication
-//import org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories
+import java.time.LocalDate
 
-//@EnableNeo4jRepositories
-@SpringBootApplication
+import org.slf4j.{Logger, LoggerFactory}
+import org.springframework.boot.ApplicationRunner
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration
+import org.springframework.context.annotation.{Bean, ComponentScan, Configuration}
+
+import scala.beans.BeanProperty
+
+@Configuration
+@ComponentScan
+@EnableAutoConfiguration
 class ScalaApplication {
   val log: Logger = LoggerFactory.getLogger(classOf[ScalaApplication])
 
-  def hello = log.debug("message from ScalaApplication")
+  // bean declaration
+
+  case class Aircraft(@BeanProperty id: Long,
+                      @BeanProperty regNo: String,
+                      @BeanProperty engineNo: Int,
+                      @BeanProperty airlineName: String,
+                      @BeanProperty deliverDate: LocalDate)
+
+
+  class DependencyAnalyzer {
+    def hello = s"scala class ${this.toString}"
+  }
+
+  @Configuration
+  class MyConfiguration {
+    @Bean def dependencyAnalyzer() = new DependencyAnalyzer()
+  }
+
+
+  @Bean
+  def init(da: DependencyAnalyzer): ApplicationRunner = args => {
+    log.debug("ScalaApplication/SpringBoot initialization")
+    log.debug(s"message from a bean: ${da.hello}")
+  }
 }
 
+// application runner
+object ScalaApplication extends App {
+  val log: Logger = LoggerFactory.getLogger(classOf[ScalaApplication])
+
+  // Onlu for debugging, remove when needed
+  /*
+  val context = SpringApplication.run(classOf[ScalaApplication], args: _*)
+  val beanList = context.getBeanDefinitionNames.toList
+  beanList.foreach(log.debug(_))
+  */
+
+}

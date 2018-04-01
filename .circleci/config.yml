@@ -23,7 +23,6 @@ jobs:
       - run:
           name: build app
           command: |
-                   ls -la
                    ./gradlew -v
                    ./gradlew clean build
 
