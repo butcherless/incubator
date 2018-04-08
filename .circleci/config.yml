@@ -24,7 +24,7 @@ jobs:
           name: build app
           command: |
                    ./gradlew -v
-                   ./gradlew clean build bootRun
+                   ./gradlew clean build
 
 #  test:
 #      post:
