@@ -17,14 +17,21 @@ class ScalaApplication {
 
   // bean declaration
 
-  case class Aircraft(@BeanProperty id: Long,
-                      @BeanProperty regNo: String,
-                      @BeanProperty engineNo: Int,
-                      @BeanProperty airlineName: String,
-                      @BeanProperty deliverDate: LocalDate)
+  case class AircraftBean(@BeanProperty id: Long,
+                          @BeanProperty regNo: String,
+                          @BeanProperty engineNo: Int,
+                          @BeanProperty airlineName: String,
+                          @BeanProperty deliverDate: LocalDate)
+
+  case class Aircraft(id: String,
+                      regNo: String,
+                      engineNo: Int,
+                      airlineName: String,
+                      deliverDate: LocalDate)
 
 
   class DependencyAnalyzer {
+
     def hello = s"scala class ${this.toString}"
   }
 
@@ -38,6 +45,9 @@ class ScalaApplication {
   def init(da: DependencyAnalyzer): ApplicationRunner = args => {
     log.debug("ScalaApplication/SpringBoot initialization")
     log.debug(s"message from a bean: ${da.hello}")
+
+    DataManager.loadData
+    log.debug("all data has been deleted")
   }
 }
 
@@ -54,3 +64,4 @@ object ScalaApplication extends App {
   */
 
 }
+

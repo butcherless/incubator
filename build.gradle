@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.0.0.RELEASE'
+        springBootVersion = '2.0.1.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -37,6 +37,8 @@ ext {
 dependencies {
     // standalone application
     compile "org.springframework.boot:spring-boot-starter"
+    compile 'org.neo4j.driver:neo4j-java-driver:1.5.1'
+
     compile "org.scala-lang:scala-library:${scalaVersion}"
 
 //    compile 'org.springframework.data:spring-data-neo4j:5.0.5.RELEASE'
