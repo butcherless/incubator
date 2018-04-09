@@ -7,3 +7,12 @@ Research project through small concept tests
 - example: https://github.com/bijukunjummen/spring-boot-scala-web
 - The great Josh Long: https://github.com/spring-tips/scala/blob/master/src/main/scala/tweets/tweets.scala
 - https://spring.io/blog/2017/10/11/spring-tips-bootiful-reactive-scala
+- https://github.com/jecklgamis/springboot-scala-example
+- https://dadruid5.com/2017/03/22/an-introduction-to-using-spring-with-scala-a-positive-view-with-tips/
+- https://docs.spring.io/spring-data/rest/docs/3.0.6.RELEASE/reference/html/
+- https://github.com/neo4j/neo4j-ogm
+- https://neo4j.com/docs/pdf/cypher-refcard-3.2.pdf
+- https://github.com/knoldus/neo4j-scala-starter
+- https://dzone.com/articles/getting-started-neo4j-with-scala-annbspintroductio
+- https://github.com/spring-guides/gs-accessing-neo4j-data-rest
+- https://github.com/spring-tips/scala/blob/master/pom.xml
