@@ -21,6 +21,8 @@ object DataManager {
 
   def getId = UUID.randomUUID().toString
 
+  def getLocalDate(year: Int, month: Int, day: Int) = LocalDate.of(year, month, day)
+
   def loadData = {
     val driver = getDriver
     val session = driver.session

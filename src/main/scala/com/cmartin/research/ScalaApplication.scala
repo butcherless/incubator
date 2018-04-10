@@ -2,38 +2,25 @@ package com.cmartin.research
 
 import java.time.LocalDate
 
-import com.cmartin.repository.PersonRepository
+import com.cmartin.domain.{AircraftBean, Person}
+import com.cmartin.repository.{AircraftRepository, PersonRepository}
+import com.cmartin.research.DataManager.getLocalDate
 import org.neo4j.ogm.session.SessionFactory
 import org.slf4j.{Logger, LoggerFactory}
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration
+import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.{ApplicationRunner, SpringApplication}
-import org.springframework.context.annotation.{Bean, ComponentScan, Configuration}
+import org.springframework.context.annotation.{Bean, Configuration}
 import org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories
 import org.springframework.data.neo4j.transaction.Neo4jTransactionManager
-import org.springframework.transaction.annotation.EnableTransactionManagement
+import org.springframework.transaction.annotation.{EnableTransactionManagement, Transactional}
 
-import scala.beans.BeanProperty
-
-@Configuration
-@ComponentScan
-@EnableAutoConfiguration
-//@SpringBootApplication
+//@Configuration
+//@ComponentScan
+//@EnableAutoConfiguration
+@EnableNeo4jRepositories(Array("com.cmartin.repository"))
+@SpringBootApplication
 class ScalaApplication {
   val log: Logger = LoggerFactory.getLogger(classOf[ScalaApplication])
-
-  // bean declaration
-
-  case class AircraftBean(@BeanProperty id: Long,
-                          @BeanProperty regNo: String,
-                          @BeanProperty engineNo: Int,
-                          @BeanProperty airlineName: String,
-                          @BeanProperty deliverDate: LocalDate)
-
-  case class Aircraft(id: String,
-                      regNo: String,
-                      engineNo: Int,
-                      airlineName: String,
-                      deliverDate: LocalDate)
 
   class DependencyAnalyzer {
     def hello = s"scala class ${this.toString}"
@@ -44,7 +31,6 @@ class ScalaApplication {
 
 
   @Configuration
-  @EnableNeo4jRepositories(Array("com.cmartin.repository"))
   @EnableTransactionManagement
   class MyConfiguration {
     @Bean def dependencyAnalyzer() = new DependencyAnalyzer()
@@ -70,12 +56,21 @@ class ScalaApplication {
 
 
   @Bean
+  @Transactional
   //def init(da: DependencyAnalyzer): ApplicationRunner = args => {
-  def init(repo: PersonRepository): ApplicationRunner = args => {
+  def init(personRepo: PersonRepository, aircraftRepo: AircraftRepository): ApplicationRunner = args => {
     log.debug("ScalaApplication/SpringBoot initialization")
-    val count = repo.count()
-    log.debug(s"person entity count: ${count}")
+    log.debug(s"person entity count: ${personRepo.count}")
     //DataManager.loadData
+    val p = new Person("pepe")
+    personRepo.save(p)
+    log.debug(s"person entity count: ${personRepo.count}")
+
+
+    val ac = AircraftBean(regNo = "ec-lxr", engineNo = 2, name = "Pico de las Nieves", deliverDate = getLocalDate(2015, 9, 1))
+    aircraftRepo.save(ac)
+    log.debug(s"aircraft entity count: ${aircraftRepo.count}")
+
     log.debug("all data has been deleted")
   }
 }
