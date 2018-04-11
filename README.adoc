@@ -20,3 +20,4 @@ Research project through small concept tests
 - https://dzone.com/articles/getting-started-neo4j-with-scala-annbspintroductio
 - https://github.com/spring-guides/gs-accessing-neo4j-data-rest
 - https://github.com/spring-tips/scala/blob/master/pom.xml
+- https://github.com/dnvriend/spring-boot-with-scala/blob/master/src/main/scala/com/github/dnvriend/repository/BookRepository.scala
