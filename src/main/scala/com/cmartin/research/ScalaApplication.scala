@@ -1,7 +1,9 @@
 package com.cmartin.research
 
-import com.cmartin.domain.AircraftBean
-import com.cmartin.repository.AircraftRepository
+import java.time.LocalDateTime
+
+import com.cmartin.domain.{AircraftBean, Airline, Flight, Route}
+import com.cmartin.repository.Repos
 import com.cmartin.research.DataManager.getLocalDate
 import com.cmartin.research.ScalaApplication.log
 import org.neo4j.ogm.session.SessionFactory
@@ -45,23 +47,39 @@ class ScalaApplication {
 
 
   @Configuration
-  class ApplicationConfiguration(repo: AircraftRepository) {
+  class ApplicationConfiguration() {
+    @Bean def repos = new Repos()
 
-    @Bean def dependencyAnalyzer() = new DependencyAnalyzer(repo)
+    @Bean def dependencyAnalyzer() = new DependencyAnalyzer(repos)
   }
 
 
-  @Bean def init(repo: AircraftRepository): ApplicationRunner = args => {
+  @Bean def init(repos: Repos): ApplicationRunner = args => {
     log.debug("init: delete all beans")
-    repo.deleteAll();
+    repos.alRepo.deleteAll()
+    repos.acRepo.deleteAll();
+
+    val airline = Airline("Iberia", "ES")
+    repos.alRepo.save(airline)
 
     List(
-      AircraftBean(regNo = "ec-mmx", engineNo = 2, name = "Sierra Nevada", deliverDate = getLocalDate(2018, 2, 15)),
-      AircraftBean(regNo = "ec-lvl", engineNo = 2, name = "Aneto", deliverDate = getLocalDate(2012, 5, 1)),
-      AircraftBean(regNo = "ec-lxr", engineNo = 2, name = "Pico de las Nieves", deliverDate = getLocalDate(2015, 9, 1)),
-      AircraftBean(regNo = "ec-nop", engineNo = 2, name = "Teide", deliverDate = getLocalDate(2014, 12, 1)),
-      AircraftBean(regNo = "ec-raw", engineNo = 2, name = "Mulhacen", deliverDate = getLocalDate(2018, 3, 17))
-    ).foreach(repo.save(_))
+      AircraftBean("ec-mmx", 2, "Sierra Nevada", getLocalDate(2018, 2, 15), airline),
+      AircraftBean("ec-lvl", 2, "Aneto", getLocalDate(2012, 5, 1), airline),
+      AircraftBean("ec-lxr", 2, "Pico de las Nieves", getLocalDate(2015, 9, 1), airline),
+      AircraftBean("ec-nop", 2, "Teide", getLocalDate(2014, 12, 1), airline),
+      AircraftBean("ec-raw", 2, "Mulhacen", getLocalDate(2018, 3, 17), airline)
+    ).foreach(repos.acRepo.save(_))
+
+    List(
+      Route("MAD","TFN"),
+      Route("TFN", "MAD"),
+      Route("MAD", "LPA"),
+      Route("LPA", "MAD")
+    ).foreach(repos.roRepo.save(_))
+
+    List(
+      Flight("ux9117",LocalDateTime.now,LocalDateTime.now,AircraftBean("ec-mmx", 2, "Sierra Nevada", getLocalDate(2018, 2, 15), airline))
+    ).foreach(repos.flRepo.save(_))
   }
 
 }
@@ -70,27 +88,31 @@ class ScalaApplication {
 object ScalaApplication extends App {
   val log: Logger = LoggerFactory.getLogger(classOf[ScalaApplication])
 
+  /*
   def debugContextBeans(): Unit = {
     val beanList = context.getBeanDefinitionNames.toList
     beanList.foreach(log.debug(_))
   }
+  */
 
-  val context = SpringApplication.run(classOf[ScalaApplication], args: _*)
-  context.registerShutdownHook()
-  context.close()
+  val context = SpringApplication.run(classOf[ScalaApplication], args: _*).close
+
 }
 
 /** main class with spring boot callback function 'run'
   *
-  * @param repo
+  * @param repos
   */
-class DependencyAnalyzer(repo: AircraftRepository) extends CommandLineRunner {
+class DependencyAnalyzer(repos: Repos) extends CommandLineRunner {
   def analyze = s"analyzing dependencies"
 
-  def personCount = repo.count()
+  def personCount = repos.acRepo.count
+
+  def airlineCount = repos.alRepo.count
 
   override def run(args: String*): Unit = {
     log.debug("command line runner callback function")
-    log.debug(s"repo count: ${personCount}")
+    log.debug(s"aircraft repo count: ${personCount}")
+    log.debug(s"airline repo count: ${airlineCount}")
   }
 }

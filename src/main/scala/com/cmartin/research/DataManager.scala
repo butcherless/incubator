@@ -9,7 +9,7 @@ import org.slf4j.{Logger, LoggerFactory}
 object DataManager {
   val log: Logger = LoggerFactory.getLogger(DataManager.getClass)
 
-  case class Airline(name: String, country: String)
+  //case class Airline(name: String, country: String)
 
   case class Aircraft(id: String,
                       regNo: String,
@@ -29,7 +29,7 @@ object DataManager {
 
     val delete_all_stmt = "match (n) detach delete (n)"
     session.run(delete_all_stmt)
-
+/*
     val airlines = List(
       Airline("Air Europa", "ES"),
       Airline("Iberia", "ES"),
@@ -38,7 +38,7 @@ object DataManager {
     airlines.foreach(
       e => session.run(s"create (a:Airline {name:'${e.name}', country:'${e.country}'})")
     )
-
+*/
     val aircrafts = List(
       Aircraft(getId, "ec-mmx", 2, "Sierra Nevada", LocalDate.of(2018, 2, 15)),
       Aircraft(getId, "ec-lvl", 2, "Aneto", LocalDate.of(2012, 5, 1))
