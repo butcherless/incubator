@@ -29,7 +29,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 ext {
-    scalaVersion = "2.12.5"
+    scalaVersion = "2.12.6"
 }
 
 //mainClassName = "com.cmartin.research.ScalaApplication"
