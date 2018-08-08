@@ -132,8 +132,14 @@
         <dependency>
     <groupId>org.scala-sbt</groupId>
     <artifactId>sbt</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
 </dependency>
+<dependency>
+    <groupId>net.virtual-void</groupId>
+    <artifactId>sbt-dependency-graph</artifactId>
+    <version>0.9.1</version>
+</dependency>
+
 
     </dependencies>
 </project>
