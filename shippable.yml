@@ -1,0 +1,11 @@
+language: scala
+
+scala:
+  - 2.12.6
+
+build:
+  ci:
+    - sbt ";clean ;common/publishLocal ;repository/publishLocal ;service/publishLocal ;controller/publishLocal ;web/publishLocal"
+
+jdk:
+  - oraclejdk8
