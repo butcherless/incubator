@@ -45,7 +45,8 @@ jobs:
           name: compile, test and run
           command: |
                    cd webapp-api
-                   sbt ";clean ;compile"
+                   sbt ";clean ;common/compile ;common/publishLocal"
+                   sbt ";repository/compile ;repository/publishLocal"
 
 
 workflows:
