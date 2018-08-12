@@ -44,6 +44,7 @@ jobs:
       - run:
           name: compile, test and run
           command: |
+                   cd webapp-api
                    cat /dev/null | sbt ";clean ;publishLocal"
 
 
