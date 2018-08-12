@@ -33,7 +33,9 @@ lazy val specs2 = "org.specs2" %% "specs2-core" % specs2Version % "test"
 lazy val uTest = "com.lihaoyi" %% "utest" % "0.6.4" % "test"
 
 lazy val commonDep = "com.cmartin.learn" %% "common" % projectVersion
-lazy val controllerDep = "com.cmartin.learn" %% "common" % projectVersion
+lazy val repositoryDep = "com.cmartin.learn" %% "repository" % projectVersion
+lazy val serviceDep = "com.cmartin.learn" %% "service" % projectVersion
+lazy val controllerDep = "com.cmartin.learn" %% "controller" % projectVersion
 
 lazy val root = (project in file(".")).aggregate(
   common,
@@ -54,24 +56,26 @@ lazy val controller = (project in file("controller"))
   .settings(
     commonSettings,
     name := "controller",
-    libraryDependencies ++= Seq(commonDep)
+    libraryDependencies ++= Seq(commonDep, serviceDep)
   )
 
 lazy val repository = (project in file("repository"))
   .settings(
     commonSettings,
-    name := "repository"
+    name := "repository",
+    libraryDependencies ++= Seq(commonDep)
   )
 
 lazy val service = (project in file("service"))
   .settings(
     commonSettings,
-    name := "service"
+    name := "service",
+    libraryDependencies ++= Seq(commonDep, repositoryDep)
   )
 
 lazy val web = (project in file("web"))
   .settings(
     commonSettings,
     name := "web",
-    libraryDependencies ++= Seq(commonDep, controllerDep)
+    libraryDependencies ++= Seq(commonDep, controllerDep, serviceDep, repositoryDep)
   )
