@@ -5,7 +5,7 @@ scala:
 
 build:
   ci:
-    - sbt ";clean ;assembly"
+    - sbt test
 
 jdk:
   - oraclejdk8
