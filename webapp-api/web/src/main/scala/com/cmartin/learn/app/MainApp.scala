@@ -10,6 +10,5 @@ object MainApp extends App {
   val dummyService = new DummyServiceImpl(dummyRepository)
   val dummyController = new DummyController(dummyService)
 
-
   println("MainApp message")
 }

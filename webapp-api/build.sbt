@@ -56,26 +56,26 @@ lazy val controller = (project in file("controller"))
   .settings(
     commonSettings,
     name := "controller",
-    libraryDependencies ++= Seq(commonDep, serviceDep)
-  )
+    libraryDependencies ++= Seq(scalaTest)
+  ).dependsOn(common, service)
 
 lazy val repository = (project in file("repository"))
   .settings(
     commonSettings,
     name := "repository",
-    libraryDependencies ++= Seq(commonDep)
-  )
+    libraryDependencies ++= Seq(scalaTest)
+  ).dependsOn(common)
 
 lazy val service = (project in file("service"))
   .settings(
     commonSettings,
     name := "service",
-    libraryDependencies ++= Seq(commonDep, repositoryDep)
-  )
+    libraryDependencies ++= Seq(scalaTest)
+  ).dependsOn(common, repository)
 
 lazy val web = (project in file("web"))
   .settings(
     commonSettings,
     name := "web",
-    libraryDependencies ++= Seq(commonDep, controllerDep, serviceDep, repositoryDep)
-  )
+    libraryDependencies ++= Seq(scalaTest)
+  ).dependsOn(common, controller)
