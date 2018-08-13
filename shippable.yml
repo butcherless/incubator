@@ -5,7 +5,7 @@ scala:
 
 build:
   ci:
-    - sbt ";clean ;common/publishLocal ;repository/publishLocal ;service/publishLocal ;controller/publishLocal ;web/publishLocal"
+    - sbt ";clean ;assembly"
 
 jdk:
   - oraclejdk8
