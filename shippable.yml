@@ -5,7 +5,8 @@ scala:
 
 build:
   ci:
-    - sbt test
+    - cd webapp-api
+    - sbt assembly
 
 jdk:
   - oraclejdk8
