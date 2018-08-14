@@ -7,6 +7,8 @@ build:
   ci:
     - cd webapp-api
     - sbt assembly
+    - sbt ";coverage;test;coverageReport"
+    - bash <(curl -s https://codecov.io/bash) -t 551ffd9e-aac2-4eff-937c-d8bcca72bf38
 
 jdk:
   - oraclejdk8
