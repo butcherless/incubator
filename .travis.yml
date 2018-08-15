@@ -6,5 +6,4 @@ jdk:
 script:
   - ./gradlew clean build
   - cd webapp-api
-  - sbt ";clean;coverage;test;coverageReport"
-  - bash <(curl -s https://codecov.io/bash) -t db92a4a7-4ab4-49ab-9ba9-164a43a25009
+  - sbt ";clean ;coverage ;test ;coverageReport; assembly"
