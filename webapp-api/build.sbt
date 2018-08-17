@@ -13,7 +13,6 @@ lazy val projectVersion = "1.0.0-SNAPSHOT"
 
 lazy val commonSettings = Seq(
   organization := "com.cmartin.learn",
-  name := "webapi",
   version := projectVersion,
   scalaVersion := "2.12.6"
 )
@@ -37,13 +36,7 @@ lazy val repositoryDep = "com.cmartin.learn" %% "repository" % projectVersion
 lazy val serviceDep = "com.cmartin.learn" %% "service" % projectVersion
 lazy val controllerDep = "com.cmartin.learn" %% "controller" % projectVersion
 
-lazy val root = (project in file(".")).aggregate(
-  common,
-  controller,
-  repository,
-  service,
-  web
-)
+
 
 lazy val common = (project in file("common"))
   .settings(
