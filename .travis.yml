@@ -6,4 +6,5 @@ jdk:
 script:
   - ./gradlew clean build
   - cd webapp-api
+  - curl http://repo1.maven.org/maven2/org/scala-sbt/sbt-launch/1.2.1/sbt-launch-1.2.1.jar -o /home/travis/.sbt/launchers/1.2.1/sbt-launch.jar
   - sbt ";clean ;coverage ;test ;coverageReport; assembly"
