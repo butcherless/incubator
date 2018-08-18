@@ -17,8 +17,9 @@ jobs:
     - stage: "Testing"
       script:
         - echo `pwd`
-        - env
         - cd $TRAVIS_BUILD_DIR/webapp-api && sbt ";clean ;test"
+      script:
+        - echo `pwd`
         - cd $TRAVIS_BUILD_DIR && ./gradlew clean test
     - stage: "Packaging"
       script:
