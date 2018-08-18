@@ -11,10 +11,10 @@ jobs:
   include:
     - stage: "Testing"
       script:
-        - cd ~/webapp-api && sbt ";clean ;test"
-        - cd ~ && ./gradlew clean test
+        - cd ${HOME}/webapp-api && sbt ";clean ;test"
+        - cd ${HOME} && ./gradlew clean test
     - stage: "Packaging"
       script:
-        - cd ~/webapp-api && sbt package
+        - cd ${HOME}/webapp-api && sbt package
         
 #  - sbt ";clean ;coverage ;test ;coverageReport; assembly"
