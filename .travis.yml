@@ -5,7 +5,8 @@ jdk:
 
 cache:
     directories:
-     - /home/travis/.sbt/
+     - /home/travis/.sbt
+     - /home/travis/.gradle
 
 before_install:
   - mkdir -p /home/travis/.sbt/launchers/1.2.1
@@ -17,8 +18,8 @@ jobs:
       script:
         - echo `pwd`
         - env
-        - cd webapp-api && sbt ";clean ;test"
-        - cd - && ./gradlew clean test
+        - cd $TRAVIS_BUILD_DIR/webapp-api && sbt ";clean ;test"
+        - cd $TRAVIS_BUILD_DIR && ./gradlew clean test
     - stage: "Packaging"
       script:
         - cd webapp-api && sbt package
