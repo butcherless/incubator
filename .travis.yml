@@ -9,4 +9,4 @@ before_install:
 
 script:
   - cd $TRAVIS_BUILD_DIR/webapp-api && sbt ";clean ;coverage ;assembly ;coverageReport"
-  - cd $TRAVIS_BUILD_DIR && ./gradlew clean build jacocoTestReport
+  - cd $TRAVIS_BUILD_DIR && ./gradlew clean build
