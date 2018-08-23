@@ -1,13 +1,13 @@
 import sbt.Keys.libraryDependencies
 
-lazy val akkaHttpVersion = "10.1.3"
+lazy val akkaHttpVersion = "10.1.4"
 lazy val akkaVersion = "2.5.14"
 lazy val catsVersion = "1.2.0"
 lazy val logbackVersion = "1.2.3"
 lazy val scalaLoggingVersion = "3.9.0"
 lazy val scalazVersion = "7.2.25"
 lazy val scalatestVersion = "3.0.5"
-lazy val specs2Version = "4.3.3"
+lazy val specs2Version = "4.3.4"
 
 lazy val projectVersion = "1.0.0-SNAPSHOT"
 
