@@ -21,7 +21,7 @@
     <dependency>
       <groupId>com.typesafe.akka</groupId>
       <artifactId>akka-http_2.12</artifactId>
-      <version>10.1.3</version>
+      <version>10.1.4</version>
     </dependency>
     <dependency>
       <groupId>com.typesafe.akka</groupId>
@@ -31,7 +31,7 @@
     <dependency>
       <groupId>org.specs2</groupId>
       <artifactId>specs2-core_2.12</artifactId>
-      <version>4.3.3</version>
+      <version>4.3.4</version>
     </dependency>
     <dependency>
       <groupId>org.typelevel</groupId>
@@ -51,12 +51,12 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.10.0</version>
+      <version>3.11.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <version>3.7</version>
+      <version>3.8</version>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
