@@ -8,13 +8,15 @@ import akka.http.scaladsl.model._
 import akka.stream.ActorMaterializer
 import com.cmartin.learn.common.sayHello
 import com.cmartin.learn.repository.spec.DummyRepository
-import com.cmartin.learn.service.spec.DummyService
+import com.cmartin.learn.service.spec.{Artifact, DummyService}
+import com.typesafe.scalalogging.Logger
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Success, Try}
 
 package object impl {
+
 
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
@@ -24,6 +26,8 @@ package object impl {
   val uri = Uri("https://search.maven.org/solrsearch/select?q=g:com.typesafe.play%20AND%20a:play-json_2.12&core=gav")
 
   class DummyServiceImpl(repository: DummyRepository) extends DummyService {
+    val logger = Logger[DummyServiceImpl]
+
     override def operationOne(): String = {
       repository.saveDummy()
       sayHello()
@@ -40,7 +44,14 @@ package object impl {
         case Failure(_) => println("failure")
       }
 
+
     }
+
+    override def getArtifactVersions(name: String, repo: String): Try[List[Artifact]] = ???
+  }
+
+  object DummyServiceImpl {
+    def apply(repository: DummyRepository): DummyServiceImpl = new DummyServiceImpl(repository)
   }
 
 }
