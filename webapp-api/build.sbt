@@ -23,6 +23,7 @@ lazy val utestVersion = "0.6.4"
 
 lazy val akkaHttp = "com.typesafe.akka" %% "akka-http" % akkaHttpVersion
 lazy val akkaJson = "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion
+lazy val akkaActor = "com.typesafe.akka" %% "akka-actor" % akkaVersion
 lazy val akkaStream = "com.typesafe.akka" %% "akka-stream" % akkaVersion
 lazy val cats = "org.typelevel" %% "cats-core" % catsVersion
 lazy val catsFree = "org.typelevel" %% "cats-free" % catsVersion
@@ -63,7 +64,7 @@ lazy val service = (project in file("service"))
   .settings(
     commonSettings,
     name := "service",
-    libraryDependencies ++= Seq(playJson, scalaTest)
+    libraryDependencies ++= Seq(akkaActor, akkaHttp, akkaStream, playJson, sttp,  scalaTest)
   ).dependsOn(common, repository)
 
 lazy val web = (project in file("web"))
@@ -72,3 +73,7 @@ lazy val web = (project in file("web"))
     name := "web",
     libraryDependencies ++= Seq(scalaTest)
   ).dependsOn(common, controller)
+
+// quick research deps
+
+lazy val sttp = "com.softwaremill.sttp" %% "core" % "1.3.3"
