@@ -4,8 +4,8 @@ jdk:
   - oraclejdk8
 
 before_install:
-  - mkdir -p /home/travis/.sbt/launchers/1.2.1
-  - curl http://repo1.maven.org/maven2/org/scala-sbt/sbt-launch/1.2.1/sbt-launch-1.2.1.jar -o /home/travis/.sbt/launchers/1.2.1/sbt-launch.jar
+  - mkdir -p /home/travis/.sbt/launchers/1.2.3
+  - curl http://repo1.maven.org/maven2/org/scala-sbt/sbt-launch/1.2.1/sbt-launch-1.2.3.jar -o /home/travis/.sbt/launchers/1.2.3/sbt-launch.jar
 
 script:
   - cd $TRAVIS_BUILD_DIR/webapp-api && sbt ";clean ;coverage ;assembly ;coverageReport"
