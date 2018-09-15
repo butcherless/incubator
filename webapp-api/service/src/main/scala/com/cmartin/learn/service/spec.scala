@@ -6,6 +6,8 @@ package object spec {
 
   case class Artifact(g: String, a: String, v: String)
 
+  case class Library(g: String, a: String, v: String, d: String, s: String)
+
   trait DummyService {
     def operationOne(): String
 

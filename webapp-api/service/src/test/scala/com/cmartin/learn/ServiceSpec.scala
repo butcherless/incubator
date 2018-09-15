@@ -5,8 +5,6 @@ import com.cmartin.learn.repository.impl.DummyRepositoryImpl
 import com.cmartin.learn.service.impl.DummyServiceImpl
 import org.scalatest.{FlatSpec, Matchers}
 
-import scala.concurrent.Await
-
 class ServiceSpec extends FlatSpec with Matchers {
 
   // TODO add Mock
