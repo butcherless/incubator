@@ -43,7 +43,7 @@ object DepManager extends App {
       config.getInt("nexus.port"),
       config.getString("nexus.repo")
     )
-    logger.info(s"settings: {host=${settings.host}, port=${settings.port}, repository=${settings.repo}}")
+    logger.info(settings.toString)
     settings
   }
 

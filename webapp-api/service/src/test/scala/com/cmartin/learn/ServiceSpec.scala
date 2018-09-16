@@ -9,7 +9,7 @@ class ServiceSpec extends FlatSpec with Matchers {
 
   // TODO add Mock
   val repository = new DummyRepositoryImpl()
-  val service = new DummyServiceImpl(repository)
+  //val service = new DummyServiceImpl(repository)
 
   "Dummy test" should "pass" in {
     sayHello() shouldEqual "hello from common"
