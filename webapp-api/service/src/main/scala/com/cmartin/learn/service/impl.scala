@@ -2,7 +2,7 @@ package com.cmartin.learn.service
 
 import com.cmartin.learn.common.sayHello
 import com.cmartin.learn.repository.spec.DummyRepository
-import com.cmartin.learn.service.spec.{Artifact, DummyService}
+import com.cmartin.learn.service.spec.{Artifact, DummyService, GAV, Library}
 import com.softwaremill.sttp._
 import play.api.libs.json._
 
@@ -21,11 +21,12 @@ package object impl {
 
   //val uri = Uri("https://search.maven.org/solrsearch/select?q=g:com.typesafe.play%20AND%20a:play-json_2.12&core=gav")
 
-  class DummyServiceImpl(repository: DummyRepository) extends DummyService {
-
+  class DummyServiceImpl(settings: Settings, repository: DummyRepository) extends DummyService {
 
     val logger = Logger[DummyServiceImpl]
     implicit val backend = HttpURLConnectionBackend()
+    val nexusEndpoint = s"http://${settings.host}:${settings.port}/nexus/service/local/lucene/search"
+
 
     override def operationOne(): String = {
       repository.saveDummy()
@@ -48,7 +49,7 @@ package object impl {
 
     // TODO refactor operations with Try[T]
     override def getArtifactVersions(name: String, repo: String): Try[List[Artifact]] = {
-      val endpoint: Uri = uri"http://srxmdesarepo.dummy.es:8080/nexus/service/local/lucene/search?a=${name}&repositoryId=${repo}"
+      val endpoint: Uri = uri"${nexusEndpoint}?a=${name}&repositoryId=${repo}"
       logger.trace(s"uri: ${endpoint}")
 
       // send request to the nexus server
@@ -77,6 +78,17 @@ package object impl {
       Try(result.toList)
     }
 
+    override def getArtifactFiles(gav: GAV, repo: String): Try[List[Library]] = ???
+
+    /*
+     _    _ ______ _      _____  ______ _____
+    | |  | |  ____| |    |  __ \|  ____|  __ \
+    | |__| | |__  | |    | |__) | |__  | |__) |
+    |  __  |  __| | |    |  ___/|  __| |  _  /
+    | |  | | |____| |____| |    | |____| | \ \
+    |_|  |_|______|______|_|    |______|_|  \_\
+     */
+
     private def processArtifact(v: JsValue) = {
       val artifact = Artifact(v("groupId").as[String],
         v("artifactId").as[String],
@@ -92,10 +104,11 @@ package object impl {
 
       logger.trace(s"response: status=${response.code}, contentLength=${contentLength}, contentType=${contentType}")
     }
+
   }
 
   object DummyServiceImpl {
-    def apply(repository: DummyRepository): DummyServiceImpl = new DummyServiceImpl(repository)
+    def apply(settings: Settings, repository: DummyRepository): DummyServiceImpl = new DummyServiceImpl(settings, repository)
   }
 
 }

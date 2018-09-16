@@ -1,0 +1,44 @@
+= Dependency Manager
+
+== Operations
+
+**Get artifact files**:
+
+[source]
+----
+@startuml
+' para generar la imagen PNG copiar el contenido de este archivo en el siguiente formulario: http://www.plantuml.com/plantuml/form
+skinparam monochrome true
+actor User
+participant "WebApp" as WA
+participant "DepService" as DS
+participant "Nexus server" as NS
+participant "JSON Helper" as JH
+
+User -> WA: /files?name&repo
+activate WA
+
+WA -> DS: getFiles(name,repo)
+activate DS
+
+DS -> DS: getVersions(name,repo)
+DS -> NS: /lucene?name&repo
+activate NS
+NS --> DS: {versions}
+DS --> DS: List[Gav]
+
+loop N async
+DS -> DS: getFiles(gav,repo)
+DS -> NS: /repo/gav/
+NS --> DS: {files}
+DS --> DS: List[Library]
+end
+deactivate NS
+
+DS --> WA: AgregatedList[Library]
+deactivate DS
+
+WA --> User: [files]
+deactivate WA
+@enduml
+----

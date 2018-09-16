@@ -4,6 +4,7 @@ import com.cmartin.learn.repository.impl.DummyRepositoryImpl
 import com.cmartin.learn.repository.spec.DummyRepository
 import com.cmartin.learn.service.impl.DummyServiceImpl
 import com.cmartin.learn.service.spec.DummyService
+import com.typesafe.config.{Config, ConfigFactory}
 import com.typesafe.scalalogging.Logger
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -24,15 +25,30 @@ object Test {
 
 class DepManager
 
+case class Settings(host: String, port: Int, repo: String)
+
 //println(s"insert into tdplibrary values('${l.g}','${l.a}','${l.v}','${l.d}','${l.s}')")
 object DepManager extends App {
   lazy val logger = Logger[DepManager]
   val repository: DummyRepository = DummyRepositoryImpl()
-  val service: DummyService = DummyServiceImpl(repository)
 
   // http get request to nexus
   val artifactName = "mma-arch-cache"
-  val repositoryName = "dummy-releases-lib"
+  val repositoryName = "mutua-releases-lib"
+
+  def init(): Settings = {
+    val config: Config = ConfigFactory.load()
+    val settings = Settings(
+      config.getString("nexus.host"),
+      config.getInt("nexus.port"),
+      config.getString("nexus.repo")
+    )
+    logger.info(s"settings: {host=${settings.host}, port=${settings.port}, repository=${settings.repo}}")
+    settings
+  }
+
+  val settings = init()
+  val service: DummyService = DummyServiceImpl(settings, repository)
 
   val artifacts = service.getArtifactVersions(artifactName, repositoryName)
 
