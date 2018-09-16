@@ -30,6 +30,7 @@ targetCompatibility = 1.8
 
 ext {
     scalaVersion = "2.12.6"
+    jacksonVersion = "2.9.6"
 }
 
 //mainClassName = "com.cmartin.research.ScalaApplication"
@@ -41,7 +42,8 @@ dependencies {
 
 
     compile 'org.neo4j.driver:neo4j-java-driver:1.6.1',
-            'com.fasterxml.jackson.core:jackson-databind:2.9.5',
+            "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}",
+            "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}",
             'org.apache.commons:commons-lang3:3.7'
 
     compile "org.scala-lang:scala-library:${scalaVersion}"
