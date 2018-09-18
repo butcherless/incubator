@@ -14,6 +14,7 @@ lazy val akkaHttpVersion = "10.1.5"
 lazy val akkaVersion = "2.5.16"
 lazy val catsVersion = "1.3.1"
 lazy val configVersion = "1.3.3"
+lazy val json4sVersion = "3.6.1"
 lazy val logbackVersion = "1.2.3"
 lazy val playJsonVersion = "2.6.10"
 lazy val scalaLoggingVersion = "3.9.0"
@@ -29,6 +30,7 @@ lazy val akkaStream = "com.typesafe.akka" %% "akka-stream" % akkaVersion
 lazy val cats = "org.typelevel" %% "cats-core" % catsVersion
 lazy val catsFree = "org.typelevel" %% "cats-free" % catsVersion
 lazy val config = "com.typesafe" % "config" % configVersion
+lazy val json4sNative = "org.json4s" %% "json4s-native" % json4sVersion
 lazy val logback = "ch.qos.logback" % "logback-classic" % logbackVersion
 lazy val playJson = "com.typesafe.play" % "play-json_2.12" % playJsonVersion
 lazy val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion
@@ -66,7 +68,7 @@ lazy val service = (project in file("service"))
   .settings(
     commonSettings,
     name := "service",
-    libraryDependencies ++= Seq(akkaActor, akkaHttp, akkaStream, config, playJson, sttp, scalaLogging, logback, scalaTest)
+    libraryDependencies ++= Seq(akkaActor, akkaHttp, akkaStream, config, json4sNative, playJson, sttp, scalaLogging, logback, scalaTest)
   ).dependsOn(common, repository)
 
 lazy val web = (project in file("web"))

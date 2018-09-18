@@ -2,9 +2,11 @@ package com.cmartin.learn.service
 
 import com.cmartin.learn.common.sayHello
 import com.cmartin.learn.repository.spec.DummyRepository
-import com.cmartin.learn.service.spec.{Artifact, DummyService, GAV, Library}
+import com.cmartin.learn.service.spec._
 import com.softwaremill.sttp._
 import play.api.libs.json._
+
+import scala.concurrent.Future
 
 //import com.softwaremill.sttp.{HeaderNames, HttpURLConnectionBackend, Uri,sttp, MediaTypes}
 import com.typesafe.scalalogging.Logger
@@ -78,7 +80,6 @@ package object impl {
       Try(result.toList)
     }
 
-    override def getArtifactFiles(gav: GAV, repo: String): Try[List[Library]] = ???
 
     /*
      _    _ ______ _      _____  ______ _____
@@ -105,6 +106,7 @@ package object impl {
       logger.trace(s"response: status=${response.code}, contentLength=${contentLength}, contentType=${contentType}")
     }
 
+    override def getArtifactFiles(gav: GAV, repo: String): Future[List[OptionLibrary]] = ???
   }
 
   object DummyServiceImpl {

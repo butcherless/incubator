@@ -34,7 +34,7 @@ object DepManager extends App {
 
   // http get request to nexus
   val artifactName = "mma-arch-cache"
-  val repositoryName = "mutua-releases-lib"
+  val repositoryName = "xxxxx-releases-lib"
 
   def init(): Settings = {
     val config: Config = ConfigFactory.load()
@@ -59,7 +59,6 @@ object DepManager extends App {
 
   logger.info("application stopped.")
 }
-
 
 /*
 

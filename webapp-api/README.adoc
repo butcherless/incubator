@@ -1,5 +1,9 @@
 = Dependency Manager
 
+== Links
+
+. https://github.com/json4s/json4s
+
 == Operations
 
 **Get artifact files**:

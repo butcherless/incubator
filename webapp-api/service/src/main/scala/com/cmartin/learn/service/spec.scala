@@ -1,8 +1,11 @@
 package com.cmartin.learn.service
 
+import scala.concurrent.Future
 import scala.util.Try
 
 package object spec {
+
+  type OptionLibrary = Option[Library]
 
   case class Artifact(g: String, a: String, v: String)
 
@@ -17,7 +20,7 @@ package object spec {
 
     def getArtifactVersions(name: String, repo: String): Try[List[Artifact]]
 
-    def getArtifactFiles(gav: GAV, repo: String): Try[List[Library]]
+    def getArtifactFiles(gav: GAV, repo: String): Future[List[OptionLibrary]]
   }
 
 }
