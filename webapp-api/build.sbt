@@ -41,7 +41,7 @@ lazy val scalaTest = "org.scalatest" %% "scalatest" % scalatestVersion % "test"
 lazy val specs2 = "org.specs2" %% "specs2-core" % specs2Version % "test"
 lazy val uTest = "com.lihaoyi" %% "utest" % utestVersion % "test"
 
-// app modules
+// webapp modules
 
 lazy val common = (project in file("common"))
   .settings(
@@ -49,13 +49,6 @@ lazy val common = (project in file("common"))
     name := "common",
     libraryDependencies ++= Seq(scalaTest)
   )
-
-lazy val controller = (project in file("controller"))
-  .settings(
-    commonSettings,
-    name := "controller",
-    libraryDependencies ++= Seq(scalaTest)
-  ).dependsOn(common, service)
 
 lazy val repository = (project in file("repository"))
   .settings(
@@ -70,6 +63,13 @@ lazy val service = (project in file("service"))
     name := "service",
     libraryDependencies ++= Seq(akkaActor, akkaHttp, akkaStream, config, json4sNative, playJson, sttp, scalaLogging, logback, scalaTest)
   ).dependsOn(common, repository)
+
+lazy val controller = (project in file("controller"))
+  .settings(
+    commonSettings,
+    name := "controller",
+    libraryDependencies ++= Seq(scalaTest)
+  ).dependsOn(common, service)
 
 lazy val web = (project in file("web"))
   .settings(

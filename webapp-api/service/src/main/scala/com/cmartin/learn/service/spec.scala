@@ -23,4 +23,10 @@ package object spec {
     def getArtifactFiles(gav: GAV, repo: String): Future[List[OptionLibrary]]
   }
 
+  trait NexusRepository {
+    def getVersions(artifactName: String, repositoryName: String): Try[List[GAV]]
+
+    def getGavFiles(gav: GAV, repositoryName: String): Try[List[Library]]
+  }
+
 }
