@@ -44,7 +44,7 @@ class FutureSpec extends FlatSpec with Matchers {
       case Failure(e) => println(s"Error processing future operations, error = ${e.getMessage}")
     }
 
-    val result: List[Option[GAV]] = Await.result(futureTraverseResult, DurationInt(1).second)
+    val result: List[Option[GAV]] = Await.result(futureTraverseResult, DurationInt(2).second)
 
     println(result.getClass)
     println(result)

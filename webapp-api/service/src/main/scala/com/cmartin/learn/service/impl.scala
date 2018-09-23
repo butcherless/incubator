@@ -56,6 +56,17 @@ package object impl {
       }
     }
 
+    def getGavFiles(gs: List[GAV])(implicit rn: String) = {
+      Try(
+        gs.flatMap(g => {
+          val endpoint = buildGavFilesEndpoint2(g, rn)
+          val response = getJsonResponse2(endpoint)
+          val jsonString = getJsonString2(response)
+          getFiles2(g, jsonString)
+        })
+      )
+    }
+
     /*
      _    _   ______   _        _____    ______   _____     _____
     | |  | | |  ____| | |      |  __ \  |  ____| |  __ \   / ____|
@@ -81,9 +92,18 @@ package object impl {
       Try(endpoint)
     }
 
+    private def buildGavFilesEndpoint2(gav: GAV, repositoryName: String): Uri = {
+      val groupIdPath = gav.groupId.replace('.', '/')
+      uri"${settings.getGavFilesUri()}/${repositoryName}/content/${groupIdPath}/${gav.artifactId}/${gav.version}/"
+    }
+
     // send request to the nexus server
     private def getJsonResponse(endpoint: Uri) = {
       Try(sttp.header(HeaderNames.Accept, MediaTypes.Json).get(endpoint).send())
+    }
+
+    private def getJsonResponse2(endpoint: Uri) = {
+      sttp.header(HeaderNames.Accept, MediaTypes.Json).get(endpoint).send()
     }
 
     /* retrieve json from the body response */
@@ -94,12 +114,22 @@ package object impl {
       }
     }
 
+    private def getJsonString2(response: Response[String]) = {
+      response.body.getOrElse("")
+    }
+
     private def getFiles(gav: GAV, jsonString: String): Try[List[Library]] = {
       Try(
         (parse(jsonString) \\ "data")
           .children
           .map(extractLibrary(gav, _))
       )
+    }
+
+    private def getFiles2(gav: GAV, jsonString: String): List[Library] = {
+      (parse(jsonString) \\ "data")
+        .children
+        .map(extractLibrary(gav, _))
     }
 
     private def getCoordinates(jsonString: String): Try[List[GAV]] = {
