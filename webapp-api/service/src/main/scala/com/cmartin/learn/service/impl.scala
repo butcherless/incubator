@@ -7,6 +7,7 @@ import com.typesafe.scalalogging.Logger
 import org.json4s.native.JsonMethods.parse
 import org.json4s.{DefaultFormats, JValue}
 
+import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
 package object impl {
@@ -21,6 +22,8 @@ package object impl {
     val logger: Logger = Logger[JsonNexusRepository]
     implicit val backend = HttpURLConnectionBackend()
     implicit lazy val formats = DefaultFormats
+
+    import scala.concurrent.ExecutionContext.Implicits.global
 
 
     override def getVersions(artifactName: String, repositoryName: String): Try[List[GAV]] = {
@@ -41,6 +44,16 @@ package object impl {
         jsonString <- getJsonString(response)
         files <- getFiles(gav, jsonString)
       } yield files
+    }
+
+    def getAsyncGavFiles(gav: GAV, repositoryName: String): Future[List[Library]] = {
+      Future {
+        val files = getGavFiles(gav, repositoryName)
+        files match {
+          case Success(list) => list
+          case Failure(_) => List.empty[Library]
+        }
+      }
     }
 
     /*

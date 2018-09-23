@@ -1,8 +1,14 @@
 package com.cmartin.learn
 
 import com.cmartin.learn.service.impl.{JsonNexusRepository, NexusSettings, getNexusSettings}
+import com.cmartin.learn.service.spec
+import com.cmartin.learn.service.spec.Library
 import org.scalatest.TryValues._
 import org.scalatest.{FlatSpec, Matchers}
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.util.Try
 
 class JsonSpec extends FlatSpec with Matchers {
 
@@ -12,27 +18,45 @@ class JsonSpec extends FlatSpec with Matchers {
     lazy val nexusRepo = JsonNexusRepository(settings)
   }
 
-  //"Json repository get coordinates list"
   ignore should "return a non empty coordinates (gav) list from nexus repo" in {
     val coordinates = fixture.nexusRepo.getVersions(TestConstants.ArtifactName, TestConstants.RepositoryName)
 
-    coordinates.success.value.nonEmpty shouldBe (true)
+    coordinates.success.value.nonEmpty shouldBe true
     coordinates.success.value.forall(_.version.nonEmpty)
   }
 
-  //"Json repository get coordinates list"
   ignore should "return an empty coordinates (gav) list from nexus repo" in {
     val coordinates = fixture.nexusRepo.getVersions(TestConstants.NotExistingArtifactName, TestConstants.RepositoryName)
 
-    coordinates.success.value.isEmpty shouldBe (true)
+    coordinates.success.value.isEmpty shouldBe true
   }
 
-  //"Json repository get files list"
   ignore should "return a non empty artifact files list from nexus repo" in {
     val jarList = fixture.nexusRepo.getGavFiles(TestConstants.Gav, TestConstants.RepositoryName)
 
-    jarList.success.value.nonEmpty shouldBe (true)
+    jarList.success.value.nonEmpty shouldBe true
     //coordinates.success.value.forall(_.version.nonEmpty)
   }
 
+
+  it should "return a future list of artifacts" in {
+    val coordinates: Try[List[spec.GAV]] = fixture.nexusRepo.getVersions(TestConstants.ArtifactName, TestConstants.RepositoryName)
+
+    coordinates.success.value.nonEmpty shouldBe true
+
+    val gavList: List[spec.GAV] = coordinates.get
+
+    val futures: List[Future[List[Library]]] = gavList.map(fixture.nexusRepo.getAsyncGavFiles(_, TestConstants.RepositoryName))
+
+    val traverseResult: Future[List[List[Library]]] = Future.traverse(futures) { f => f }
+
+    traverseResult.onComplete {
+      case scala.util.Success(list) => {
+        val result = list.flatten
+        println(s"list size: ${result.size}")
+        result.foreach(println(_))
+      }
+      case scala.util.Failure(exception) => println(List.empty[Library])
+    }
+  }
 }

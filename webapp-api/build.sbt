@@ -75,7 +75,7 @@ lazy val web = (project in file("web"))
   .settings(
     commonSettings,
     name := "web",
-    libraryDependencies ++= Seq(scalaTest)
+    libraryDependencies ++= Seq(scalaLogging, logback, scalaTest)
   ).dependsOn(common, controller)
 
 // quick research deps
