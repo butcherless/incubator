@@ -39,7 +39,7 @@ class JsonSpec extends FlatSpec with Matchers {
   }
 
 
-  it should "return a future list of artifacts" in {
+  ignore should "return a future list of artifacts" in {
     val coordinates: Try[List[spec.GAV]] = fixture.nexusRepo.getVersions(TestConstants.ArtifactName, TestConstants.RepositoryName)
 
     coordinates.success.value.nonEmpty shouldBe true
