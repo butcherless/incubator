@@ -5,7 +5,8 @@ lazy val projectVersion = "1.0.0-SNAPSHOT"
 lazy val commonSettings = Seq(
   organization := "com.cmartin.learn",
   version := projectVersion,
-  scalaVersion := "2.12.6"
+  scalaVersion := "2.12.6",
+  scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-language:higherKinds")
 )
 
 // third party deps

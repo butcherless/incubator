@@ -15,12 +15,13 @@ object MainApp extends App {
   lazy val repository = JsonNexusRepository(getNexusSettings())
 
   implicit val repoName = "mutua-releases-lib"
-  val artifactName = "mma-arch-base"
+  //val artifactName = "mma-arch-base"
+  val artifactName = "mma-comp-cics"
 
   logger.info(s"MainApp starts at: ${initInstant} instant")
 
 
-  val result: Try[List[Library]] = repository.getVersions(artifactName, repoName)
+  val temp: Try[List[Library]] = repository.getVersions(artifactName, repoName)
     .map(x => x
       .flatMap(g => repository.getGavFiles(g, repoName)
         .getOrElse(List.empty)
@@ -28,13 +29,13 @@ object MainApp extends App {
     )
 
 
-  val r2: Try[List[Library]] = for {
+  val files: Try[List[Library]] = for {
     versions <- repository.getVersions(artifactName, repoName)
     files <- repository.getGavFiles(versions)
   } yield files
 
 
-  r2 match {
+  val result: Unit = files match {
     case Success(list) => processResults(list)
     case util.Failure(exception) => logger.error(s"error while processing results: $exception")
   }

@@ -25,4 +25,15 @@ package object spec {
     def operationOne(): String
   }
 
+  /**
+    * P.O.C.
+    */
+  trait AbstractNexusRepository[M[_]] {
+
+    def operationOne(s: String): M[Int]
+
+    def operationTwo(n: Int): M[Boolean]
+
+  }
+
 }
