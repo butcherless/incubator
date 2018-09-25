@@ -6,6 +6,10 @@ Research project through small concept tests
 - stop database: docker stop neo4j
 
 
+== Scala / Neo4j Integration
+
+- https://dzone.com/articles/getting-started-neo4j-with-scala-annbspintroductio
+
 == Links
 - spring data neo4j: https://docs.spring.io/spring-data/neo4j/docs/5.0.5.RELEASE/reference/html/
 - example: https://github.com/bijukunjummen/spring-boot-scala-web
