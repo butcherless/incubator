@@ -13,6 +13,23 @@ class FutureSpec extends FlatSpec with Matchers {
   val gav1 = GAV("com.typesafe", "config", "1.3.3")
 
 
+  "future for comprehension" should "aggregate results" in {
+    val f1: Future[Option[GAV]] = getArtifact(1)
+    val f2 = getArtifact(2)
+    val f3 = getArtifact(3)
+
+    val f4: Future[(Option[GAV], Option[GAV], Option[GAV])] = for {
+      r1 <- f1
+      r2 <- f2
+      r3 <- f3
+    } yield (r1, r2, r3)
+
+    val result = Await.result(f4, 2 seconds)
+    result._1.isDefined shouldBe true
+    result._2.isDefined shouldBe true
+    result._3.isDefined shouldBe true
+  }
+
   "Get artifact future patch >= 0" should "return Some" in {
     val result: Option[GAV] = Await.result(getArtifact(2), 10 seconds)
     result.isDefined shouldBe (true)

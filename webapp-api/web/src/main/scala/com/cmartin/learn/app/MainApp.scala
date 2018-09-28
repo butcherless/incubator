@@ -14,9 +14,10 @@ object MainApp extends App {
   lazy val initInstant = getTimestamp()
   lazy val repository = JsonNexusRepository(getNexusSettings())
 
-  implicit val repoName = "mutua-releases-lib"
+  //implicit val repoName = "mutua-releases-lib"
+  implicit val repoName = "mutua-snapshots"
   //val artifactName = "mma-arch-base"
-  val artifactName = "mma-comp-cics"
+  val artifactName = "scs-multicanal-perfilado"
 
   logger.info(s"MainApp starts at: ${initInstant} instant")
 

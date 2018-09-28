@@ -5,14 +5,14 @@ lazy val projectVersion = "1.0.0-SNAPSHOT"
 lazy val commonSettings = Seq(
   organization := "com.cmartin.learn",
   version := projectVersion,
-  scalaVersion := "2.12.6",
+  scalaVersion := "2.12.7",
   scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-language:higherKinds")
 )
 
 // third party deps
 
 lazy val akkaHttpVersion = "10.1.5"
-lazy val akkaVersion = "2.5.16"
+lazy val akkaVersion = "2.5.17"
 lazy val catsVersion = "1.3.1"
 lazy val configVersion = "1.3.3"
 lazy val json4sVersion = "3.6.1"
@@ -81,4 +81,4 @@ lazy val web = (project in file("web"))
 
 // quick research deps
 
-lazy val sttp = "com.softwaremill.sttp" %% "core" % "1.3.3"
+lazy val sttp = "com.softwaremill.sttp" %% "core" % "1.3.5"

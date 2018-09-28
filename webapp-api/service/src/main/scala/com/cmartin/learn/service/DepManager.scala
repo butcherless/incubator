@@ -31,8 +31,8 @@ object DepManager extends App {
   val repository: DummyRepository = DummyRepositoryImpl()
 
   // http get request to nexus
-  val artifactName = "mma-arch-cache"
-  val repositoryName = "xxxxx-releases-lib"
+  val artifactName = "scs-multicanal-perfilado"
+  val repositoryName = "mutua-releases-lib"
 
   def init(): Settings = {
     val config: Config = ConfigFactory.load()
