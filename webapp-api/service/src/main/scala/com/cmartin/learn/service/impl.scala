@@ -149,8 +149,8 @@ package object impl {
     }
 
     private def traceResponse(response: Response[String]): Try[Unit] = {
-      val contentType = response.header(HeaderNames.ContentType).getOrElse()
-      val contentLength = response.header(HeaderNames.ContentLength).getOrElse()
+      val contentType = response.header(HeaderNames.ContentType).getOrElse(Unit)
+      val contentLength = response.header(HeaderNames.ContentLength).getOrElse(Unit)
 
       Try(logger.trace(s"response={status=${response.code}, contentLength=${contentLength}, contentType=${contentType}}"))
     }

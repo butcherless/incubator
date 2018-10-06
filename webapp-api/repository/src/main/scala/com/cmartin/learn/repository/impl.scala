@@ -1,5 +1,7 @@
 package com.cmartin.learn.repository
 
+import java.util.UUID
+
 import com.cmartin.learn.common.getDummyInt
 import com.cmartin.learn.repository.spec.{DummyRepository, SimpleRepository}
 
@@ -8,7 +10,7 @@ import scala.collection.mutable.TreeSet
 package object impl {
 
   // TODO change code to UUID
-  case class Aircraft(k: Long, typeCode: String, registration: String)
+  case class Aircraft(k: String = "", typeCode: String, registration: String)
 
   object Aircraft {
     implicit val ord = new Ordering[Aircraft] {
@@ -34,29 +36,32 @@ package object impl {
   }
 
 
-  class MemoryRepository extends SimpleRepository[Option, Aircraft, Long] {
+  class MemoryRepository extends SimpleRepository[Option, Aircraft, String] {
     private val repo = TreeSet[Aircraft]()
 
     override def findAll(filter: Aircraft => Boolean): Option[List[Aircraft]] =
       Some(repo.filter(filter).toList)
 
-    override def findById(k: Long): Option[Aircraft] = repo.find(_.k == k)
+    override def findById(k: String): Option[Aircraft] = repo.find(_.k == k)
 
-    override def remove(t: Aircraft): Option[Long] =
+    override def remove(t: Aircraft): Option[String] =
       if (repo.remove(t)) Some(t.k) else None
 
-    override def removeAll(filter: Aircraft => Boolean): Option[List[Long]] = {
+    override def removeAll(filter: Aircraft => Boolean): Option[List[String]] = {
       val result = repo.filter(filter).map(_.k)
       repo.retain(filter)
       Some(result.toList)
     }
 
-    override def save(t: Aircraft): Option[Long] = {
-      repo.update(t, true)
-      Some(t.k)
+    override def save(t: Aircraft): Option[String] = {
+      val id = nextId()
+      repo += t.copy(k = id)
+      Some(id)
     }
 
     override def count(): Option[Long] = Some(repo.size)
+
+    private def nextId(): String = UUID.randomUUID().toString
   }
 
   object MemoryRepository extends MemoryRepository {

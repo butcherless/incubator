@@ -8,6 +8,7 @@ import org.scalatest.{FlatSpec, Matchers}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.language.reflectiveCalls
 import scala.util.Try
 
 class JsonSpec extends FlatSpec with Matchers {
