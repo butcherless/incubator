@@ -8,13 +8,18 @@ import scala.language.reflectiveCalls
 
 class RepositorySpec extends FlatSpec with Matchers {
 
+  val typeCodeBoeing = "B788"
+  val typeCodeAirbus = "A359"
+  val registrationMXV = "ec-mxv"
+  val registrationMIG = "ec-mig"
+
   val uuidRegex = "[a-z0-9-]{36}"
 
   // CREATE
   it should "save an aircraft into the repository" in {
     val repo = fixture.repository
     val beforeCount = repo.count()
-    val a = newAircraft("B787", "ec-mab")
+    val a = newAircraft(typeCodeBoeing, registrationMIG)
 
     // functionality
     val aSaved = repo.save(a)
@@ -30,9 +35,8 @@ class RepositorySpec extends FlatSpec with Matchers {
   it should "retrieve an aircraft from the repository" in {
     // preconditions
     val repo = fixture.repository
-    val a = newAircraft("B787", "ec-mab")
+    val a = newAircraft(typeCodeBoeing, registrationMIG)
     val aSaved = repo.save(a)
-    aSaved.value.nonEmpty shouldBe true
 
     // functionality
     val result: Option[Aircraft] = repo.findById(aSaved.value)
@@ -56,24 +60,37 @@ class RepositorySpec extends FlatSpec with Matchers {
 
   // UPDATE
   it should "update an aircraft into the repository" in {
-    val typeCode = "A359"
-    val registration = "ec-mig"
     // preconditions
     val repo = fixture.repository
-    val a = newAircraft("B787", "ec-mab")
+    val a = newAircraft(typeCodeBoeing, registrationMIG)
     val aSaved = repo.save(a)
-    aSaved.value.nonEmpty shouldBe true
     val aRetrieved: Option[Aircraft] = repo.findById(aSaved.value)
-    aRetrieved.isDefined shouldBe true
 
     // functionality
-    val aUpdated: Aircraft = aRetrieved.value.copy(typeCode = typeCode, registration = registration)
+    repo.save(aRetrieved.value.copy(typeCode = typeCodeAirbus, registration = registrationMXV))
+    val aUpdated = repo.findById(aSaved.value)
 
     // verifications
-    aUpdated.typeCode shouldEqual typeCode
-    aUpdated.registration shouldEqual registration
+    aUpdated.value.typeCode shouldEqual typeCodeAirbus
+    aUpdated.value.registration shouldEqual registrationMXV
   }
 
+  it should "remove an aircraft from the repository" in {
+    // preconditions
+    val repo = fixture.repository
+    val created = newAircraft(typeCodeBoeing, registrationMIG)
+    val aSaved = repo.save(created)
+    val beforeCount = repo.count()
+
+    // functionality
+    val retrieved = repo.findById(aSaved.value)
+    val res: Option[String] = repo.remove(retrieved.value)
+
+    // verifications
+    val afterCount = repo.count()
+    res.value shouldEqual aSaved.value
+    beforeCount.value - afterCount.value shouldEqual 1
+  }
 
   /*
    _    _   ______   _        _____    ______   _____     _____

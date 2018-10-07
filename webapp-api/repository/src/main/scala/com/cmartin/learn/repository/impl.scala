@@ -44,8 +44,8 @@ package object impl {
 
     override def findById(k: String): Option[Aircraft] = repo.find(_.k == k)
 
-    override def remove(t: Aircraft): Option[String] =
-      if (repo.remove(t)) Some(t.k) else None
+    override def remove(aircraft: Aircraft): Option[String] =
+      if (repo.remove(aircraft)) Some(aircraft.k) else None
 
     override def removeAll(filter: Aircraft => Boolean): Option[List[String]] = {
       val result = repo.filter(filter).map(_.k)
@@ -53,10 +53,16 @@ package object impl {
       Some(result.toList)
     }
 
-    override def save(t: Aircraft): Option[String] = {
-      val id = nextId()
-      repo += t.copy(k = id)
-      Some(id)
+    override def save(aircraft: Aircraft): Option[String] = {
+      if (aircraft.k.isEmpty) {
+        val id = nextId()
+        repo += aircraft.copy(k = id)
+        Some(id)
+      } else {
+        remove(aircraft)
+        repo += aircraft
+        Some(aircraft.k)
+      }
     }
 
     override def count(): Option[Long] = Some(repo.size)
