@@ -8,5 +8,8 @@ before_install:
   - curl http://repo1.maven.org/maven2/org/scala-sbt/sbt-launch/1.2.3/sbt-launch-1.2.3.jar -o /home/travis/.sbt/launchers/1.2.3/sbt-launch.jar
 
 script:
-  - cd $TRAVIS_BUILD_DIR/webapp-api && sbt ";clean ;coverage ;assembly ;coverageReport"
+  - cd $TRAVIS_BUILD_DIR/webapp-api && sbt ";clean ;coverage ;assembly ;coverageReport; coverageAggregate"
   - cd $TRAVIS_BUILD_DIR && ./gradlew clean build
+
+after_success:
+  - cd $TRAVIS_BUILD_DIR/webapp-api && sbt coveralls
