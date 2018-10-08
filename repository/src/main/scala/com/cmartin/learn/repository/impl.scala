@@ -2,8 +2,7 @@ package com.cmartin.learn.repository
 
 import java.util.UUID
 
-import com.cmartin.learn.common.getDummyInt
-import com.cmartin.learn.repository.spec.{DummyRepository, SimpleRepository}
+import com.cmartin.learn.repository.spec.SimpleRepository
 
 import scala.collection.mutable.TreeSet
 
@@ -25,14 +24,6 @@ package object impl {
         a1.k.compareTo(a2.k)
       }
     }
-  }
-
-  class DummyRepositoryImpl extends DummyRepository {
-    override def saveDummy(): Int = getDummyInt()
-  }
-
-  object DummyRepositoryImpl {
-    def apply(): DummyRepositoryImpl = new DummyRepositoryImpl()
   }
 
 

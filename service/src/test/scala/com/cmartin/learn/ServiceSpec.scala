@@ -1,13 +1,11 @@
 package com.cmartin.learn
 
 import com.cmartin.learn.common.sayHello
-import com.cmartin.learn.repository.impl.DummyRepositoryImpl
 import org.scalatest.{FlatSpec, Matchers}
 
 class ServiceSpec extends FlatSpec with Matchers {
 
   // TODO add Mock
-  val repository = new DummyRepositoryImpl()
   //val service = new DummyServiceImpl(repository)
 
   "Dummy test" should "pass" in {

@@ -1,7 +1,5 @@
 package com.cmartin.learn.service
 
-import com.cmartin.learn.repository.impl.DummyRepositoryImpl
-import com.cmartin.learn.repository.spec.DummyRepository
 import com.typesafe.config.{Config, ConfigFactory}
 import com.typesafe.scalalogging.Logger
 
@@ -28,7 +26,6 @@ case class Settings(host: String, port: Int, repo: String)
 //println(s"insert into tdplibrary values('${l.g}','${l.a}','${l.v}','${l.d}','${l.s}')")
 object DepManager extends App {
   lazy val logger = Logger[DepManager]
-  val repository: DummyRepository = DummyRepositoryImpl()
 
   // http get request to nexus
   val artifactName = "scs-multicanal-perfilado"

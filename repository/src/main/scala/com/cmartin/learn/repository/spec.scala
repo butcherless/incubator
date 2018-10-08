@@ -2,10 +2,6 @@ package com.cmartin.learn.repository
 
 package object spec {
 
-  trait DummyRepository {
-    def saveDummy(): Int
-  }
-
   trait SimpleRepository[M[_], T, K] {
 
     def findAll(filter: (T) => Boolean): M[List[T]]
