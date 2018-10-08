@@ -69,6 +69,7 @@ class RepositorySpec extends FlatSpec with Matchers {
     // verifications
     repo.count().value shouldEqual 2
     list.size shouldEqual 1
+    list.value.head.typeCode shouldEqual typeCodeAirbus
   }
 
 
@@ -89,6 +90,8 @@ class RepositorySpec extends FlatSpec with Matchers {
     aUpdated.value.registration shouldEqual registrationMXV
   }
 
+
+  // REMOVE
   it should "remove an aircraft from the repository" in {
     // preconditions
     val repo = fixture.repository
@@ -105,6 +108,22 @@ class RepositorySpec extends FlatSpec with Matchers {
     res.value shouldEqual aSaved.value
     beforeCount.value - afterCount.value shouldEqual 1
   }
+
+  it should "remove only airbus aircraft from the repository" in {
+    // preconditions
+    val repo = fixture.repository
+    repo.save(newAircraft(typeCodeBoeing, registrationMIG))
+    val aSaved = repo.save(newAircraft(typeCodeAirbus, registrationMXV))
+
+    // functionality
+    val list = repo.removeAll(_.typeCode == typeCodeAirbus)
+
+    // verifications
+    repo.count().value shouldEqual 1
+    list.size shouldEqual 1
+    list.value.head shouldEqual aSaved.value
+  }
+
 
   /*
    _    _   ______   _        _____    ______   _____     _____

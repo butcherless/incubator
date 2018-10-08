@@ -39,9 +39,10 @@ package object impl {
       if (repo.remove(aircraft)) Some(aircraft.k) else None
 
     override def removeAll(filter: Aircraft => Boolean): Option[List[String]] = {
-      val result = repo.filter(filter).map(_.k)
-      repo.retain(filter)
-      Some(result.toList)
+      val removableList = repo.filter(filter)
+      repo --= removableList
+
+      Some(removableList.map(_.k).toList)
     }
 
     override def save(aircraft: Aircraft): Option[String] = {
