@@ -1,6 +1,20 @@
 = Project Incubator
 Research project through small concept tests
 
+
+.CircleCI
+https://circleci.com/gh/butcherless/scala[Build CicleCI]
+
+image::https://circleci.com/gh/butcherless/scala.svg?style=svg[CircleCI build]
+
+
+.Codecov
+https://codecov.io/gh/butcherless/incubator[Codecov coverage]
+
+image::https://codecov.io/gh/butcherless/incubator/branch/master/graph/badge.svg[Codecov coverage]
+
+.Neo4j Docker server
+
 - start database: docker run --name neo4j -d --rm --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data:/data \--volume=$HOME/neo4j/logs:/logs neo4j:3.3.0
 
 - stop database: docker stop neo4j
