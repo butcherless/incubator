@@ -57,6 +57,20 @@ class RepositorySpec extends FlatSpec with Matchers {
     result shouldBe None
   }
 
+  it should "retrieve only airbus aircraft from the repository" in {
+    // preconditions
+    val repo = fixture.repository
+    val aSaved = repo.save(newAircraft(typeCodeBoeing, registrationMIG))
+    val bSaved = repo.save(newAircraft(typeCodeAirbus, registrationMXV))
+
+    // functionality
+    val list = repo.findAll(_.typeCode == typeCodeAirbus)
+
+    // verifications
+    repo.count().value shouldEqual 2
+    list.size shouldEqual 1
+  }
+
 
   // UPDATE
   it should "update an aircraft into the repository" in {
