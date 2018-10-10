@@ -25,7 +25,7 @@ class FutureSpec extends FlatSpec with Matchers {
       r3 <- f3
     } yield (r1, r2, r3)
 
-    val result = Await.result(f4, 2 seconds)
+    val result = Await.result(f4, 5 seconds)
     result._1.isDefined shouldBe true
     result._2.isDefined shouldBe true
     result._3.isDefined shouldBe true
