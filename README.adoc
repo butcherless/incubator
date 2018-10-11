@@ -24,6 +24,13 @@ image::https://codecov.io/gh/butcherless/incubator/branch/master/graph/badge.svg
 
 - https://dzone.com/articles/getting-started-neo4j-with-scala-annbspintroductio
 
+
+== Sbt tool
+
+Debug commands:
+
+ sbt -batch clean test --debug
+
 == Links
 - spring data neo4j: https://docs.spring.io/spring-data/neo4j/docs/5.0.5.RELEASE/reference/html/
 - example: https://github.com/bijukunjummen/spring-boot-scala-web
