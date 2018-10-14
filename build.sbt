@@ -21,7 +21,7 @@ lazy val playJsonVersion = "2.6.10"
 lazy val scalaLoggingVersion = "3.9.0"
 lazy val scalazVersion = "7.2.26"
 lazy val scalatestVersion = "3.0.5"
-lazy val specs2Version = "4.3.4"
+lazy val specs2Version = "4.3.5"
 lazy val utestVersion = "0.6.4"
 
 lazy val akkaHttp = "com.typesafe.akka" %% "akka-http" % akkaHttpVersion
