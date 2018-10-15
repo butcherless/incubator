@@ -41,32 +41,29 @@ class FutureSpec extends AsyncFlatSpec with Matchers {
     })
   }
 
-  /*
 
   "Get artifact list future" should "return a result list" in {
     val futureOperations = List(
       getArtifact(0),
       getArtifact(1),
-      getArtifact(-1),
+      getArtifact(2),
       getArtifact(3),
       getArtifact(4)
     )
 
+    //    val futureTraverseResult: Future[List[Option[GAV]]] = Future.sequence(futureOperations)
     val futureTraverseResult: Future[List[Option[GAV]]] = Future.traverse(futureOperations) {
       e => e
     }
 
-    //    val futureTraverseResult: Future[List[Option[GAV]]] = Future.sequence(futureOperations)
-
-    futureTraverseResult.onComplete {
-      case Success(results) => println(s"Results (${results.size}): $results")
-      case Failure(e) => println(s"Error processing future operations, error = ${e.getMessage}")
+    futureTraverseResult map {
+      t => {
+        t.nonEmpty shouldBe true
+        t.forall(_.value.version.startsWith("1.3.")) shouldBe true
+      }
     }
-
-    val result: List[Option[GAV]] = Await.result(futureTraverseResult, 10 seconds)
   }
 
-  */
 
   /*
   *  H E L P E R S
