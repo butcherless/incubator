@@ -1,17 +1,26 @@
 package com.cmartin.learn
 
 import com.cmartin.learn.service.spec.GAV
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.OptionValues._
+import org.scalatest.{AsyncFlatSpec, Matchers}
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 import scala.language.postfixOps
-import scala.util.{Failure, Random, Success}
+import scala.util.Random
 
-class FutureSpec extends FlatSpec with Matchers {
+class FutureSpec extends AsyncFlatSpec with Matchers {
 
   val gav1 = GAV("com.typesafe", "config", "1.3.3")
+
+  "Get artifact future patch >= 0" should "return Some" in {
+    val artifact = getArtifact(2)
+    artifact map (t => t.value.version shouldEqual ("1.3.2"))
+  }
+
+  "Get artifact future patch < 0" should "return None" in {
+    val artifact = getArtifact(-1)
+    artifact map (t => t shouldBe None)
+  }
 
 
   "future for comprehension" should "aggregate results" in {
@@ -19,28 +28,20 @@ class FutureSpec extends FlatSpec with Matchers {
     val f2 = getArtifact(2)
     val f3 = getArtifact(3)
 
-    val f4: Future[(Option[GAV], Option[GAV], Option[GAV])] = for {
+    val tuple: Future[(Option[GAV], Option[GAV], Option[GAV])] = for {
       r1 <- f1
       r2 <- f2
       r3 <- f3
     } yield (r1, r2, r3)
 
-    val result = Await.result(f4, 5 seconds)
-    result._1.isDefined shouldBe true
-    result._2.isDefined shouldBe true
-    result._3.isDefined shouldBe true
+    tuple map (t => {
+      t._1.value.version shouldBe "1.3.1"
+      t._2.value.version shouldBe "1.3.2"
+      t._3.value.version shouldBe "1.3.3"
+    })
   }
 
-  "Get artifact future patch >= 0" should "return Some" in {
-    val result: Option[GAV] = Await.result(getArtifact(2), 10 seconds)
-    result.isDefined shouldBe (true)
-    result.get.version shouldEqual ("1.3.2")
-  }
-
-  "Get artifact future patch < 0" should "return None" in {
-    val result: Option[GAV] = Await.result(getArtifact(-1), 10 seconds)
-    result.isEmpty shouldBe (true)
-  }
+  /*
 
   "Get artifact list future" should "return a result list" in {
     val futureOperations = List(
@@ -63,22 +64,26 @@ class FutureSpec extends FlatSpec with Matchers {
     }
 
     val result: List[Option[GAV]] = Await.result(futureTraverseResult, 10 seconds)
-
-    //    println(result.getClass)
-    //    println(result)
   }
 
-  // HELPERS
+  */
+
+  /*
+  *  H E L P E R S
+  */
+
 
   def getArtifact(patch: Int): Future[Option[GAV]] = {
+    val d = delay(1)
     if (patch >= 0)
       Future {
-        val d = delay(1)
-        Thread.sleep(d)
         //        println(s"I'm $patch, wait $d")
+        Thread.sleep(d)
         Some(gav1.copy(version = s"1.3.$patch"))
       }
     else Future {
+      //        println(s"I'm $patch, wait $d")
+      Thread.sleep(d)
       None
     }
   }
