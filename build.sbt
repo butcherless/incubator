@@ -60,7 +60,7 @@ lazy val repository = (project in file("repository"))
   .settings(
     commonSettings,
     name := "repository",
-    libraryDependencies ++= Seq(slick, slickPool, slf4j, scalaTest)
+    libraryDependencies ++= Seq(slick, slickPool, logback, scalaTest)
   ).dependsOn(common)
 
 lazy val service = (project in file("service"))
