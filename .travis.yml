@@ -1,7 +1,16 @@
-language: java
+language: scala
+
+group: travis_lts
+
+scala:
+  - 2.12.7
 
 jdk:
   - oraclejdk8
+
+addons:
+  apt:
+    update: true
 
 script:
   - cd $TRAVIS_BUILD_DIR && sbt ";clean ;coverage ;assembly ;coverageReport; coverageAggregate"
