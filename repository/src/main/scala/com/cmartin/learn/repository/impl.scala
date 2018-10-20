@@ -8,7 +8,6 @@ import scala.collection.mutable.TreeSet
 
 package object impl {
 
-  // TODO change code to UUID
   case class Aircraft(k: String = "", typeCode: String, registration: String)
 
   object Aircraft {

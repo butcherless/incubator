@@ -15,6 +15,7 @@ lazy val akkaHttpVersion = "10.1.5"
 lazy val akkaVersion = "2.5.17"
 lazy val catsVersion = "1.3.1"
 lazy val configVersion = "1.3.3"
+lazy val h2Version = "1.4.197"
 lazy val json4sVersion = "3.6.1"
 lazy val logbackVersion = "1.2.3"
 lazy val playJsonVersion = "2.6.10"
@@ -34,11 +35,12 @@ lazy val cats = "org.typelevel" %% "cats-core" % catsVersion
 lazy val catsFree = "org.typelevel" %% "cats-free" % catsVersion
 lazy val config = "com.typesafe" % "config" % configVersion
 lazy val json4sNative = "org.json4s" %% "json4s-native" % json4sVersion
+lazy val h2Database = "com.h2database" % "h2" % h2Version
 lazy val logback = "ch.qos.logback" % "logback-classic" % logbackVersion
 lazy val playJson = "com.typesafe.play" % "play-json_2.12" % playJsonVersion
 lazy val scalaLogging = "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion
 lazy val scalaz = "org.scalaz" %% "scalaz-core" % scalazVersion
-lazy val slf4j = "org.slf4j" % "slf4j-nop" % slf4jVersion
+lazy val slf4j = "org.slf4j" %% "slf4j-nop" % slf4jVersion
 lazy val slick = "com.typesafe.slick" %% "slick" % slickVersion
 lazy val slickPool = "com.typesafe.slick" %% "slick-hikaricp" % slickVersion
 
@@ -60,7 +62,7 @@ lazy val repository = (project in file("repository"))
   .settings(
     commonSettings,
     name := "repository",
-    libraryDependencies ++= Seq(slick, slickPool, logback, scalaTest)
+    libraryDependencies ++= Seq(slick, slickPool, logback, h2Database, scalaTest)
   ).dependsOn(common)
 
 lazy val service = (project in file("service"))
