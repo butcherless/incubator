@@ -5,7 +5,7 @@ scala:
 
 build:
   ci:
-    - sbt ";clean ;coverage ;test ;coverageReport; assembly"
+    - sbt -mem 1536 ";clean ;coverage ;test ;coverageReport; assembly"
 
 jdk:
   - oraclejdk8
