@@ -11,6 +11,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   implicit override val patienceConfig = PatienceConfig(timeout = Span(5, Seconds))
 
   val registrationMIG = "ec-mig"
+  val registrationMNS = "ec-mns"
 
   val fleet = TableQuery[Fleet]
 
@@ -36,7 +37,26 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     val list = db.run(fleet.filter(_.registration === registrationMIG).result).futureValue
 
     list.size shouldBe 1
-    list.head.registration shouldBe registrationMIG
+    val aircraft = list.head
+    aircraft.id.isDefined shouldBe true
+    aircraft.typeCode shouldBe TypeCodes.BOEING_787_800
+    aircraft.registration shouldBe registrationMIG
+  }
+
+  it should "update an aircraft" in {
+    insertAircraft()
+
+    val updateAction = fleet.filter(_.registration === registrationMIG)
+      .map(a => a.registration)
+      .update(registrationMNS)
+
+    val selectAction = fleet.filter(_.registration === registrationMNS).result
+
+    val list = db.run(updateAction andThen selectAction).futureValue
+
+    list.nonEmpty shouldBe true
+    val aircraft = list.head
+    aircraft.registration shouldBe registrationMNS
   }
 
 
