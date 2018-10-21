@@ -25,13 +25,13 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     tables.count(_.name.name == TableNames.fleet) shouldBe 1
   }
 
-  it should "insert an aircraft" in {
+  it should "insert an aircraft into the database" in {
     val count = insertAircraft()
 
     count shouldBe 1
   }
 
-  it should "retrieve an aircraft" in {
+  it should "retrieve an aircraft from the database" in {
     insertAircraft()
 
     val list = db.run(fleet.filter(_.registration === registrationMIG).result).futureValue
@@ -43,7 +43,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     aircraft.registration shouldBe registrationMIG
   }
 
-  it should "update an aircraft" in {
+  it should "update an aircraft into the database" in {
     insertAircraft()
 
     val updateAction = fleet.filter(_.registration === registrationMIG)
@@ -57,6 +57,20 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     list.nonEmpty shouldBe true
     val aircraft = list.head
     aircraft.registration shouldBe registrationMNS
+  }
+
+  it should "delete an aircraft from the dataase" in {
+    insertAircraft()
+    val q1 = fleet.filter(_.registration === registrationMIG)
+    val a1 = q1.result
+    val a2 = q1.delete
+    val a3 = fleet.length.result
+
+    val count = db.run(
+      a1 andThen a2 andThen a3
+    ).futureValue
+
+    count shouldBe 0
   }
 
 
