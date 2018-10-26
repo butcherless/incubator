@@ -2,24 +2,44 @@
 
 NOTE: Research project through small concept tests
 
-== Continuous Integration
+== Continuous Integration & QA
 
-.CircleCI
-https://circleci.com/gh/butcherless/scala[Build CicleCI]
+[cols="2,3,2", options="header", width="50%"] 
+|===
+|Service
+|Link
+|Status
 
-image::https://circleci.com/gh/butcherless/scala.svg?style=svg[CircleCI build]
+| CircleCI
+| https://circleci.com/gh/butcherless/incubator[Build CircleCI]
+| image:https://circleci.com/gh/butcherless/incubator.svg?style=svg[CircleCI build]
 
+| SemaphoreCI
+| https://semaphoreci.com/butcherless/incubator[Build SemaphoreCI]
+| image:https://semaphoreci.com/api/v1/butcherless/incubator/branches/master/badge.svg[SemaphoreCI build]
 
-.Codecov
-https://codecov.io/gh/butcherless/incubator[Codecov coverage]
+| ShippableCI
+| https://app.shippable.com/github/butcherless/incubator[Build ShippableCI]
+| image:https://api.shippable.com/projects/5b68c6d57dafeb0700d706c0/badge?branch=master[ShippableCI build]
 
-image::https://codecov.io/gh/butcherless/incubator/branch/master/graph/badge.svg[Codecov coverage]
+| TravisCI
+| https://travis-ci.org/butcherless/incubator[Build TravisCI]
+| image:https://travis-ci.org/butcherless/scala.svg?branch=master[TravisCI build]
 
-.Neo4j Docker server
+| Codecov
+| https://codecov.io/gh/butcherless/incubator[Codecov coverage]
+| image:https://codecov.io/gh/butcherless/incubator/branch/master/graph/badge.svg[Codecov coverage]
+|===
 
-* start database: docker run --name neo4j -d --rm --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data:/data \--volume=$HOME/neo4j/logs:/logs neo4j:3.3.0
+== Neo4j Docker server
 
-* stop database: docker stop neo4j
+.start database:
+ 
+ docker run --name neo4j -d --rm --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data:/data \--volume=$HOME/neo4j/logs:/logs neo4j:3.3.0
+
+.stop database:
+
+ docker stop neo4j
 
 
 == Scala / Neo4j Integration
@@ -29,9 +49,15 @@ image::https://codecov.io/gh/butcherless/incubator/branch/master/graph/badge.svg
 
 == Sbt tool
 
-Debug commands:
+.Debug command
 
  sbt -batch clean test --debug
+
+.Coverage report
+
+ sbt ";clean;coverage;test;coverageReport"
+
+report:: target/scala-2.12/scoverage-report/index.html
 
 == Links
 * spring data neo4j: https://docs.spring.io/spring-data/neo4j/docs/5.0.5.RELEASE/reference/html/
