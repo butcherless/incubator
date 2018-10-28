@@ -1,6 +1,6 @@
 package com.cmartin.learn
 
-import com.cmartin.learn.repository.frm.{Aircraft, Fleet, TableNames, TypeCodes}
+import com.cmartin.learn.repository.frm._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Seconds, Span}
 import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
@@ -14,6 +14,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   val registrationMNS = "ec-mns"
 
   val fleet = TableQuery[Fleet]
+  val countries = TableQuery[Countries]
 
   var db: Database = _
 
@@ -21,8 +22,11 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   it should "create the fleet database" in {
     val tables = db.run(MTable.getTables).futureValue
 
-    tables.size shouldBe 1
+    tables.size shouldBe 4
     tables.count(_.name.name == TableNames.fleet) shouldBe 1
+    tables.count(_.name.name == TableNames.countries) shouldBe 1
+    tables.count(_.name.name == TableNames.airlines) shouldBe 1
+    tables.count(_.name.name == TableNames.airports) shouldBe 1
   }
 
   it should "insert an aircraft into the database" in {
@@ -86,7 +90,12 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   def insertAircraft(): Int =
     db.run(fleet += Aircraft(None, TypeCodes.BOEING_787_800, registrationMIG)).futureValue
 
-  def createSchema() = db.run((fleet.schema).create).futureValue
+  def createSchema() = db.run(
+    (airlines.schema ++
+      airports.schema ++
+      fleet.schema ++
+      countries.schema)
+      .create).futureValue
 
   before {
     db = Database.forConfig("h2mem")
