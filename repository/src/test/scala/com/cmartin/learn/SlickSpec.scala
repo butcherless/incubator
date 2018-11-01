@@ -123,6 +123,17 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     airport.countryId shouldEqual countryId
   }
 
+  it should "retrieve an Airport empty collection" in{
+    val query =  for {
+      airport <- airports
+      country <- countries.filter(_.name === "spain")
+    } yield airport
+
+    val results = db.run(query.result).futureValue
+
+    results.isEmpty shouldBe true
+  }
+
   /*
    _    _   ______   _        _____    ______   _____     _____
   | |  | | |  ____| | |      |  __ \  |  ____| |  __ \   / ____|
