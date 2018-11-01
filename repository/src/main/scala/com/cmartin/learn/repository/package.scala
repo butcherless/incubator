@@ -23,9 +23,9 @@ package object frm {
   /*
        A I R C R A F T
    */
-  case class Aircraft(id: Option[Long] = None, typeCode: String, registration: String)
+  final case class Aircraft(id: Option[Long] = None, typeCode: String, registration: String)
 
-  class Fleet(tag: Tag) extends Table[Aircraft](tag, TableNames.fleet) {
+  final class Fleet(tag: Tag) extends Table[Aircraft](tag, TableNames.fleet) {
     // This is the primary key column:
     def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
 
@@ -42,9 +42,9 @@ package object frm {
   /*
        A I R L I N E
    */
-  case class Airline(id: Option[Long] = None, name: String, foundationDate: Date)
+  final case class Airline(id: Option[Long] = None, name: String, foundationDate: Date)
 
-  class Airlines(tag: Tag) extends Table[Airline](tag, TableNames.airlines) {
+  final class Airlines(tag: Tag) extends Table[Airline](tag, TableNames.airlines) {
     // This is the primary key column:
     def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
 
@@ -61,9 +61,9 @@ package object frm {
   /*
        C O U N T R Y
    */
-  case class Country(id: Option[Long] = None, name: String)
+  final case class Country(id: Option[Long] = None, name: String)
 
-  class Countries(tag: Tag) extends Table[Country](tag, TableNames.countries) {
+  final class Countries(tag: Tag) extends Table[Country](tag, TableNames.countries) {
     // This is the primary key column:
     def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
 
@@ -78,9 +78,9 @@ package object frm {
   /*
        A I R P O R T
    */
-  case class Airport(id: Option[Long] = None, name: String, iataCode: String, icaoCode: String, countryId: Long)
+  final case class Airport(id: Option[Long] = None, name: String, iataCode: String, icaoCode: String, countryId: Long)
 
-  class Airports(tag: Tag) extends Table[Airport](tag, TableNames.airports) {
+  final class Airports(tag: Tag) extends Table[Airport](tag, TableNames.airports) {
     // This is the primary key column:
     def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
 
@@ -92,7 +92,7 @@ package object frm {
 
     def countryId = column[Long]("COUNTRY_ID")
 
-    def * = (id.?, name, iataCode, iataCode, countryId) <> (Airport.tupled, Airport.unapply)
+    def * = (id.?, name, iataCode, icaoCode, countryId) <> (Airport.tupled, Airport.unapply)
 
     // foreign keys
     def country = foreignKey("COUNTRY", countryId, TableQuery[Countries])(_.id)
