@@ -88,4 +88,4 @@ lazy val web = (project in file("web"))
 
 // quick research deps
 
-lazy val sttp = "com.softwaremill.sttp" %% "core" % "1.3.9"
+lazy val sttp = "com.softwaremill.sttp" %% "core" % "1.4.0"
