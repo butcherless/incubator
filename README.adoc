@@ -49,6 +49,10 @@ NOTE: Research project through small concept tests
 
 == Sbt tool
 
+.Build command
+
+ sbt -batch clean assembly
+
 .Debug command
 
  sbt -batch clean test --debug
