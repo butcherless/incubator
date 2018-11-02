@@ -1,6 +1,7 @@
 package com.cmartin.learn
 
 import com.cmartin.learn.repository.frm._
+import org.scalatest.OptionValues._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Seconds, Span}
 import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
@@ -15,7 +16,6 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   val barajasIataCode = "MAD"
 
   val ecMigAircraft = Aircraft(None, TypeCodes.BOEING_787_800, registrationMIG)
-  val spainCountry = newCountry("Spain")
 
   val fleet = TableQuery[Fleet]
   val countries = TableQuery[Countries]
@@ -48,7 +48,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
 
     list.size shouldBe 1
     val aircraft = list.head
-    aircraft.id.isDefined shouldBe true
+    aircraft.id.value should be > 0L
     aircraft.typeCode shouldBe TypeCodes.BOEING_787_800
     aircraft.registration shouldBe registrationMIG
   }
@@ -87,8 +87,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   // COUNTRY
 
   it should "insert a country into the database" in {
-    val country = newCountry("Spain")
-    val query = countries += country
+    val query = countries += esCountry
     val action = db.run(query)
     val count = action.futureValue
 
@@ -96,22 +95,22 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   }
 
   it should "retrieve a country from the database" in {
-    insertCountry(spainCountry)
+    insertCountry(esCountry)
 
-    val list = db.run(countries.filter(_.name === spainCountry.name).result).futureValue
+    val list = db.run(countries.filter(_.name === esCountry.name).result).futureValue
 
     list.size shouldBe 1
     val country = list.head
-    country.id.isDefined shouldBe true
-    country.name shouldBe spainCountry.name
+    country.id.value should be > 0L
+    country.name shouldBe esCountry.name
   }
 
   it should "insert a country and an airport" in {
-    insertCountry(spainCountry)
-    val countryId = db.run(countries.filter(_.name === spainCountry.name).result)
+    insertCountry(esCountry)
+    val countryId = db.run(countries.filter(_.code === esCountry.code).result)
       .futureValue
       .head
-      .id.get
+      .id.value
 
     insertAirport(newAirport("Madrid Barajas", barajasIataCode, "LEMD", countryId))
     val airport = db.run(airports.filter(_.iataCode === barajasIataCode).result)
@@ -119,19 +118,48 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
       .head
 
     // assert
-    airport.id.isDefined shouldBe true
+    airport.id.value should be > 0L
     airport.countryId shouldEqual countryId
   }
 
-  it should "retrieve an Airport empty collection" in{
-    val query =  for {
+  it should "retrieve an Airport empty collection" in {
+    val query = for {
       airport <- airports
-      country <- countries.filter(_.name === "spain")
+      country <- countries.filter(_.name === esCountry.name)
     } yield airport
 
     val results = db.run(query.result).futureValue
 
     results.isEmpty shouldBe true
+  }
+
+
+  it should "populate the database" in {
+    db.run(countries ++= TestCountries)
+    val countryId = db.run(countries.filter(_.code === esCountry.code).result)
+      .futureValue
+      .head
+      .id
+
+    insertAirport(Airport(None, "Tenerife Norte", "TFN", "GXCO", countryId.get))
+    insertAirport(Airport(None, "Madrid Barajas", "MAD", "LEMD", countryId.get))
+    insertAirport(Airport(None, "Barcelona International", "BCN", "LEBL", countryId.get))
+
+    val countryCount = db.run(countries.length.result).futureValue
+    val airportCount = db.run(airports.length.result).futureValue
+
+    countryCount shouldBe 3
+    airportCount shouldBe 3
+
+    val query = for {
+      airport <- airports
+      country <- countries.filter(_.name === esCountry.name)
+    } yield airport
+
+    val results = db.run(query.result).futureValue
+
+    results.nonEmpty shouldBe true
+    results.size shouldBe 3
   }
 
   /*
@@ -143,7 +171,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   |_|  |_| |______| |______| |_|      |______| |_|  \_\ |_____/
   */
 
-  def newCountry(name: String) = Country(name = name)
+  def newCountry(name: String, code: String) = Country(name = name, code = code)
 
   def insertCountry(country: Country) = db.run(countries += country).futureValue
 
@@ -171,5 +199,14 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   after {
     db.close
   }
+
+
+  // T E S T   D A T A
+  val esCountry = newCountry("Spain", "ES")
+  val ukCountry = newCountry("United Kingdom", "UK")
+  val brCountry = newCountry("Brasil", "BR")
+
+  val TestCountries = Seq(esCountry, ukCountry, brCountry)
+
 
 }

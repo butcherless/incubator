@@ -61,15 +61,16 @@ package object frm {
   /*
        C O U N T R Y
    */
-  final case class Country(id: Option[Long] = None, name: String)
+  final case class Country(id: Option[Long] = None, name: String, code: String)
 
   final class Countries(tag: Tag) extends Table[Country](tag, TableNames.countries) {
     // This is the primary key column:
     def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
 
     def name = column[String]("NAME")
+    def code = column[String]("CODE")
 
-    def * = (id.?, name) <> (Country.tupled, Country.unapply)
+    def * = (id.?, name, code) <> (Country.tupled, Country.unapply)
   }
 
   lazy val countries: TableQuery[Countries] = TableQuery[Countries]
