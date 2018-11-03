@@ -53,6 +53,10 @@ NOTE: Research project through small concept tests
 
  sbt -batch clean assembly
 
+.Run one test only
+
+ repository/testOnly com.cmartin.learn.SlickSpec -- -z populate
+
 .Debug command
 
  sbt -batch clean test --debug
