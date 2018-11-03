@@ -67,6 +67,12 @@ NOTE: Research project through small concept tests
 
 report:: target/scala-2.12/scoverage-report/index.html
 
+== Subproyects
+
+=== Repository
+
+* http://books.underscore.io/essential-slick/essential-slick-3.html
+
 == Links
 * spring data neo4j: https://docs.spring.io/spring-data/neo4j/docs/5.0.5.RELEASE/reference/html/
 * example: https://github.com/bijukunjummen/spring-boot-scala-web

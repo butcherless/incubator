@@ -8,6 +8,8 @@ import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
 import slick.jdbc.H2Profile.api._
 import slick.jdbc.meta.MTable
 
+import scala.concurrent.ExecutionContext.Implicits.global
+
 class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFutures {
   implicit override val patienceConfig = PatienceConfig(timeout = Span(5, Seconds))
 
@@ -106,16 +108,30 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   }
 
   it should "insert a country and an airport" in {
-    val countryId = db.run(countriesReturningId() += Country(esCountry._1, esCountry._2)).futureValue
+    def countryIdDBIO(): DBIO[Long] = countriesReturningId() += Country(esCountry._1, esCountry._2)
 
-    insertAirport(Airport(madAirport._1, madAirport._2, madAirport._3, countryId))
-    val airport = db.run(airports.filter(_.iataCode === madAirport._2).result)
-      .futureValue
-      .head
+    def airportIdDBIO(id: Long): DBIO[Long] = airportsReturningId += Airport(madAirport._1, madAirport._2, madAirport._3, id)
+
+    def airportDBIO(id: Long): DBIO[Seq[Airport]] = airports.filter(_.id === id).result
+
+    val resultAction = for {
+      countryId <- countryIdDBIO
+      airportId <- airportIdDBIO(countryId)
+      airport <- airportDBIO(airportId)
+    } yield (airport, airportId, countryId)
+
+    val result = db.run(resultAction).futureValue
+
+    val airportSeq = result._1
+    val airportId = result._2
+    val countryId = result._3
 
     // assert
-    airport.id.value should be > 0L
-    airport.countryId shouldEqual countryId
+    airportSeq.nonEmpty shouldBe true
+    val airport: Airport = airportSeq.head
+    airport.id.value shouldBe airportId
+    airport.iataCode shouldBe madAirport._2
+    airport.countryId shouldBe countryId
   }
 
   it should "retrieve an Airport empty collection" in {
@@ -166,6 +182,8 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
 
   def insertCountry(country: Country) = db.run(countries += country).futureValue
 
+  def airportsReturningId() = airports returning airports.map(_.id)
+
   def countriesReturningId() = countries returning countries.map(_.id)
 
   def insertAirport(airport: Airport) = db.run(airports += airport).futureValue
@@ -185,12 +203,17 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   }
 
 
-  def createSchema() = db.run(
-    (airlines.schema ++
-      airports.schema ++
-      fleet.schema ++
-      countries.schema)
-      .create).futureValue
+  def createSchema() = {
+    val schemaAction = (
+      airlines.schema ++
+        airports.schema ++
+        fleet.schema ++
+        countries.schema
+      ).create
+
+    db.run(schemaAction).futureValue
+  }
+
 
   before {
     db = Database.forConfig("h2mem")
