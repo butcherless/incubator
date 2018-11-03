@@ -72,6 +72,8 @@ package object frm {
     def code = column[String]("CODE")
 
     def * = (name, code, id.?) <> (Country.tupled, Country.unapply)
+
+    def codeIndex = index("code_idx", code, unique = true)
   }
 
   lazy val countries: TableQuery[Countries] = TableQuery[Countries]

@@ -145,25 +145,32 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     results.isEmpty shouldBe true
   }
 
+  def countryIdDBIO(countryTuple: (String, String)) = countriesReturningId() += Country(countryTuple._1, countryTuple._2)
+
+  def airportIdDBIO(tuple: (String, String, String))(countryId: Long) =
+    airportsReturningId() += Airport(tuple._1, tuple._2, tuple._3, countryId)
 
   it should "populate the database" in {
-    db.run(countries ++= TestCountries)
-    val countryId = db.run(countries.filter(_.code === esCountry._2).result)
-      .futureValue
-      .head
-      .id
+    val resultAction = for {
+      esId <- countryIdDBIO(esCountry)
+      _ <- airportIdDBIO(madAirport)(esId)
+      _ <- airportIdDBIO(tfnAirport)(esId)
+      _ <- airportIdDBIO(bcnAirport)(esId)
+      ukId <- countryIdDBIO(ukCountry)
+      _ <- airportIdDBIO(lhrAirport)(ukId)
+      _ <- airportIdDBIO(lgwAirport)(ukId)
+    } yield Unit
 
-    insertAirport(Airport(madAirport._1, madAirport._2, madAirport._3, countryId.get))
-    insertAirport(Airport(tfnAirport._1, tfnAirport._2, tfnAirport._3, countryId.get))
-    insertAirport(Airport(bcnAirport._1, bcnAirport._2, bcnAirport._3, countryId.get))
+    db.run(resultAction).futureValue
+
 
     val countryCount = db.run(countries.length.result).futureValue
     val airportCount = db.run(airports.length.result).futureValue
 
-    countryCount shouldBe 3
-    airportCount shouldBe 3
+    countryCount shouldBe 2
+    airportCount shouldBe 5
 
-    val results = db.run(findAirportByCountryName(esCountry._1)).futureValue
+    val results = db.run(findAirportByCountryCode(esCountry._2)).futureValue
 
     results.nonEmpty shouldBe true
     results.size shouldBe 3
@@ -193,16 +200,16 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   def insertAircraft(aircraft: Aircraft): Int = db.run(fleet += aircraft).futureValue
 
   // F I N D E R S
-  def findAirportByCountryName(name: String) = {
+  def findAirportByCountryCode(code: String) = {
     val query = for {
       airport <- airports
-      country <- countries.filter(_.name === name)
-    } yield airport
+      country <- countries if country.id === airport.countryId && country.code === code
+    } yield (airport)
 
     query.result
   }
 
-
+  
   def createSchema() = {
     val schemaAction = (
       airlines.schema ++
@@ -227,17 +234,17 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
 
   // T E S T   D A T A
   val esCountry = ("Spain", "ES")
-  val ukCountry = newCountry("United Kingdom", "UK")
-  val brCountry = newCountry("Brasil", "BR")
+  val ukCountry = ("United Kingdom", "UK")
+  val brCountry = ("Brasil", "BR")
 
   val TestCountries = Seq(Country(esCountry._1, esCountry._2), ukCountry, brCountry)
 
   val madAirport = ("Madrid Barajas", "MAD", "LEMD")
   val tfnAirport = ("Tenerife Norte", "TFN", "GXCO")
   val bcnAirport = ("Barcelona International", "BCN", "LEBL")
+  val lhrAirport = ("London Heathrow", "LHR", "EGLL")
+  val lgwAirport = ("London Gatwick", "LGW", "EGKK")
   /*
-  val lhrAirport = Airport(None, "London Heathrow", "LHR", "EGLL")
-  val lgwAirport = Airport(None, "London Gatwick", "LGW", "EGKK")
   val bsbAirport = Airport(None, "Presidente Juscelino Kubistschek International", "BSB", "SBBR")
   val ssaAirport = Airport(None, "Deputado Luiz Eduardo Magalhães International", "SSA", "SBSV")
   val gigAirport = Airport(None, "Tom Jobim International Airport", "GIG", "SBGL")
