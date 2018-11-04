@@ -161,6 +161,10 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
       ukId <- countryIdDBIO(ukCountry)
       _ <- airportIdDBIO(lhrAirport)(ukId)
       _ <- airportIdDBIO(lgwAirport)(ukId)
+      brId <- countryIdDBIO(brCountry)
+      _ <- airportIdDBIO(bsbAirport)(brId)
+      _ <- airportIdDBIO(gigAirport)(brId)
+      _ <- airportIdDBIO(ssaAirport)(brId)
     } yield Unit
 
     Await.result(db.run(resultAction), 2 seconds)
@@ -169,8 +173,8 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     val countryCount = db.run(countries.length.result).futureValue
     val airportCount = db.run(airports.length.result).futureValue
 
-    countryCount shouldBe 2
-    airportCount shouldBe 5
+    countryCount shouldBe 3
+    airportCount shouldBe 8
 
     val results = db.run(findAirportByCountryCode(esCountry._2)).futureValue
 
@@ -205,7 +209,8 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   def findAirportByCountryCode(code: String) = {
     val query = for {
       airport <- airports
-      country <- countries if country.id === airport.countryId && country.code === code
+      //country <- countries if country.id === airport.countryId && country.code === code
+      country <- airport.country if country.code === code
     } yield (airport)
 
     query.result
@@ -246,10 +251,8 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   val bcnAirport = ("Barcelona International", "BCN", "LEBL")
   val lhrAirport = ("London Heathrow", "LHR", "EGLL")
   val lgwAirport = ("London Gatwick", "LGW", "EGKK")
-  /*
-  val bsbAirport = Airport(None, "Presidente Juscelino Kubistschek International", "BSB", "SBBR")
-  val ssaAirport = Airport(None, "Deputado Luiz Eduardo Magalhães International", "SSA", "SBSV")
-  val gigAirport = Airport(None, "Tom Jobim International Airport", "GIG", "SBGL")
-  */
+  val bsbAirport = ( "Presidente Juscelino Kubistschek International", "BSB", "SBBR")
+  val ssaAirport = ( "Deputado Luiz Eduardo Magalhães International", "SSA", "SBSV")
+  val gigAirport = ( "Tom Jobim International Airport", "GIG", "SBGL")
 
 }
