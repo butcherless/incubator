@@ -23,7 +23,7 @@ package object frm {
   /*
        A I R C R A F T
    */
-  final case class Aircraft(typeCode: String, registration: String, id: Option[Long] = None)
+  final case class Aircraft(typeCode: String, registration: String, airlineId: Long, id: Option[Long] = None)
 
   final class Fleet(tag: Tag) extends Table[Aircraft](tag, TableNames.fleet) {
     // This is the primary key column:
@@ -33,7 +33,13 @@ package object frm {
 
     def registration = column[String]("REGISTRATION")
 
-    def * = (typeCode, registration, id.?) <> (Aircraft.tupled, Aircraft.unapply)
+    def airlineId = column[Long]("AIRLINE_ID")
+
+    def * = (typeCode, registration, airlineId, id.?) <> (Aircraft.tupled, Aircraft.unapply)
+
+    // foreign keys
+    def airline = foreignKey("AIRLINE", airlineId, TableQuery[Airlines])(_.id)
+
   }
 
   lazy val fleet = TableQuery[Fleet]

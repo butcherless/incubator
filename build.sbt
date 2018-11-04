@@ -6,7 +6,7 @@ lazy val commonSettings = Seq(
   organization := "com.cmartin.learn",
   version := projectVersion,
   scalaVersion := "2.12.7",
-  scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-language:higherKinds")
+  scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-language:higherKinds", "-language:postfixOps")
 )
 
 // third party deps
