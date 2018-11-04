@@ -71,7 +71,8 @@ report:: target/scala-2.12/scoverage-report/index.html
 
 === Repository
 
-* http://books.underscore.io/essential-slick/essential-slick-3.html
+* Essential Slick 3: http://books.underscore.io/essential-slick/essential-slick-3.html
+* Pawel Dolega - A gentle introduction to Slick 3: https://www.youtube.com/watch?v=t1EbXHVJXfs
 
 == Links
 * spring data neo4j: https://docs.spring.io/spring-data/neo4j/docs/5.0.5.RELEASE/reference/html/
