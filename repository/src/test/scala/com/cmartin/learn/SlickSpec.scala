@@ -8,7 +8,9 @@ import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
 import slick.jdbc.H2Profile.api._
 import slick.jdbc.meta.MTable
 
+import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
 
 class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFutures {
   implicit override val patienceConfig = PatienceConfig(timeout = Span(5, Seconds))
@@ -161,7 +163,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
       _ <- airportIdDBIO(lgwAirport)(ukId)
     } yield Unit
 
-    db.run(resultAction).futureValue
+    Await.result(db.run(resultAction), 2 seconds)
 
 
     val countryCount = db.run(countries.length.result).futureValue
@@ -209,7 +211,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     query.result
   }
 
-  
+
   def createSchema() = {
     val schemaAction = (
       airlines.schema ++
