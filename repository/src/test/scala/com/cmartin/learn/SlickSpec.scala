@@ -176,10 +176,18 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     countryCount shouldBe 3
     airportCount shouldBe 8
 
-    val results = db.run(findAirportByCountryCode(esCountry._2)).futureValue
+    val esResults = db.run(findAirportByCountryCode(esCountry._2)).futureValue
+    esResults.nonEmpty shouldBe true
+    esResults.size shouldBe 3
 
-    results.nonEmpty shouldBe true
-    results.size shouldBe 3
+    val ukResults = db.run(findAirportByCountryCode(ukCountry._2)).futureValue
+    ukResults.nonEmpty shouldBe true
+    ukResults.size shouldBe 2
+
+    val brResults = db.run(findAirportByCountryCode(brCountry._2)).futureValue
+    brResults.nonEmpty shouldBe true
+    brResults.size shouldBe 3
+
   }
 
   /*
@@ -251,8 +259,8 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   val bcnAirport = ("Barcelona International", "BCN", "LEBL")
   val lhrAirport = ("London Heathrow", "LHR", "EGLL")
   val lgwAirport = ("London Gatwick", "LGW", "EGKK")
-  val bsbAirport = ( "Presidente Juscelino Kubistschek International", "BSB", "SBBR")
-  val ssaAirport = ( "Deputado Luiz Eduardo Magalhães International", "SSA", "SBSV")
-  val gigAirport = ( "Tom Jobim International Airport", "GIG", "SBGL")
+  val bsbAirport = ("Presidente Juscelino Kubistschek International", "BSB", "SBBR")
+  val ssaAirport = ("Deputado Luiz Eduardo Magalhães International", "SSA", "SBSV")
+  val gigAirport = ("Tom Jobim International Airport", "GIG", "SBGL")
 
 }
