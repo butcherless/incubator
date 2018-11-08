@@ -12,7 +12,7 @@ lazy val commonSettings = Seq(
 // third party deps
 
 lazy val akkaHttpVersion = "10.1.5"
-lazy val akkaVersion = "2.5.17"
+lazy val akkaVersion = "2.5.18"
 lazy val catsVersion = "1.3.1"
 lazy val configVersion = "1.3.3"
 lazy val h2Version = "1.4.197"

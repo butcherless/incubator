@@ -13,6 +13,7 @@ package object frm {
     val airports = "AIRPORTS"
     val countries = "COUNTRIES"
     val fleet = "FLEET"
+    val routes = "ROUTES"
   }
 
   object TypeCodes {
@@ -110,4 +111,31 @@ package object frm {
 
   lazy val airports = TableQuery[Airports]
 
+
+  /*
+       R O U T E
+   */
+  final case class Route(distance: Double, originId: Long, destinationId: Long)
+
+  final class Routes(tag: Tag) extends Table[Route](tag, TableNames.routes) {
+    // These are the primary key columns:
+    def originId = column[Long]("ORIGIN_ID")
+
+    def destinationId = column[Long]("DESTINATION_ID")
+
+    def pk = primaryKey("primaryKey", (originId, destinationId))
+
+    def distance = column[Double]("DISTANCE")
+
+    def * = (distance, originId, destinationId) <> (Route.tupled, Route.unapply)
+
+    // foreign keys
+    def origin = foreignKey("FK_ORIGIN", originId, TableQuery[Airports])(origin =>
+      origin.id, onDelete = ForeignKeyAction.Cascade)
+
+    def destination = foreignKey("FK_DESTINATION", destinationId, TableQuery[Airports])(destination =>
+      destination.id, onDelete = ForeignKeyAction.Cascade)
+  }
+
+  lazy val routes = TableQuery[Routes]
 }
