@@ -53,9 +53,15 @@ NOTE: Research project through small concept tests
 
  sbt -batch clean assembly
 
-.Run one test only
+.Run oneOnly (name includes substring)
 
  repository/testOnly com.cmartin.learn.SlickSpec -- -z populate
+
+.Run testOnly (exact name)
+
+.Scalatest runner details
+
+http://www.scalatest.org/user_guide/using_the_runner#selectingSuitesAndTests
 
 .Debug command
 
@@ -67,6 +73,7 @@ NOTE: Research project through small concept tests
 
 report:: target/scala-2.12/scoverage-report/index.html
 
+
 == Subproyects
 
 === Repository
@@ -75,6 +82,7 @@ report:: target/scala-2.12/scoverage-report/index.html
 * Pawel Dolega - A gentle introduction to Slick 3: https://www.youtube.com/watch?v=t1EbXHVJXfs
 
 == Links
+* Thanks FlightRadar24: https://www.flightradar24.com/
 * spring data neo4j: https://docs.spring.io/spring-data/neo4j/docs/5.0.5.RELEASE/reference/html/
 * example: https://github.com/bijukunjummen/spring-boot-scala-web
 * The great Josh Long: https://github.com/spring-tips/scala/blob/master/src/main/scala/tweets/tweets.scala
