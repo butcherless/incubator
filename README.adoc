@@ -4,7 +4,7 @@ NOTE: Research project through small concept tests
 
 == Continuous Integration & QA
 
-[cols="2,3,2", options="header", width="50%"] 
+[cols="2,3,2", options="header", width="50%"]
 |===
 |Service
 |Link
@@ -34,7 +34,7 @@ NOTE: Research project through small concept tests
 == Neo4j Docker server
 
 .start database:
- 
+
  docker run --name neo4j -d --rm --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data:/data \--volume=$HOME/neo4j/logs:/logs neo4j:3.3.0
 
 .stop database:
@@ -74,17 +74,110 @@ http://www.scalatest.org/user_guide/using_the_runner#selectingSuitesAndTests
 report:: target/scala-2.12/scoverage-report/index.html
 
 
-== Subproyects
+== Subprojects
 
 === Repository
 
 * Essential Slick 3: http://books.underscore.io/essential-slick/essential-slick-3.html
 * Pawel Dolega - A gentle introduction to Slick 3: https://www.youtube.com/watch?v=t1EbXHVJXfs
 
+=== Model
+
+Aircraft:: An airplane capable of flight to transport people and cargo.
+
+.associations
+An _Aircraft_ belongs to an _Airline_.
+
+.properties
+[cols="1,3", options="header", width="80%"]
+|===
+|Name
+|Description
+
+|typeCode
+|code indicating the type of _Aircraft_
+
+|registration
+|international code identifying the _Aircraft_
+|===
+
+
+Airline:: An organization providing a regular public service of air transport on one or more routes.
+
+.properties
+[cols="1,3", options="header", width="80%"]
+|===
+|Name
+|Description
+
+|name
+|the commercial name of the _Airline_
+
+|foundationDate
+|the date on which its activity began
+|===
+
+
+Airport:: A complex of runways and buildings for the take-off, landing, and maintenance of civil aircraft, with facilities for passengers.
+
+.associations
+An _Airport_ belongs to an _Country_.
+
+.properties
+[cols="1,3", options="header", width="80%"]
+|===
+|Name
+|Description
+
+|name
+|the international name of the _Airport_
+
+|iataCode
+|the _Airport_ code for the International Air Transport Association
+
+|icaoCode
+|the _Airport_ code for the International Civil Aviation Organization
+|===
+
+
+Country:: A nation with its own government, occupying a particular territory.
+
+.properties
+[cols="1,3", options="header", width="80%"]
+|===
+|Name
+|Description
+
+|code
+|international two letters code, es, uk, de, us, etc.
+|===
+
+
+Route:: A way or course taken in getting from a starting point to a destination.
+
+.associations
+A _Route_ has a starting _Airport_ and a destination _Airport_.
+
+.properties
+[cols="1,3", options="header", width="80%"]
+|===
+|Name
+|Description
+
+|distance
+|number of nautical miles between the two _Airports_, 957 nm.
+|===
+
+
+Flight:: An act of flying; a journey made through the air or in space, especially a timetabled journey made by an airline.
+
+.associations
+A _Flight_ runs through a _Route_.
+
 == Links
-* Thanks FlightRadar24: https://www.flightradar24.com/
-* spring data neo4j: https://docs.spring.io/spring-data/neo4j/docs/5.0.5.RELEASE/reference/html/
-* example: https://github.com/bijukunjummen/spring-boot-scala-web
+* Thanks to *FlightRadar24*: https://www.flightradar24.com/
+* Spring data neo4j: https://docs.spring.io/spring-data/neo4j/docs/5.0.5.RELEASE/reference/html/
+* Example: https://github.com/bijukunjummen/spring-boot-scala-web
 * The great Josh Long: https://github.com/spring-tips/scala/blob/master/src/main/scala/tweets/tweets.scala
 * https://spring.io/blog/2017/10/11/spring-tips-bootiful-reactive-scala
 * https://github.com/jecklgamis/springboot-scala-example
