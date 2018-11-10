@@ -13,6 +13,7 @@ package object frm {
     val airports = "AIRPORTS"
     val countries = "COUNTRIES"
     val fleet = "FLEET"
+    val flights = "FLIGHTS"
     val routes = "ROUTES"
   }
 
@@ -138,4 +139,31 @@ package object frm {
   }
 
   lazy val routes = TableQuery[Routes]
+
+
+  /*
+     F L I G H T
+  */
+  final case class Flight(code: String, alias: String, schedDeparture: Date, schedArrival: Date, id: Option[Long] = None)
+
+  final class Flights(tag: Tag) extends Table[Flight](tag, TableNames.flights) {
+    // This is the primary key column:
+    def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
+
+    def code = column[String]("CODE")
+
+    def alias = column[String]("ALIAS")
+
+    def schedDeparture = column[Date]("SCHEDULED_DEPARTURE")
+
+    def schedArrival = column[Date]("SCHEDULED_ARRIVAL")
+
+    def * = (code, alias, schedDeparture, schedArrival, id.?) <> (Flight.tupled, Flight.unapply)
+
+    // foreign keys
+    //TODO def route = foreignKey("FK_ROUTE")
+  }
+
+  lazy val flights = TableQuery[Flights]
+
 }

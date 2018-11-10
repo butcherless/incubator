@@ -27,17 +27,19 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   val fleet = TableQuery[Fleet]
   val countries = TableQuery[Countries]
 
+  val tableCount = 6
   var db: Database = _
 
 
   it should "create the aviation database" in {
     val tables = db.run(MTable.getTables).futureValue
 
-    tables.size shouldBe 5
+    tables.size shouldBe tableCount
     tables.count(_.name.name == TableNames.airlines) shouldBe 1
     tables.count(_.name.name == TableNames.airports) shouldBe 1
     tables.count(_.name.name == TableNames.countries) shouldBe 1
     tables.count(_.name.name == TableNames.fleet) shouldBe 1
+    tables.count(_.name.name == TableNames.flights) shouldBe 1
     tables.count(_.name.name == TableNames.routes) shouldBe 1
   }
 
@@ -272,8 +274,9 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     val schemaAction = (
       airlines.schema ++
         airports.schema ++
-        fleet.schema ++
         countries.schema ++
+        fleet.schema ++
+        flights.schema ++
         routes.schema
       ).create
 
