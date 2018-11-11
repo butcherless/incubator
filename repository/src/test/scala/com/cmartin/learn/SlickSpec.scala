@@ -1,7 +1,7 @@
 package com.cmartin.learn
 
 import java.sql.Date
-import java.time.LocalDate
+import java.time.{LocalDate, LocalTime}
 
 import com.cmartin.learn.repository.frm._
 import org.scalatest.OptionValues._
@@ -182,6 +182,18 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     res.size shouldBe 4
   }
 
+  it should "retrieve flight by code" in {
+    val resultAction = populateDatabase()
+    Await.result(db.run(resultAction), 2 seconds)
+
+    val res = db.run(flights.filter(_.code === flightUx9059._1).result).futureValue
+
+    res.nonEmpty shouldBe true
+    res.size shouldBe 1
+  }
+
+  //TODO findFlightsByRoute
+
   it should "populate the database" in {
     val resultAction = populateDatabase()
 
@@ -220,7 +232,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     routes += Route(distance, originId, destinationId)
 
   def countryIdDBIO(countryTuple: (String, String)) =
-    countriesReturningId() += Country(countryTuple._1, countryTuple._2)
+    countriesReturningId += Country(countryTuple._1, countryTuple._2)
 
   def newCountry(name: String, code: String) = Country(name, code)
 
@@ -235,13 +247,18 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   def airportDBIO(id: Long): DBIO[Seq[Airport]] = airports.filter(_.id === id).result
 
   def airportIdDBIO(tuple: (String, String, String))(countryId: Long) =
-    airportsReturningId() += Airport(tuple._1, tuple._2, tuple._3, countryId)
+    airportsReturningId += Airport(tuple._1, tuple._2, tuple._3, countryId)
+
+  def flightDBIO(code: String, alias: String, departure: String, arrival: String)(routeId: Long) =
+    flightsReturningId += Flight(code, alias, departure, arrival, routeId)
 
   def airportsReturningId() = airports returning airports.map(_.id)
 
   def countriesReturningId() = countries returning countries.map(_.id)
 
   def fleetReturningId() = fleet returning fleet.map(_.id)
+
+  def flightsReturningId = flights returning flights.map(_.id)
 
   def newLocalDate(year: Int, month: Int, day: Int): Date = java.sql.Date.valueOf(LocalDate.of(year, month, day))
 
@@ -280,6 +297,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     db.run(schemaAction).futureValue
   }
 
+
   def populateDatabase() = {
     for {
       esId <- countryIdDBIO(esCountry)
@@ -293,12 +311,13 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
       _ <- airportIdDBIO(bsbAirport)(brId)
       _ <- airportIdDBIO(gigAirport)(brId)
       _ <- airportIdDBIO(ssaAirport)(brId)
-      - <- routeDBIO(957.0)(madId)(tfnId)
+      madTfnId <- routeDBIO(957.0)(madId)(tfnId)
       - <- routeDBIO(671.0)(madId)(lhrId)
       - <- routeDBIO(261.0)(madId)(bcnId)
       - <- routeDBIO(655.0)(madId)(lgwId) // 4 destinations
       - <- routeDBIO(261.0)(bcnId)(madId)
       - <- routeDBIO(261.0)(bcnId)(lgwId) // 2 destinations
+      _ <- flightDBIO(flightUx9059._1, flightUx9059._2, flightUx9059._3, flightUx9059._4)(madTfnId)
     } yield Unit
   }
 
@@ -311,7 +330,6 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   after {
     db.close
   }
-
 
   // T E S T   D A T A
   val esCountry = ("Spain", "ES")
@@ -330,4 +348,6 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   val gigAirport = ("Tom Jobim International Airport", "GIG", "SBGL")
 
   val aeaAirline = ("Air Europa", newLocalDate(1986, 11, 21))
+
+  val flightUx9059 = ("ux9059", "aea9059", LocalTime.of(7, 5, 0).toString, LocalTime.of(8, 55, 0).toString)
 }

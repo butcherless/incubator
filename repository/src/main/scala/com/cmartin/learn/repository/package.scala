@@ -5,7 +5,6 @@ import java.sql.Date
 
 import slick.jdbc.H2Profile.api._
 
-
 package object frm {
 
   object TableNames {
@@ -40,7 +39,7 @@ package object frm {
     def * = (typeCode, registration, airlineId, id.?) <> (Aircraft.tupled, Aircraft.unapply)
 
     // foreign keys
-    def airline = foreignKey("AIRLINE", airlineId, TableQuery[Airlines])(_.id)
+    def airline = foreignKey("FK_AIRLINE", airlineId, TableQuery[Airlines])(_.id)
 
   }
 
@@ -108,10 +107,10 @@ package object frm {
     def * = (name, iataCode, icaoCode, countryId, id.?) <> (Airport.tupled, Airport.unapply)
 
     // foreign keys
-    def country = foreignKey("COUNTRY", countryId, TableQuery[Countries])(_.id)
+    def country = foreignKey("FK_COUNTRY", countryId, TableQuery[Countries])(_.id)
 
     // indexes
-    def originDestinationIndex = index("iataCode_index", iataCode, unique = true)
+    def iataIndex = index("iataCode_index", iataCode, unique = true)
   }
 
   lazy val airports = TableQuery[Airports]
@@ -154,7 +153,7 @@ package object frm {
   /*
      F L I G H T
   */
-  final case class Flight(code: String, alias: String, schedDeparture: Date, schedArrival: Date, id: Option[Long] = None)
+  final case class Flight(code: String, alias: String, schedDeparture: String, schedArrival: String, routeId: Long, id: Option[Long] = None)
 
   final class Flights(tag: Tag) extends Table[Flight](tag, TableNames.flights) {
     // This is the primary key column:
@@ -164,14 +163,23 @@ package object frm {
 
     def alias = column[String]("ALIAS")
 
-    def schedDeparture = column[Date]("SCHEDULED_DEPARTURE")
+    //TODO Custom Column Mappings, LocalTime
+    def schedDeparture = column[String]("SCHEDULED_DEPARTURE")
 
-    def schedArrival = column[Date]("SCHEDULED_ARRIVAL")
+    //TODO Custom Column Mappings, LocalTime
+    def schedArrival = column[String]("SCHEDULED_ARRIVAL")
 
-    def * = (code, alias, schedDeparture, schedArrival, id.?) <> (Flight.tupled, Flight.unapply)
+    // foreign columns:
+    def routeId = column[Long]("ROUTE_ID")
+
+    def * = (code, alias, schedDeparture, schedArrival, routeId, id.?) <> (Flight.tupled, Flight.unapply)
 
     // foreign keys
-    //TODO def route = foreignKey("FK_ROUTE")
+    def route = foreignKey("FK_ROUTE", routeId, TableQuery[Routes])(_.id)
+
+    // indexes
+    def codeIndex = index("code_index", code, unique = true)
+
   }
 
   lazy val flights = TableQuery[Flights]
