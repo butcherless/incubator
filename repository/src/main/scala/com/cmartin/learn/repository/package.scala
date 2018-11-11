@@ -93,7 +93,7 @@ package object frm {
   final case class Airport(name: String, iataCode: String, icaoCode: String, countryId: Long, id: Option[Long] = None)
 
   final class Airports(tag: Tag) extends Table[Airport](tag, TableNames.airports) {
-    // This is the primary key column:
+    // primary key column:
     def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
 
     def name = column[String]("NAME")
@@ -102,12 +102,16 @@ package object frm {
 
     def icaoCode = column[String]("ICAO_CODE")
 
+    // foreign columns:
     def countryId = column[Long]("COUNTRY_ID")
 
     def * = (name, iataCode, icaoCode, countryId, id.?) <> (Airport.tupled, Airport.unapply)
 
     // foreign keys
     def country = foreignKey("COUNTRY", countryId, TableQuery[Countries])(_.id)
+
+    // indexes
+    def originDestinationIndex = index("iataCode_index", iataCode, unique = true)
   }
 
   lazy val airports = TableQuery[Airports]
@@ -116,19 +120,22 @@ package object frm {
   /*
        R O U T E
    */
-  final case class Route(distance: Double, originId: Long, destinationId: Long)
+  final case class Route(distance: Double, originId: Long, destinationId: Long, id: Option[Long] = None)
 
   final class Routes(tag: Tag) extends Table[Route](tag, TableNames.routes) {
-    // These are the primary key columns:
+    // primary key column:
+    def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
+
+    def distance = column[Double]("DISTANCE")
+
+    // foreign key columns:
     def originId = column[Long]("ORIGIN_ID")
 
     def destinationId = column[Long]("DESTINATION_ID")
 
-    def pk = primaryKey("primaryKey", (originId, destinationId))
+    //def pk = primaryKey("primaryKey", (originId, destinationId))
 
-    def distance = column[Double]("DISTANCE")
-
-    def * = (distance, originId, destinationId) <> (Route.tupled, Route.unapply)
+    def * = (distance, originId, destinationId, id.?) <> (Route.tupled, Route.unapply)
 
     // foreign keys
     def origin = foreignKey("FK_ORIGIN", originId, TableQuery[Airports])(origin =>
@@ -136,6 +143,9 @@ package object frm {
 
     def destination = foreignKey("FK_DESTINATION", destinationId, TableQuery[Airports])(destination =>
       destination.id, onDelete = ForeignKeyAction.Cascade)
+
+    // compound index
+    def originDestinationIndex = index("origin_destination_index", (originId, destinationId), unique = true)
   }
 
   lazy val routes = TableQuery[Routes]

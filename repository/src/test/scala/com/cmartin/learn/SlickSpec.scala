@@ -174,24 +174,11 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     results.isEmpty shouldBe true
   }
 
-  //TODO still working
-  it should "WIP retrieve destinations airports for an origin airport" in {
+  it should "retrieve destinations airports for an origin airport" in {
     val resultAction = populateDatabase()
-
     Await.result(db.run(resultAction), 2 seconds)
 
-    val madId = db.run(airports.filter(_.iataCode === madAirport._2).result).futureValue.head.id
-
-    val q = for {
-      r <- routes
-      d <- r.destination  if r.originId === madId
-    } yield d
-
-    println(q.result.statements.mkString)
-
-    val res = db.run(q.result).futureValue
-
-    println(res)
+    val res = db.run(findRouteDestinationsByOrigin(madAirport._2)).futureValue
     res.size shouldBe 4
   }
 
@@ -269,6 +256,16 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     query.result
   }
 
+  def findRouteDestinationsByOrigin(iataCode: String) = {
+    val query = for {
+      route <- routes
+      airport <- route.destination
+      origin <- route.origin if origin.iataCode === iataCode
+    } yield airport
+
+    query.result
+  }
+
 
   def createSchema() = {
     val schemaAction = (
@@ -299,9 +296,9 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
       - <- routeDBIO(957.0)(madId)(tfnId)
       - <- routeDBIO(671.0)(madId)(lhrId)
       - <- routeDBIO(261.0)(madId)(bcnId)
-      - <- routeDBIO(655.0)(madId)(lgwId)
+      - <- routeDBIO(655.0)(madId)(lgwId) // 4 destinations
       - <- routeDBIO(261.0)(bcnId)(madId)
-      - <- routeDBIO(261.0)(bcnId)(lgwId)
+      - <- routeDBIO(261.0)(bcnId)(lgwId) // 2 destinations
     } yield Unit
   }
 
