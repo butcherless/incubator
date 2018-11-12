@@ -2,6 +2,7 @@ package com.cmartin.learn.repository
 
 
 import java.sql.Date
+import java.time.LocalDate
 
 import slick.jdbc.H2Profile.api._
 
@@ -221,5 +222,46 @@ package object frm {
   }
 
   lazy val journeys = TableQuery[Journeys]
+
+
+  /*
+   TODO RESEARCH delete me
+    */
+
+  import java.time.LocalTime
+
+  object CustomColumnTypes {
+    implicit val jodaDateTimeType =
+    //      MappedColumnType.base[LocalTime, Timestamp](
+    //        lt => new Timestamp(lt.toNanoOfDay),
+    //        ts => LocalTime.of(8, 0)
+    //      )
+      MappedColumnType.base[LocalTime, String](
+        lt => lt.toString,
+        st => LocalTime.parse(st)
+      )
+
+  }
+
+
+  case class Message(senderId: Long, content: String, timestamp: LocalTime, localDate: LocalDate, id: Long = 0L)
+
+  // defined class Message
+  class MessageTable(tag: Tag) extends Table[Message](tag, "message") {
+
+    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+
+    def senderId = column[Long]("sender")
+
+    def content = column[String]("content")
+
+    def timestamp = column[String]("timestamp")
+
+    def * = (senderId, content, timestamp, id).mapTo[Message]
+  }
+
+  // defined class MessageTable
+  lazy val messages = TableQuery[MessageTable]
+  lazy val insertMessage = messages returning messages.map(_.id)
 
 }
