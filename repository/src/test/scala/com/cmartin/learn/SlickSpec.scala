@@ -27,7 +27,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   val fleet = TableQuery[Fleet]
   val countries = TableQuery[Countries]
 
-  val tableCount = 6
+  val tableCount = 7
   var db: Database = _
 
 
@@ -40,6 +40,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     tables.count(_.name.name == TableNames.countries) shouldBe 1
     tables.count(_.name.name == TableNames.fleet) shouldBe 1
     tables.count(_.name.name == TableNames.flights) shouldBe 1
+    tables.count(_.name.name == TableNames.journeys) shouldBe 1
     tables.count(_.name.name == TableNames.routes) shouldBe 1
   }
 
@@ -80,7 +81,6 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     } yield (aircrafts)
 
     val aircrafts = db.run(resultAction).futureValue
-
 
     aircrafts.size shouldBe 1
     val aircraft = aircrafts.head
@@ -196,7 +196,6 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
 
   it should "populate the database" in {
     val resultAction = populateDatabase()
-
     Await.result(db.run(resultAction), 2 seconds)
 
     val countryCount = db.run(countries.length.result).futureValue
@@ -291,6 +290,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
         countries.schema ++
         fleet.schema ++
         flights.schema ++
+        journeys.schema ++
         routes.schema
       ).create
 
@@ -318,6 +318,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
       - <- routeDBIO(261.0)(bcnId)(madId)
       - <- routeDBIO(261.0)(bcnId)(lgwId) // 2 destinations
       _ <- flightDBIO(flightUx9059._1, flightUx9059._2, flightUx9059._3, flightUx9059._4)(madTfnId)
+      // _ <- journeyDBIO(depDate, arrDate)(flightId)(aircraftId)
     } yield Unit
   }
 
@@ -338,7 +339,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
 
   val TestCountries = Seq(Country(esCountry._1, esCountry._2), ukCountry, brCountry)
 
-  val madAirport = ("Madrid Barajas", "MAD", "LEMD")
+  val madAirport = ("Madrid Barajas", barajasIataCode, "LEMD")
   val tfnAirport = ("Tenerife Norte", "TFN", "GXCO")
   val bcnAirport = ("Barcelona International", "BCN", "LEBL")
   val lhrAirport = ("London Heathrow", "LHR", "EGLL")

@@ -13,23 +13,27 @@ package object frm {
     val countries = "COUNTRIES"
     val fleet = "FLEET"
     val flights = "FLIGHTS"
+    val journeys = "JOURNEYS"
     val routes = "ROUTES"
   }
 
   object TypeCodes {
+    val AIRBUS_320 = "A320"
     val AIRBUS_350_900 = "A359"
+    val BOEING_737_800 = "B738"
     val BOEING_787_800 = "B788"
   }
 
   /*
-       A I R C R A F T
+      A I R C R A F T
    */
   final case class Aircraft(typeCode: String, registration: String, airlineId: Long, id: Option[Long] = None)
 
   final class Fleet(tag: Tag) extends Table[Aircraft](tag, TableNames.fleet) {
-    // This is the primary key column:
+    // primary key column:
     def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
 
+    // property columns:
     def typeCode = column[String]("TYPE_CODE")
 
     def registration = column[String]("REGISTRATION")
@@ -47,14 +51,15 @@ package object frm {
 
 
   /*
-       A I R L I N E
+      A I R L I N E
    */
   final case class Airline(name: String, foundationDate: Date, id: Option[Long] = None)
 
   final class Airlines(tag: Tag) extends Table[Airline](tag, TableNames.airlines) {
-    // This is the primary key column:
+    // primary key column:
     def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
 
+    // property columns:
     def name = column[String]("NAME")
 
     def foundationDate = column[Date]("FOUNDATION_DATE")
@@ -66,20 +71,22 @@ package object frm {
 
 
   /*
-       C O U N T R Y
+      C O U N T R Y
    */
   final case class Country(name: String, code: String, id: Option[Long] = None)
 
   final class Countries(tag: Tag) extends Table[Country](tag, TableNames.countries) {
-    // This is the primary key column:
+    // primary key column:
     def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
 
+    // property columns:
     def name = column[String]("NAME")
 
     def code = column[String]("CODE")
 
     def * = (name, code, id.?) <> (Country.tupled, Country.unapply)
 
+    // indexes
     def codeIndex = index("code_idx", code, unique = true)
   }
 
@@ -87,7 +94,7 @@ package object frm {
 
 
   /*
-       A I R P O R T
+      A I R P O R T
    */
   final case class Airport(name: String, iataCode: String, icaoCode: String, countryId: Long, id: Option[Long] = None)
 
@@ -95,6 +102,7 @@ package object frm {
     // primary key column:
     def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
 
+    // property columns:
     def name = column[String]("NAME")
 
     def iataCode = column[String]("IATA_CODE")
@@ -117,7 +125,7 @@ package object frm {
 
 
   /*
-       R O U T E
+      R O U T E
    */
   final case class Route(distance: Double, originId: Long, destinationId: Long, id: Option[Long] = None)
 
@@ -125,14 +133,13 @@ package object frm {
     // primary key column:
     def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
 
+    // property columns:
     def distance = column[Double]("DISTANCE")
 
     // foreign key columns:
     def originId = column[Long]("ORIGIN_ID")
 
     def destinationId = column[Long]("DESTINATION_ID")
-
-    //def pk = primaryKey("primaryKey", (originId, destinationId))
 
     def * = (distance, originId, destinationId, id.?) <> (Route.tupled, Route.unapply)
 
@@ -143,7 +150,7 @@ package object frm {
     def destination = foreignKey("FK_DESTINATION", destinationId, TableQuery[Airports])(destination =>
       destination.id, onDelete = ForeignKeyAction.Cascade)
 
-    // compound index
+    // indexes, compound
     def originDestinationIndex = index("origin_destination_index", (originId, destinationId), unique = true)
   }
 
@@ -151,14 +158,15 @@ package object frm {
 
 
   /*
-     F L I G H T
+      F L I G H T
   */
   final case class Flight(code: String, alias: String, schedDeparture: String, schedArrival: String, routeId: Long, id: Option[Long] = None)
 
   final class Flights(tag: Tag) extends Table[Flight](tag, TableNames.flights) {
-    // This is the primary key column:
+    // primary key column:
     def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
 
+    // property columns:
     def code = column[String]("CODE")
 
     def alias = column[String]("ALIAS")
@@ -183,5 +191,35 @@ package object frm {
   }
 
   lazy val flights = TableQuery[Flights]
+
+
+  /*
+      J O U R N E Y
+   */
+  final case class Journey(departureDate: Date, arrivalDate: Date, flightId: Long, aircraftId: Long, id: Option[Long] = None)
+
+  final class Journeys(tag: Tag) extends Table[Journey](tag, TableNames.journeys) {
+    // primary key column:
+    def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
+
+    // property columns:
+    def departureDate = column[Date]("DEPARTURE_DATE")
+
+    def arrivalDate = column[Date]("ARRIVAL_DATE")
+
+    // foreign columns:
+    def flightId = column[Long]("FLIGHT_ID")
+
+    def aircraftId = column[Long]("AIRCRAFT_ID")
+
+    def * = (departureDate, arrivalDate, flightId, aircraftId, id.?) <> (Journey.tupled, Journey.unapply)
+
+    // foreign keys
+    def flight = foreignKey("FK_FLIGHT", flightId, TableQuery[Flights])(_.id)
+
+    def aircraft = foreignKey("FK_AIRCRAFT", aircraftId, TableQuery[Fleet])(_.id)
+  }
+
+  lazy val journeys = TableQuery[Journeys]
 
 }
