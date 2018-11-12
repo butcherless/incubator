@@ -4,7 +4,7 @@ NOTE: Research project through small concept tests
 
 == Continuous Integration & QA
 
-[cols="2,3,2", options="header", width="50%"]
+[cols="3,4,2", options="header", width="60%"]
 |===
 |Service
 |Link
@@ -95,10 +95,10 @@ An _Aircraft_ belongs to an _Airline_.
 |Description
 
 |typeCode
-|code indicating the type of _Aircraft_
+|code indicating the type of _Aircraft_, B788
 
 |registration
-|international code identifying the _Aircraft_
+|international code identifying the _Aircraft_, EC-MIG
 |===
 
 
@@ -111,10 +111,10 @@ Airline:: An organization providing a regular public service of air transport on
 |Description
 
 |name
-|the commercial name of the _Airline_
+|the commercial name of the _Airline_, Iberia
 
 |foundationDate
-|the date on which its activity began
+|the date on which its activity began, 1927-06-28
 |===
 
 
@@ -130,13 +130,13 @@ An _Airport_ belongs to an _Country_.
 |Description
 
 |name
-|the international name of the _Airport_
+|the international name of the _Airport_, Tenerife Norte
 
 |iataCode
-|the _Airport_ code for the International Air Transport Association
+|the _Airport_ code for the International Air Transport Association, MAD
 
 |icaoCode
-|the _Airport_ code for the International Civil Aviation Organization
+|the _Airport_ code for the International Civil Aviation Organization, LEBL
 |===
 
 
@@ -173,6 +173,46 @@ Flight:: An act of flying; a journey made through the air or in space, especiall
 
 .associations
 A _Flight_ runs through a _Route_.
+
+.properties
+[cols="1,3", options="header", width="80%"]
+|===
+|Name
+|Description
+
+|code
+|main _Airline_ commercial code, UX9117
+
+|alias
+|alternative _Airline_ commercial code, AEA9117
+
+|schedDeparture
+|scheduled departure local time, 07:05
+
+|schedArrival
+|scheduled arrival local time, 08:55
+|===
+
+
+Journey:: An act of travelling from one place to another.
+
+.associations
+A _Journey_ runs through a _Flight_.
+
+A _Journey_ takes place inside an _Aircraft_.
+
+.properties
+[cols="1,3", options="header", width="80%"]
+|===
+|Name
+|Description
+
+|departureDate
+|real time for departure, 15:23
+
+|arrivalDate
+|real time for arrival, 19:41
+|===
 
 == Links
 * Thanks to *FlightRadar24*: https://www.flightradar24.com/
