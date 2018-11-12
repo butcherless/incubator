@@ -1,8 +1,7 @@
 package com.cmartin.learn.repository
 
-
 import java.sql.Date
-import java.time.LocalDate
+import java.time.{LocalDate, LocalTime}
 
 import slick.jdbc.H2Profile.api._
 
@@ -24,6 +23,26 @@ package object frm {
     val BOEING_737_800 = "B738"
     val BOEING_787_800 = "B788"
   }
+
+  /*
+    maps the custom types of the application to the database
+ */
+  object CustomColumnTypes {
+
+    implicit val localDateType =
+      MappedColumnType.base[LocalDate, Date](
+        ld => Date.valueOf(ld),
+        dt => dt.toLocalDate
+      )
+
+    implicit val localTimeType =
+      MappedColumnType.base[LocalTime, String](
+        lt => lt.toString,
+        st => LocalTime.parse(st)
+      )
+
+  }
+
 
   /*
       A I R C R A F T
@@ -54,16 +73,19 @@ package object frm {
   /*
       A I R L I N E
    */
-  final case class Airline(name: String, foundationDate: Date, id: Option[Long] = None)
+  final case class Airline(name: String, foundationDate: LocalDate, id: Option[Long] = None)
 
   final class Airlines(tag: Tag) extends Table[Airline](tag, TableNames.airlines) {
+
+    import CustomColumnTypes.localDateType
+
     // primary key column:
     def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
 
     // property columns:
     def name = column[String]("NAME")
 
-    def foundationDate = column[Date]("FOUNDATION_DATE")
+    def foundationDate = column[LocalDate]("FOUNDATION_DATE")
 
     def * = (name, foundationDate, id.?) <> (Airline.tupled, Airline.unapply)
   }
@@ -161,9 +183,12 @@ package object frm {
   /*
       F L I G H T
   */
-  final case class Flight(code: String, alias: String, schedDeparture: String, schedArrival: String, routeId: Long, id: Option[Long] = None)
+  final case class Flight(code: String, alias: String, schedDeparture: LocalTime, schedArrival: LocalTime, routeId: Long, id: Option[Long] = None)
 
   final class Flights(tag: Tag) extends Table[Flight](tag, TableNames.flights) {
+
+    import CustomColumnTypes.localTimeType
+
     // primary key column:
     def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
 
@@ -173,10 +198,10 @@ package object frm {
     def alias = column[String]("ALIAS")
 
     //TODO Custom Column Mappings, LocalTime
-    def schedDeparture = column[String]("SCHEDULED_DEPARTURE")
+    def schedDeparture = column[LocalTime]("SCHEDULED_DEPARTURE")
 
     //TODO Custom Column Mappings, LocalTime
-    def schedArrival = column[String]("SCHEDULED_ARRIVAL")
+    def schedArrival = column[LocalTime]("SCHEDULED_ARRIVAL")
 
     // foreign columns:
     def routeId = column[Long]("ROUTE_ID")
@@ -197,16 +222,18 @@ package object frm {
   /*
       J O U R N E Y
    */
-  final case class Journey(departureDate: Date, arrivalDate: Date, flightId: Long, aircraftId: Long, id: Option[Long] = None)
+  final case class Journey(departureDate: LocalTime, arrivalDate: LocalTime, flightId: Long, aircraftId: Long, id: Option[Long] = None)
 
   final class Journeys(tag: Tag) extends Table[Journey](tag, TableNames.journeys) {
+    import CustomColumnTypes.localTimeType
+
     // primary key column:
     def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
 
     // property columns:
-    def departureDate = column[Date]("DEPARTURE_DATE")
+    def departureDate = column[LocalTime]("DEPARTURE_DATE")
 
-    def arrivalDate = column[Date]("ARRIVAL_DATE")
+    def arrivalDate = column[LocalTime]("ARRIVAL_DATE")
 
     // foreign columns:
     def flightId = column[Long]("FLIGHT_ID")
@@ -228,26 +255,13 @@ package object frm {
    TODO RESEARCH delete me
     */
 
-  import java.time.LocalTime
 
-  object CustomColumnTypes {
-    implicit val jodaDateTimeType =
-    //      MappedColumnType.base[LocalTime, Timestamp](
-    //        lt => new Timestamp(lt.toNanoOfDay),
-    //        ts => LocalTime.of(8, 0)
-    //      )
-      MappedColumnType.base[LocalTime, String](
-        lt => lt.toString,
-        st => LocalTime.parse(st)
-      )
-
-  }
-
-
-  case class Message(senderId: Long, content: String, timestamp: LocalTime, localDate: LocalDate, id: Long = 0L)
+  case class Message(senderId: Long, content: String, localtime: LocalTime, localdate: LocalDate, id: Long = 0L)
 
   // defined class Message
   class MessageTable(tag: Tag) extends Table[Message](tag, "message") {
+
+    import CustomColumnTypes._
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
 
@@ -255,13 +269,14 @@ package object frm {
 
     def content = column[String]("content")
 
-    def timestamp = column[String]("timestamp")
+    def localtime = column[LocalTime]("localtime")
 
-    def * = (senderId, content, timestamp, id).mapTo[Message]
+    def localdate = column[LocalDate]("localdate")
+
+    def * = (senderId, content, localtime, localdate, id) <> (Message.tupled, Message.unapply)
   }
 
   // defined class MessageTable
   lazy val messages = TableQuery[MessageTable]
-  lazy val insertMessage = messages returning messages.map(_.id)
 
 }

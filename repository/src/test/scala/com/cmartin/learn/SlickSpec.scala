@@ -1,6 +1,5 @@
 package com.cmartin.learn
 
-import java.sql.Date
 import java.time.{LocalDate, LocalTime}
 
 import com.cmartin.learn.repository.frm._
@@ -248,7 +247,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   def airportIdDBIO(tuple: (String, String, String))(countryId: Long) =
     airportsReturningId += Airport(tuple._1, tuple._2, tuple._3, countryId)
 
-  def flightDBIO(code: String, alias: String, departure: String, arrival: String)(routeId: Long) =
+  def flightDBIO(code: String, alias: String, departure: LocalTime, arrival: LocalTime)(routeId: Long) =
     flightsReturningId += Flight(code, alias, departure, arrival, routeId)
 
   def airportsReturningId() = airports returning airports.map(_.id)
@@ -258,8 +257,6 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   def fleetReturningId() = fleet returning fleet.map(_.id)
 
   def flightsReturningId = flights returning flights.map(_.id)
-
-  def newLocalDate(year: Int, month: Int, day: Int): Date = java.sql.Date.valueOf(LocalDate.of(year, month, day))
 
 
   // F I N D E R S
@@ -348,7 +345,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   val ssaAirport = ("Deputado Luiz Eduardo Magalhães International", "SSA", "SBSV")
   val gigAirport = ("Tom Jobim International Airport", "GIG", "SBGL")
 
-  val aeaAirline = ("Air Europa", newLocalDate(1986, 11, 21))
+  val aeaAirline = ("Air Europa", LocalDate.of(1986, 11, 21))
 
-  val flightUx9059 = ("ux9059", "aea9059", LocalTime.of(7, 5, 0).toString, LocalTime.of(8, 55, 0).toString)
+  val flightUx9059 = ("ux9059", "aea9059", LocalTime.of(7, 5), LocalTime.of(8, 55))
 }
