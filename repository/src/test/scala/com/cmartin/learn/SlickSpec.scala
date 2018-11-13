@@ -20,6 +20,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   val registrationMIG = "ec-mig"
   val registrationMNS = "ec-mns"
   val barajasIataCode = "MAD"
+  val madDestinationCount = 4
 
   val ecMigAircraft = Aircraft(TypeCodes.BOEING_787_800, registrationMIG, 0L)
 
@@ -138,14 +139,15 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     val country = list.head
     country.id.value should be > 0L
     country.name shouldBe esCountry._1
+    country.code shouldBe esCountry._2
   }
 
   it should "insert a country and an airport" in {
 
     val resultAction = for {
-      countryId <- countryIdDBIO(esCountry)
-      airportId <- airportIdDBIO(madAirport)(countryId)
-      airport <- airportDBIO(airportId)
+      countryId <- insertCountryDBIO(esCountry)
+      airportId <- insertAirportDBIO(madAirport)(countryId)
+      airport <- findAirportById(airportId)
     } yield (airport, airportId, countryId)
 
     val result = db.run(resultAction).futureValue
@@ -154,11 +156,13 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     val airportId = result._2
     val countryId = result._3
 
-    // assert
-    airportSeq.nonEmpty shouldBe true
+    // asserts
+    airportSeq.size shouldBe 1
     val airport: Airport = airportSeq.head
     airport.id.value shouldBe airportId
+    airport.name shouldBe madAirport._1
     airport.iataCode shouldBe madAirport._2
+    airport.icaoCode shouldBe madAirport._3
     airport.countryId shouldBe countryId
   }
 
@@ -178,7 +182,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     Await.result(db.run(resultAction), 2 seconds)
 
     val res = db.run(findRouteDestinationsByOrigin(madAirport._2)).futureValue
-    res.size shouldBe 4
+    res.size shouldBe madDestinationCount
   }
 
   it should "retrieve flight by code" in {
@@ -187,8 +191,9 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
 
     val res = db.run(flights.filter(_.code === flightUx9059._1).result).futureValue
 
-    res.nonEmpty shouldBe true
     res.size shouldBe 1
+    val flight = res.head
+    flight.code shouldBe flightUx9059._1
   }
 
   //TODO findFlightsByRoute
@@ -225,30 +230,27 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   |_|  |_| |______| |______| |_|      |______| |_|  \_\ |_____/
   */
 
+  def newCountry(name: String, code: String) = Country(name, code)
 
-  def routeDBIO(distance: Double)(originId: Long)(destinationId: Long) =
+  def insertRouteDBIO(distance: Double)(originId: Long)(destinationId: Long) =
     routes += Route(distance, originId, destinationId)
 
-  def countryIdDBIO(countryTuple: (String, String)) =
+  def insertCountryDBIO(countryTuple: (String, String)) =
     countriesReturningId += Country(countryTuple._1, countryTuple._2)
-
-  def newCountry(name: String, code: String) = Country(name, code)
 
   def insertCountry(country: Country) = db.run(countries += country).futureValue
 
   def insertAircraft(aircraft: Aircraft): Int = db.run(fleet += aircraft).futureValue
 
-  def airlinesReturningId() = airlines returning airlines.map(_.id)
-
   def insertAirport(airport: Airport) = db.run(airports += airport).futureValue
 
-  def airportDBIO(id: Long): DBIO[Seq[Airport]] = airports.filter(_.id === id).result
-
-  def airportIdDBIO(tuple: (String, String, String))(countryId: Long) =
+  def insertAirportDBIO(tuple: (String, String, String))(countryId: Long) =
     airportsReturningId += Airport(tuple._1, tuple._2, tuple._3, countryId)
 
-  def flightDBIO(code: String, alias: String, departure: LocalTime, arrival: LocalTime)(routeId: Long) =
+  def insertFlightDBIO(code: String, alias: String, departure: LocalTime, arrival: LocalTime)(routeId: Long) =
     flightsReturningId += Flight(code, alias, departure, arrival, routeId)
+
+  def airlinesReturningId() = airlines returning airlines.map(_.id)
 
   def airportsReturningId() = airports returning airports.map(_.id)
 
@@ -259,7 +261,12 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   def flightsReturningId = flights returning flights.map(_.id)
 
 
-  // F I N D E R S
+  /*
+       F I N D E R S
+   */
+
+  def findAirportById(id: Long): DBIO[Seq[Airport]] = airports.filter(_.id === id).result
+
   def findAirportByCountryCode(code: String) = {
     val query = for {
       airport <- airports
@@ -297,24 +304,24 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
 
   def populateDatabase() = {
     for {
-      esId <- countryIdDBIO(esCountry)
-      madId <- airportIdDBIO(madAirport)(esId)
-      tfnId <- airportIdDBIO(tfnAirport)(esId)
-      bcnId <- airportIdDBIO(bcnAirport)(esId)
-      ukId <- countryIdDBIO(ukCountry)
-      lhrId <- airportIdDBIO(lhrAirport)(ukId)
-      lgwId <- airportIdDBIO(lgwAirport)(ukId)
-      brId <- countryIdDBIO(brCountry)
-      _ <- airportIdDBIO(bsbAirport)(brId)
-      _ <- airportIdDBIO(gigAirport)(brId)
-      _ <- airportIdDBIO(ssaAirport)(brId)
-      madTfnId <- routeDBIO(957.0)(madId)(tfnId)
-      - <- routeDBIO(671.0)(madId)(lhrId)
-      - <- routeDBIO(261.0)(madId)(bcnId)
-      - <- routeDBIO(655.0)(madId)(lgwId) // 4 destinations
-      - <- routeDBIO(261.0)(bcnId)(madId)
-      - <- routeDBIO(261.0)(bcnId)(lgwId) // 2 destinations
-      _ <- flightDBIO(flightUx9059._1, flightUx9059._2, flightUx9059._3, flightUx9059._4)(madTfnId)
+      esId <- insertCountryDBIO(esCountry)
+      madId <- insertAirportDBIO(madAirport)(esId)
+      tfnId <- insertAirportDBIO(tfnAirport)(esId)
+      bcnId <- insertAirportDBIO(bcnAirport)(esId)
+      ukId <- insertCountryDBIO(ukCountry)
+      lhrId <- insertAirportDBIO(lhrAirport)(ukId)
+      lgwId <- insertAirportDBIO(lgwAirport)(ukId)
+      brId <- insertCountryDBIO(brCountry)
+      _ <- insertAirportDBIO(bsbAirport)(brId)
+      _ <- insertAirportDBIO(gigAirport)(brId)
+      _ <- insertAirportDBIO(ssaAirport)(brId)
+      madTfnId <- insertRouteDBIO(957.0)(madId)(tfnId)
+      - <- insertRouteDBIO(671.0)(madId)(lhrId)
+      - <- insertRouteDBIO(261.0)(madId)(bcnId)
+      - <- insertRouteDBIO(655.0)(madId)(lgwId) // 4 destinations
+      - <- insertRouteDBIO(261.0)(bcnId)(madId)
+      - <- insertRouteDBIO(261.0)(bcnId)(lgwId) // 2 destinations
+      _ <- insertFlightDBIO(flightUx9059._1, flightUx9059._2, flightUx9059._3, flightUx9059._4)(madTfnId)
       // _ <- journeyDBIO(depDate, arrDate)(flightId)(aircraftId)
     } yield Unit
   }

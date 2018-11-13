@@ -225,6 +225,7 @@ package object frm {
   final case class Journey(departureDate: LocalTime, arrivalDate: LocalTime, flightId: Long, aircraftId: Long, id: Option[Long] = None)
 
   final class Journeys(tag: Tag) extends Table[Journey](tag, TableNames.journeys) {
+
     import CustomColumnTypes.localTimeType
 
     // primary key column:
