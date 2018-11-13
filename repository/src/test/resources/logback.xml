@@ -13,9 +13,10 @@
         <appender-ref ref="STDOUT"/>
     </root>
 
-    <logger name="slick.jdbc.JdbcBackend.statement" level="debug" additivity="false">
+    <logger name="slick.jdbc.JdbcBackend" level="debug" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
+
     <logger name="slick.jdbc.StatementInvoker.result" level="debug" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>

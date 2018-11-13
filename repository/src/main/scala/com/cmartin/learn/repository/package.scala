@@ -251,33 +251,4 @@ package object frm {
 
   lazy val journeys = TableQuery[Journeys]
 
-
-  /*
-   TODO RESEARCH delete me
-    */
-
-
-  case class Message(senderId: Long, content: String, localtime: LocalTime, localdate: LocalDate, id: Long = 0L)
-
-  // defined class Message
-  class MessageTable(tag: Tag) extends Table[Message](tag, "message") {
-
-    import CustomColumnTypes._
-
-    def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
-
-    def senderId = column[Long]("sender")
-
-    def content = column[String]("content")
-
-    def localtime = column[LocalTime]("localtime")
-
-    def localdate = column[LocalDate]("localdate")
-
-    def * = (senderId, content, localtime, localdate, id) <> (Message.tupled, Message.unapply)
-  }
-
-  // defined class MessageTable
-  lazy val messages = TableQuery[MessageTable]
-
 }
