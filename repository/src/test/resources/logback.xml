@@ -16,5 +16,8 @@
     <logger name="slick.jdbc.JdbcBackend.statement" level="debug" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
+    <logger name="slick.jdbc.StatementInvoker.result" level="debug" additivity="false">
+        <appender-ref ref="STDOUT"/>
+    </logger>
 
 </configuration>
