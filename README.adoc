@@ -83,6 +83,8 @@ report:: target/scala-2.12/scoverage-report/index.html
 
 === Model
 
+image:entity-model.png[Entity model diagram]
+
 Aircraft:: An airplane capable of flight to transport people and cargo.
 
 .associations
