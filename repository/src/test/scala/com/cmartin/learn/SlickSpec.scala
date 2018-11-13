@@ -103,7 +103,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     aircraft.registration shouldBe registrationMNS
   }
 
-  it should "WIP delete an aircraft from the dataase" in {
+  it should "delete an aircraft from the dataase" in {
     val initialAction = for {
       airlineId <- insertAirlineDBIO(aeaAirline._1, aeaAirline._2)
       _ <- insertAircraftDBIO(ecMigAircraft._1, ecMigAircraft._2, airlineId)
