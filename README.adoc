@@ -83,7 +83,11 @@ report:: target/scala-2.12/scoverage-report/index.html
 
 === Model
 
+.Model diagram
+
 image:entity-model.png[Entity model diagram]
+
+.Entities
 
 Aircraft:: An airplane capable of flight to transport people and cargo.
 
@@ -155,22 +159,6 @@ Country:: A nation with its own government, occupying a particular territory.
 |===
 
 
-Route:: A way or course taken in getting from a starting point to a destination.
-
-.associations
-A _Route_ has a starting _Airport_ and a destination _Airport_.
-
-.properties
-[cols="1,3", options="header", width="80%"]
-|===
-|Name
-|Description
-
-|distance
-|number of nautical miles between the two _Airports_, 957 nm.
-|===
-
-
 Flight:: An act of flying; a journey made through the air or in space, especially a timetabled journey made by an airline.
 
 .associations
@@ -215,6 +203,36 @@ A _Journey_ takes place inside an _Aircraft_.
 |arrivalDate
 |real time for arrival, 19:41
 |===
+
+
+Route:: A way or course taken in getting from a starting point to a destination.
+
+.associations
+A _Route_ has a starting _Airport_ and a destination _Airport_.
+
+.properties
+[cols="1,3", options="header", width="80%"]
+|===
+|Name
+|Description
+
+|distance
+|number of nautical miles between the two _Airports_, 957 nm.
+|===
+
+== TODO
+
+Finders:
+
+* findAircraftByAirline(airline)
+* findAirlineByCountry(country)
+* findAirportByCountry(country)
+* findAirportDestination(airport)
+* findAirportOrigin(airport)
+* findFlightByRoute(origin, destination)
+* findRouteByDestination(destination)
+* findRouteByOrigin(origin)
+
 
 == Links
 * Thanks to *FlightRadar24*: https://www.flightradar24.com/
