@@ -3,7 +3,7 @@ package com.cmartin.learn
 import java.time.{LocalDate, LocalTime}
 
 import com.cmartin.learn.repository.frm._
-import com.cmartin.learn.repository.implementation.{AircraftRepository, AirlineRepository, CountryRepository}
+import com.cmartin.learn.repository.implementation.{AircraftRepository, AirlineRepository, AirportRepository, CountryRepository}
 import org.scalatest.OptionValues._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Seconds, Span}
@@ -147,8 +147,8 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   it should "insert an airport and acountry" in {
     val resultAction = for {
       countryId <- CountryRepository.insertAction(esCountry._1, esCountry._2)
-      airportId <- insertAirportDBIO(madAirport)(countryId)
-      airport <- findAirportById(airportId)
+      airportId <- AirportRepository.insertAction(madAirport._1, madAirport._2, madAirport._3, countryId)
+      airport <- AirportRepository.findById(airportId).result
     } yield (airport, airportId, countryId)
 
     val result = db.run(resultAction).futureValue
@@ -169,7 +169,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
 
   it should "retrieve an Airport empty collection" in {
     val query = for {
-      airport <- airports
+      airport <- AirportRepository.airports
       _ <- CountryRepository.findByCodeQuery(esCountry._2)
     } yield airport
 
@@ -213,20 +213,20 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     Await.result(db.run(resultAction), 2 seconds)
 
     val countryCount = db.run(CountryRepository.count.result).futureValue
-    val airportCount = db.run(airports.length.result).futureValue
+    val airportCount = db.run(AirportRepository.count.result).futureValue
 
     countryCount shouldBe 3
     airportCount shouldBe 8
 
-    val esResults = db.run(findAirportByCountryCode(esCountry._2)).futureValue
+    val esResults = db.run(AirportRepository.findByCountryCode(esCountry._2).result).futureValue
     esResults.nonEmpty shouldBe true
     esResults.size shouldBe 3
 
-    val ukResults = db.run(findAirportByCountryCode(ukCountry._2)).futureValue
+    val ukResults = db.run(AirportRepository.findByCountryCode(ukCountry._2).result).futureValue
     ukResults.nonEmpty shouldBe true
     ukResults.size shouldBe 2
 
-    val brResults = db.run(findAirportByCountryCode(brCountry._2)).futureValue
+    val brResults = db.run(AirportRepository.findByCountryCode(brCountry._2).result).futureValue
     brResults.nonEmpty shouldBe true
     brResults.size shouldBe 3
   }
@@ -240,10 +240,6 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   |_|  |_| |______| |______| |_|      |______| |_|  \_\ |_____/
   */
 
-  def insertAirport(airport: Airport): Int = db.run(airports += airport).futureValue
-
-  def insertAirportDBIO(tuple: (String, String, String))(countryId: Long) =
-    airportsReturningId += Airport(tuple._1, tuple._2, tuple._3, countryId)
 
   def insertFlightDBIO(code: String, alias: String, departure: LocalTime, arrival: LocalTime)(routeId: Long) =
     flightsReturningId += Flight(code, alias, departure, arrival, routeId)
@@ -254,7 +250,6 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   def insertRouteDBIO(distance: Double)(originId: Long)(destinationId: Long) =
     routesReturningId += Route(distance, originId, destinationId)
 
-  def airportsReturningId() = airports returning airports.map(_.id)
 
   def flightsReturningId = flights returning flights.map(_.id)
 
@@ -266,16 +261,6 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
        F I N D E R S
    */
 
-  def findAirportById(id: Long): DBIO[Seq[Airport]] = airports.filter(_.id === id).result
-
-  def findAirportByCountryCode(code: String) = {
-    val query = for {
-      airport <- airports
-      country <- airport.country if country.code === code
-    } yield airport
-
-    query.result
-  }
 
   def findRouteDestinationsByOrigin(iataCode: String) = {
     val query = for {
@@ -302,7 +287,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   def createSchema() = {
     val schemaAction = (
       AirlineRepository.airlines.schema ++
-        airports.schema ++
+        AirportRepository.airports.schema ++
         CountryRepository.countries.schema ++
         AircraftRepository.aircrafts.schema ++
         flights.schema ++
@@ -318,16 +303,16 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     for {
       esId <- CountryRepository.insertAction(esCountry._1, esCountry._2)
       airlineId <- AirlineRepository.insertAction(aeaAirline._1, aeaAirline._2)
-      madId <- insertAirportDBIO(madAirport)(esId)
-      tfnId <- insertAirportDBIO(tfnAirport)(esId)
-      bcnId <- insertAirportDBIO(bcnAirport)(esId)
+      madId <- AirportRepository.insertAction(madAirport._1, madAirport._2, madAirport._3, esId)
+      tfnId <- AirportRepository.insertAction(tfnAirport._1, tfnAirport._2, tfnAirport._3, esId)
+      bcnId <- AirportRepository.insertAction(bcnAirport._1, bcnAirport._2, bcnAirport._3, esId)
       ukId <- CountryRepository.insertAction(ukCountry._1, ukCountry._2)
-      lhrId <- insertAirportDBIO(lhrAirport)(ukId)
-      lgwId <- insertAirportDBIO(lgwAirport)(ukId)
+      lhrId <- AirportRepository.insertAction(lhrAirport._1, lhrAirport._2, lhrAirport._3, ukId)
+      lgwId <- AirportRepository.insertAction(lgwAirport._1, lgwAirport._2, lgwAirport._3, ukId)
       brId <- CountryRepository.insertAction(brCountry._1, brCountry._2)
-      _ <- insertAirportDBIO(bsbAirport)(brId)
-      _ <- insertAirportDBIO(gigAirport)(brId)
-      _ <- insertAirportDBIO(ssaAirport)(brId)
+      _ <- AirportRepository.insertAction(bsbAirport._1, bsbAirport._2, bsbAirport._3, brId)
+      _ <- AirportRepository.insertAction(gigAirport._1, gigAirport._2, gigAirport._3, brId)
+      _ <- AirportRepository.insertAction(ssaAirport._1, ssaAirport._2, ssaAirport._3, brId)
       madTfnId <- insertRouteDBIO(957.0)(madId)(tfnId)
       - <- insertRouteDBIO(671.0)(madId)(lhrId)
       - <- insertRouteDBIO(261.0)(madId)(bcnId)

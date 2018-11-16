@@ -53,4 +53,26 @@ package object implementation {
     def entityReturningId() = airlines returning airlines.map(_.id)
   }
 
+  object AirportRepository {
+    lazy val airports = TableQuery[Airports]
+
+    def findById(id: Long) = airports.filter(_.id === id)
+
+    def insertAction(name: String, iataCode: String, icaoCode: String, countryId: Long) =
+      entityReturningId += Airport(name, iataCode, icaoCode, countryId)
+
+    def count() = airports.length
+
+    def entityReturningId() = airports returning airports.map(_.id)
+
+    def findByCountryCode(code: String) = {
+      val query = for {
+        airport <- airports
+        country <- airport.country if country.code === code
+      } yield airport
+
+      query
+    }
+  }
+
 }

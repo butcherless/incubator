@@ -152,8 +152,6 @@ package object frm {
     def iataIndex = index("iataCode_index", iataCode, unique = true)
   }
 
-  lazy val airports = TableQuery[Airports]
-
 
   /*
       R O U T E
