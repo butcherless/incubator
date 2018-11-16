@@ -3,7 +3,7 @@ package com.cmartin.learn
 import java.time.{LocalDate, LocalTime}
 
 import com.cmartin.learn.repository.frm._
-import com.cmartin.learn.repository.implementation.{AircraftRepository, CountryRepository}
+import com.cmartin.learn.repository.implementation.{AircraftRepository, AirlineRepository, CountryRepository}
 import org.scalatest.OptionValues._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Seconds, Span}
@@ -44,11 +44,11 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   it should "insert an aircraft into the database" in {
 
     val resultAction = for {
-      airlineId <- airlinesReturningId() += Airline(aeaAirline._1, aeaAirline._2)
+      airlineId <- AirlineRepository.insertAction(aeaAirline._1, aeaAirline._2)
       aircraftId <- AircraftRepository.insertAction(TypeCodes.BOEING_787_800, registrationMIG, airlineId)
-      airlineCount <- airlines.length.result
+      airlineCount <- AirlineRepository.count.result
       aircraftCount <- AircraftRepository.count().result
-      airline <- airlines.filter(_.id === airlineId).result
+      airline <- AirlineRepository.findById(airlineId).result
       aircraft <- AircraftRepository.findById(aircraftId).result
     } yield (airlineCount, airline, aircraftCount, aircraft)
 
@@ -71,7 +71,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   it should "retrieve an aircraft from the database" in {
 
     val resultAction = for {
-      airlineId <- airlinesReturningId() += Airline(aeaAirline._1, aeaAirline._2)
+      airlineId <- AirlineRepository.insertAction(aeaAirline._1, aeaAirline._2)
       _ <- AircraftRepository.insertAction(TypeCodes.BOEING_787_800, registrationMIG, airlineId)
       aircrafts <- AircraftRepository.findByRegistration(registrationMIG).result
     } yield aircrafts
@@ -103,7 +103,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
 
   it should "delete an aircraft from the dataase" in {
     val initialAction = for {
-      airlineId <- insertAirlineDBIO(aeaAirline._1, aeaAirline._2)
+      airlineId <- AirlineRepository.insertAction(aeaAirline._1, aeaAirline._2)
       _ <- AircraftRepository.insertAction(ecMigAircraft._1, ecMigAircraft._2, airlineId)
       count <- AircraftRepository.count.result
     } yield count
@@ -242,9 +242,6 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
 
   def insertAirport(airport: Airport): Int = db.run(airports += airport).futureValue
 
-  def insertAirlineDBIO(name: String, foundationDate: LocalDate) =
-    airlinesReturningId += Airline(name, foundationDate)
-
   def insertAirportDBIO(tuple: (String, String, String))(countryId: Long) =
     airportsReturningId += Airport(tuple._1, tuple._2, tuple._3, countryId)
 
@@ -256,8 +253,6 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
 
   def insertRouteDBIO(distance: Double)(originId: Long)(destinationId: Long) =
     routesReturningId += Route(distance, originId, destinationId)
-
-  def airlinesReturningId() = airlines returning airlines.map(_.id)
 
   def airportsReturningId() = airports returning airports.map(_.id)
 
@@ -306,7 +301,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
 
   def createSchema() = {
     val schemaAction = (
-      airlines.schema ++
+      AirlineRepository.airlines.schema ++
         airports.schema ++
         CountryRepository.countries.schema ++
         AircraftRepository.aircrafts.schema ++
@@ -322,7 +317,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   def populateDatabase() = {
     for {
       esId <- CountryRepository.insertAction(esCountry._1, esCountry._2)
-      airlineId <- insertAirlineDBIO(aeaAirline._1, aeaAirline._2)
+      airlineId <- AirlineRepository.insertAction(aeaAirline._1, aeaAirline._2)
       madId <- insertAirportDBIO(madAirport)(esId)
       tfnId <- insertAirportDBIO(tfnAirport)(esId)
       bcnId <- insertAirportDBIO(bcnAirport)(esId)

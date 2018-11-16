@@ -1,6 +1,8 @@
 package com.cmartin.learn.repository
 
-import com.cmartin.learn.repository.frm.{Aircraft, Countries, Country, Fleet}
+import java.time.LocalDate
+
+import com.cmartin.learn.repository.frm._
 import slick.jdbc.H2Profile.api._
 import slick.lifted.TableQuery
 
@@ -15,11 +17,11 @@ package object implementation {
     }
 
     def insertAction(name: String, code: String) =
-      countriesReturningId += Country(name, code)
+      entityReturningId += Country(name, code)
 
     def count() = countries.length //.result
 
-    def countriesReturningId() = countries returning countries.map(_.id)
+    def entityReturningId() = countries returning countries.map(_.id)
   }
 
 
@@ -36,6 +38,19 @@ package object implementation {
     def count() = aircrafts.length
 
     def entityReturningId() = aircrafts returning aircrafts.map(_.id)
+  }
+
+  object AirlineRepository {
+    lazy val airlines: TableQuery[Airlines] = TableQuery[Airlines]
+
+    def findById(id: Long) = airlines.filter(_.id === id)
+
+    def insertAction(name: String, foundationDate: LocalDate) =
+      entityReturningId += Airline(name, foundationDate)
+
+    def count() = airlines.length
+
+    def entityReturningId() = airlines returning airlines.map(_.id)
   }
 
 }

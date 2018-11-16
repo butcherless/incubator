@@ -44,10 +44,17 @@ package object frm {
   }
 
 
+  trait Entity {
+    def id: Option[Long]
+  }
+
   /*
       A I R C R A F T
    */
-  final case class Aircraft(typeCode: String, registration: String, airlineId: Long, id: Option[Long] = None)
+  final case class Aircraft(typeCode: String,
+                            registration: String,
+                            airlineId: Long,
+                            id: Option[Long] = None) extends Entity
 
   final class Fleet(tag: Tag) extends Table[Aircraft](tag, TableNames.fleet) {
     // primary key column:
@@ -70,7 +77,9 @@ package object frm {
   /*
       A I R L I N E
    */
-  final case class Airline(name: String, foundationDate: LocalDate, id: Option[Long] = None)
+  final case class Airline(name: String,
+                           foundationDate: LocalDate,
+                           id: Option[Long] = None) extends Entity
 
   final class Airlines(tag: Tag) extends Table[Airline](tag, TableNames.airlines) {
 
@@ -87,13 +96,13 @@ package object frm {
     def * = (name, foundationDate, id.?) <> (Airline.tupled, Airline.unapply)
   }
 
-  lazy val airlines = TableQuery[Airlines]
-
 
   /*
       C O U N T R Y
    */
-  final case class Country(name: String, code: String, id: Option[Long] = None)
+  final case class Country(name: String,
+                           code: String,
+                           id: Option[Long] = None) extends Entity
 
   final class Countries(tag: Tag) extends Table[Country](tag, TableNames.countries) {
     // primary key column:
@@ -114,7 +123,11 @@ package object frm {
   /*
       A I R P O R T
    */
-  final case class Airport(name: String, iataCode: String, icaoCode: String, countryId: Long, id: Option[Long] = None)
+  final case class Airport(name: String,
+                           iataCode: String,
+                           icaoCode: String,
+                           countryId: Long,
+                           id: Option[Long] = None) extends Entity
 
   final class Airports(tag: Tag) extends Table[Airport](tag, TableNames.airports) {
     // primary key column:
@@ -145,7 +158,10 @@ package object frm {
   /*
       R O U T E
    */
-  final case class Route(distance: Double, originId: Long, destinationId: Long, id: Option[Long] = None)
+  final case class Route(distance: Double,
+                         originId: Long,
+                         destinationId: Long,
+                         id: Option[Long] = None) extends Entity
 
   final class Routes(tag: Tag) extends Table[Route](tag, TableNames.routes) {
     // primary key column:
@@ -178,7 +194,12 @@ package object frm {
   /*
       F L I G H T
   */
-  final case class Flight(code: String, alias: String, schedDeparture: LocalTime, schedArrival: LocalTime, routeId: Long, id: Option[Long] = None)
+  final case class Flight(code: String,
+                          alias: String,
+                          schedDeparture: LocalTime,
+                          schedArrival: LocalTime,
+                          routeId: Long,
+                          id: Option[Long] = None) extends Entity
 
   final class Flights(tag: Tag) extends Table[Flight](tag, TableNames.flights) {
 
@@ -217,7 +238,11 @@ package object frm {
   /*
       J O U R N E Y
    */
-  final case class Journey(departureDate: LocalTime, arrivalDate: LocalTime, flightId: Long, aircraftId: Long, id: Option[Long] = None)
+  final case class Journey(departureDate: LocalTime,
+                           arrivalDate: LocalTime,
+                           flightId: Long,
+                           aircraftId: Long,
+                           id: Option[Long] = None) extends Entity
 
   final class Journeys(tag: Tag) extends Table[Journey](tag, TableNames.journeys) {
 
