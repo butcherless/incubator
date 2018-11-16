@@ -3,6 +3,7 @@ package com.cmartin.learn
 import java.time.{LocalDate, LocalTime}
 
 import com.cmartin.learn.repository.frm._
+import com.cmartin.learn.repository.implementation.{AircraftRepository, CountryRepository}
 import org.scalatest.OptionValues._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Seconds, Span}
@@ -15,15 +16,12 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
 class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFutures {
-  implicit override val patienceConfig = PatienceConfig(timeout = Span(5, Seconds))
+  implicit override val patienceConfig: PatienceConfig = PatienceConfig(timeout = Span(5, Seconds))
 
   val registrationMIG = "ec-mig"
   val registrationMNS = "ec-mns"
   val barajasIataCode = "MAD"
   val madDestinationCount = 4
-
-  val fleet = TableQuery[Fleet]
-  val countries = TableQuery[Countries]
 
   val tableCount = 7
   var db: Database = _
@@ -47,11 +45,11 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
 
     val resultAction = for {
       airlineId <- airlinesReturningId() += Airline(aeaAirline._1, aeaAirline._2)
-      aircraftId <- fleetReturningId += Aircraft(TypeCodes.BOEING_787_800, registrationMIG, airlineId)
+      aircraftId <- AircraftRepository.insertAction(TypeCodes.BOEING_787_800, registrationMIG, airlineId)
       airlineCount <- airlines.length.result
-      aircraftCount <- fleet.length.result
+      aircraftCount <- AircraftRepository.count().result
       airline <- airlines.filter(_.id === airlineId).result
-      aircraft <- fleet.filter(_.id === aircraftId).result
+      aircraft <- AircraftRepository.findById(aircraftId).result
     } yield (airlineCount, airline, aircraftCount, aircraft)
 
     val results = db.run(resultAction).futureValue
@@ -74,9 +72,9 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
 
     val resultAction = for {
       airlineId <- airlinesReturningId() += Airline(aeaAirline._1, aeaAirline._2)
-      _ <- fleetReturningId += Aircraft(TypeCodes.BOEING_787_800, registrationMIG, airlineId)
-      aircrafts <- fleet.filter(_.registration === registrationMIG).result
-    } yield (aircrafts)
+      _ <- AircraftRepository.insertAction(TypeCodes.BOEING_787_800, registrationMIG, airlineId)
+      aircrafts <- AircraftRepository.findByRegistration(registrationMIG).result
+    } yield aircrafts
 
     val aircrafts = db.run(resultAction).futureValue
 
@@ -88,13 +86,13 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   }
 
   ignore should "update an aircraft into the database" in {
-    insertAircraft(Aircraft(ecMigAircraft._1, ecMigAircraft._2, 0L)) //TODO
+    AircraftRepository.insertAction(ecMigAircraft._1, ecMigAircraft._2, 0L) //TODO
 
-    val updateAction = fleet.filter(_.registration === registrationMIG)
+    val updateAction = AircraftRepository.findByRegistration(registrationMIG)
       .map(a => a.registration)
       .update(registrationMNS)
 
-    val selectAction = fleet.filter(_.registration === registrationMNS).result
+    val selectAction = AircraftRepository.findByRegistration(registrationMIG).result
 
     val list = db.run(updateAction andThen selectAction).futureValue
 
@@ -106,8 +104,8 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   it should "delete an aircraft from the dataase" in {
     val initialAction = for {
       airlineId <- insertAirlineDBIO(aeaAirline._1, aeaAirline._2)
-      _ <- insertAircraftDBIO(ecMigAircraft._1, ecMigAircraft._2, airlineId)
-      count <- tableCount(fleet)
+      _ <- AircraftRepository.insertAction(ecMigAircraft._1, ecMigAircraft._2, airlineId)
+      count <- AircraftRepository.count.result
     } yield count
 
     val initialCount = db.run(initialAction).futureValue
@@ -115,8 +113,8 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     initialCount shouldBe 1
 
     val finalAction = for {
-      _ <- fleet.filter(_.registration === registrationMIG).delete
-      count <- tableCount(fleet)
+      _ <- AircraftRepository.findByRegistration(registrationMIG).delete
+      count <- AircraftRepository.count.result
     } yield count
 
     val finalCount = db.run(finalAction).futureValue
@@ -130,29 +128,25 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
    */
 
   it should "insert a country into the database" in {
-    val query = countries += Country(esCountry._1, esCountry._2)
-    val action = db.run(query)
-    val count = action.futureValue
+    val query = CountryRepository.insertAction(esCountry._1, esCountry._2)
+    val count = db.run(query).futureValue
 
     count shouldBe 1
   }
 
   it should "retrieve a country from the database" in {
-    insertCountry(Country(esCountry._1, esCountry._2))
+    db.run(CountryRepository.insertAction(esCountry._1, esCountry._2))
+    val countryOption = db.run(CountryRepository.findByCodeQuery(esCountry._2).result.headOption).futureValue
 
-    val list = db.run(countries.filter(_.name === esCountry._1).result).futureValue
-
-    list.size shouldBe 1
-    val country = list.head
-    country.id.value should be > 0L
-    country.name shouldBe esCountry._1
-    country.code shouldBe esCountry._2
+    countryOption.value.id.value should be > 0L
+    countryOption.value.name shouldBe esCountry._1
+    countryOption.value.code shouldBe esCountry._2
   }
 
-  it should "insert a country and an airport" in {
 
+  it should "insert an airport and acountry" in {
     val resultAction = for {
-      countryId <- insertCountryDBIO(esCountry)
+      countryId <- CountryRepository.insertAction(esCountry._1, esCountry._2)
       airportId <- insertAirportDBIO(madAirport)(countryId)
       airport <- findAirportById(airportId)
     } yield (airport, airportId, countryId)
@@ -176,7 +170,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   it should "retrieve an Airport empty collection" in {
     val query = for {
       airport <- airports
-      _ <- countries.filter(_.name === esCountry._1)
+      _ <- CountryRepository.findByCodeQuery(esCountry._2)
     } yield airport
 
     val results = db.run(query.result).futureValue
@@ -203,8 +197,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     flight.code shouldBe flightUx9059._1
   }
 
-  //TODO findFlightsByRoute, implement Destination
-  it should "WIP retrieve all fligths for a given route" in {
+  it should "retrieve all fligths for a given route" in {
     val resultAction = populateDatabase()
     Await.result(db.run(resultAction), 2 seconds)
 
@@ -219,7 +212,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     val resultAction = populateDatabase()
     Await.result(db.run(resultAction), 2 seconds)
 
-    val countryCount = db.run(countries.length.result).futureValue
+    val countryCount = db.run(CountryRepository.count.result).futureValue
     val airportCount = db.run(airports.length.result).futureValue
 
     countryCount shouldBe 3
@@ -247,23 +240,13 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   |_|  |_| |______| |______| |_|      |______| |_|  \_\ |_____/
   */
 
-  def insertAircraft(aircraft: Aircraft): Int = db.run(fleet += aircraft).futureValue
-
-  def insertAirport(airport: Airport) = db.run(airports += airport).futureValue
-
-  def insertCountry(country: Country) = db.run(countries += country).futureValue
-
-  def insertAircraftDBIO(typeCode: String, registration: String, airlineId: Long) =
-    fleetReturningId += Aircraft(typeCode, registration, airlineId)
+  def insertAirport(airport: Airport): Int = db.run(airports += airport).futureValue
 
   def insertAirlineDBIO(name: String, foundationDate: LocalDate) =
     airlinesReturningId += Airline(name, foundationDate)
 
   def insertAirportDBIO(tuple: (String, String, String))(countryId: Long) =
     airportsReturningId += Airport(tuple._1, tuple._2, tuple._3, countryId)
-
-  def insertCountryDBIO(countryTuple: (String, String)) =
-    countriesReturningId += Country(countryTuple._1, countryTuple._2)
 
   def insertFlightDBIO(code: String, alias: String, departure: LocalTime, arrival: LocalTime)(routeId: Long) =
     flightsReturningId += Flight(code, alias, departure, arrival, routeId)
@@ -277,10 +260,6 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   def airlinesReturningId() = airlines returning airlines.map(_.id)
 
   def airportsReturningId() = airports returning airports.map(_.id)
-
-  def countriesReturningId() = countries returning countries.map(_.id)
-
-  def fleetReturningId() = fleet returning fleet.map(_.id)
 
   def flightsReturningId = flights returning flights.map(_.id)
 
@@ -329,8 +308,8 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     val schemaAction = (
       airlines.schema ++
         airports.schema ++
-        countries.schema ++
-        fleet.schema ++
+        CountryRepository.countries.schema ++
+        AircraftRepository.aircrafts.schema ++
         flights.schema ++
         journeys.schema ++
         routes.schema
@@ -342,15 +321,15 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
 
   def populateDatabase() = {
     for {
-      esId <- insertCountryDBIO(esCountry)
+      esId <- CountryRepository.insertAction(esCountry._1, esCountry._2)
       airlineId <- insertAirlineDBIO(aeaAirline._1, aeaAirline._2)
       madId <- insertAirportDBIO(madAirport)(esId)
       tfnId <- insertAirportDBIO(tfnAirport)(esId)
       bcnId <- insertAirportDBIO(bcnAirport)(esId)
-      ukId <- insertCountryDBIO(ukCountry)
+      ukId <- CountryRepository.insertAction(ukCountry._1, ukCountry._2)
       lhrId <- insertAirportDBIO(lhrAirport)(ukId)
       lgwId <- insertAirportDBIO(lgwAirport)(ukId)
-      brId <- insertCountryDBIO(brCountry)
+      brId <- CountryRepository.insertAction(brCountry._1, brCountry._2)
       _ <- insertAirportDBIO(bsbAirport)(brId)
       _ <- insertAirportDBIO(gigAirport)(brId)
       _ <- insertAirportDBIO(ssaAirport)(brId)
@@ -361,7 +340,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
       - <- insertRouteDBIO(261.0)(bcnId)(madId) // 4 destinations
       - <- insertRouteDBIO(261.0)(bcnId)(lgwId)
       bcnTfnId <- insertRouteDBIO(1185.0)(bcnId)(tfnId) // 3 destinations
-      aircraftId <- insertAircraftDBIO(ecMigAircraft._1, ecMigAircraft._2, airlineId)
+      aircraftId <- AircraftRepository.insertAction(ecMigAircraft._1, ecMigAircraft._2, airlineId)
       ux9059Id <- insertFlightDBIO(flightUx9059._1, flightUx9059._2, flightUx9059._3, flightUx9059._4)(madTfnId)
       d85756Id <- insertFlightDBIO(flightD85756._1, flightD85756._2, flightD85756._3, flightD85756._4)(bcnTfnId)
       _ <- insertJourneyDBIO(journeyTime._1, journeyTime._2)(ux9059Id)(aircraftId)

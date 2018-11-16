@@ -67,9 +67,6 @@ package object frm {
 
   }
 
-  lazy val fleet = TableQuery[Fleet]
-
-
   /*
       A I R L I N E
    */
@@ -112,8 +109,6 @@ package object frm {
     // indexes
     def codeIndex = index("code_idx", code, unique = true)
   }
-
-  lazy val countries: TableQuery[Countries] = TableQuery[Countries]
 
 
   /*
