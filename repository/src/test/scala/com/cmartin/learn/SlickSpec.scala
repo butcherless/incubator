@@ -3,7 +3,7 @@ package com.cmartin.learn
 import java.time.{LocalDate, LocalTime}
 
 import com.cmartin.learn.repository.frm._
-import com.cmartin.learn.repository.implementation.{AircraftRepository, AirlineRepository, AirportRepository, CountryRepository}
+import com.cmartin.learn.repository.implementation._
 import org.scalatest.OptionValues._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Seconds, Span}
@@ -169,7 +169,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
 
   it should "retrieve an Airport empty collection" in {
     val query = for {
-      airport <- AirportRepository.airports
+      airport <- AirportRepository.entities
       _ <- CountryRepository.findByCodeQuery(esCountry._2)
     } yield airport
 
@@ -190,7 +190,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     val resultAction = populateDatabase()
     Await.result(db.run(resultAction), 2 seconds)
 
-    val res = db.run(flights.filter(_.code === flightUx9059._1).result).futureValue
+    val res = db.run(FlightRepository.findByCode(flightUx9059._1)).futureValue
 
     res.size shouldBe 1
     val flight = res.head
@@ -201,7 +201,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     val resultAction = populateDatabase()
     Await.result(db.run(resultAction), 2 seconds)
 
-    val res = db.run(findFlightByRoute("MAD", "TFN")).futureValue //TODO
+    val res = db.run(FlightRepository.findByOrigin("MAD")).futureValue
 
     res.size shouldBe 1
     val flight = res.head
@@ -241,19 +241,14 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   */
 
 
-  def insertFlightDBIO(code: String, alias: String, departure: LocalTime, arrival: LocalTime)(routeId: Long) =
-    flightsReturningId += Flight(code, alias, departure, arrival, routeId)
-
-  def insertJourneyDBIO(departureDate: LocalTime, arrivalDate: LocalTime)(flightId: Long)(aircraftId: Long) =
-    journeysReturningId += Journey(departureDate, arrivalDate, flightId, aircraftId)
+  //  def insertJourneyDBIO(departureDate: LocalTime, arrivalDate: LocalTime)(flightId: Long)(aircraftId: Long) =
+  //    journeysReturningId += Journey(departureDate, arrivalDate, flightId, aircraftId)
 
   def insertRouteDBIO(distance: Double)(originId: Long)(destinationId: Long) =
     routesReturningId += Route(distance, originId, destinationId)
 
 
-  def flightsReturningId = flights returning flights.map(_.id)
-
-  def journeysReturningId = journeys returning journeys.map(_.id)
+  //  def journeysReturningId = journeys returning journeys.map(_.id)
 
   def routesReturningId = routes returning routes.map(_.id)
 
@@ -272,26 +267,17 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     query.result
   }
 
-  def findFlightByRoute(origin: String, destination: String) = {
-    val query = for {
-      flight <- flights
-      route <- flight.route
-      airport <- route.origin if airport.iataCode === origin
-    } yield flight
-
-    query.result
-  }
 
   def tableCount(table: TableQuery[_]) = table.length.result
 
   def createSchema() = {
     val schemaAction = (
-      AirlineRepository.airlines.schema ++
-        AirportRepository.airports.schema ++
-        CountryRepository.countries.schema ++
-        AircraftRepository.aircrafts.schema ++
-        flights.schema ++
-        journeys.schema ++
+      AirlineRepository.entities.schema ++
+        AirportRepository.entities.schema ++
+        CountryRepository.entities.schema ++
+        AircraftRepository.entities.schema ++
+        FlightRepository.entities.schema ++
+        JourneyRepository.entities.schema ++
         routes.schema
       ).create
 
@@ -321,9 +307,9 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
       - <- insertRouteDBIO(261.0)(bcnId)(lgwId)
       bcnTfnId <- insertRouteDBIO(1185.0)(bcnId)(tfnId) // 3 destinations
       aircraftId <- AircraftRepository.insertAction(ecMigAircraft._1, ecMigAircraft._2, airlineId)
-      ux9059Id <- insertFlightDBIO(flightUx9059._1, flightUx9059._2, flightUx9059._3, flightUx9059._4)(madTfnId)
-      d85756Id <- insertFlightDBIO(flightD85756._1, flightD85756._2, flightD85756._3, flightD85756._4)(bcnTfnId)
-      _ <- insertJourneyDBIO(journeyTime._1, journeyTime._2)(ux9059Id)(aircraftId)
+      ux9059Id <- FlightRepository.insertAction(flightUx9059._1, flightUx9059._2, flightUx9059._3, flightUx9059._4, madTfnId)
+      d85756Id <- FlightRepository.insertAction(flightD85756._1, flightD85756._2, flightD85756._3, flightD85756._4, bcnTfnId)
+      _ <- JourneyRepository.insertAction(journeyTime._1, journeyTime._2, ux9059Id, aircraftId)
     } yield Unit
   }
 

@@ -3,6 +3,7 @@ package com.cmartin.learn.repository
 import java.sql.Date
 import java.time.{LocalDate, LocalTime}
 
+import com.cmartin.learn.repository.implementation.LongBaseEntity
 import slick.jdbc.H2Profile.api._
 
 package object frm {
@@ -48,17 +49,20 @@ package object frm {
     def id: Option[Long]
   }
 
+  abstract class BaseTable[E <: LongBaseEntity](tag: Tag, tableName: String) extends Table[E](tag, tableName) {
+    // primary key column:
+    def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
+  }
+
   /*
       A I R C R A F T
    */
   final case class Aircraft(typeCode: String,
                             registration: String,
                             airlineId: Long,
-                            id: Option[Long] = None) extends Entity
+                            id: Option[Long] = None) extends LongBaseEntity
 
-  final class Fleet(tag: Tag) extends Table[Aircraft](tag, TableNames.fleet) {
-    // primary key column:
-    def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
+  final class Fleet(tag: Tag) extends BaseTable[Aircraft](tag, TableNames.fleet) {
 
     // property columns:
     def typeCode = column[String]("TYPE_CODE")
@@ -79,14 +83,11 @@ package object frm {
    */
   final case class Airline(name: String,
                            foundationDate: LocalDate,
-                           id: Option[Long] = None) extends Entity
+                           id: Option[Long] = None) extends LongBaseEntity
 
-  final class Airlines(tag: Tag) extends Table[Airline](tag, TableNames.airlines) {
+  final class Airlines(tag: Tag) extends BaseTable[Airline](tag, TableNames.airlines) {
 
     import CustomColumnTypes.localDateType
-
-    // primary key column:
-    def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
 
     // property columns:
     def name = column[String]("NAME")
@@ -102,11 +103,9 @@ package object frm {
    */
   final case class Country(name: String,
                            code: String,
-                           id: Option[Long] = None) extends Entity
+                           id: Option[Long] = None) extends LongBaseEntity
 
-  final class Countries(tag: Tag) extends Table[Country](tag, TableNames.countries) {
-    // primary key column:
-    def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
+  final class Countries(tag: Tag) extends BaseTable[Country](tag, TableNames.countries) {
 
     // property columns:
     def name = column[String]("NAME")
@@ -127,11 +126,9 @@ package object frm {
                            iataCode: String,
                            icaoCode: String,
                            countryId: Long,
-                           id: Option[Long] = None) extends Entity
+                           id: Option[Long] = None) extends LongBaseEntity
 
-  final class Airports(tag: Tag) extends Table[Airport](tag, TableNames.airports) {
-    // primary key column:
-    def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
+  final class Airports(tag: Tag) extends BaseTable[Airport](tag, TableNames.airports) {
 
     // property columns:
     def name = column[String]("NAME")
@@ -159,11 +156,9 @@ package object frm {
   final case class Route(distance: Double,
                          originId: Long,
                          destinationId: Long,
-                         id: Option[Long] = None) extends Entity
+                         id: Option[Long] = None) extends LongBaseEntity
 
-  final class Routes(tag: Tag) extends Table[Route](tag, TableNames.routes) {
-    // primary key column:
-    def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
+  final class Routes(tag: Tag) extends BaseTable[Route](tag, TableNames.routes) {
 
     // property columns:
     def distance = column[Double]("DISTANCE")
@@ -197,14 +192,11 @@ package object frm {
                           schedDeparture: LocalTime,
                           schedArrival: LocalTime,
                           routeId: Long,
-                          id: Option[Long] = None) extends Entity
+                          id: Option[Long] = None) extends LongBaseEntity
 
-  final class Flights(tag: Tag) extends Table[Flight](tag, TableNames.flights) {
+  final class Flights(tag: Tag) extends BaseTable[Flight](tag, TableNames.flights) {
 
     import CustomColumnTypes.localTimeType
-
-    // primary key column:
-    def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
 
     // property columns:
     def code = column[String]("CODE")
@@ -230,8 +222,6 @@ package object frm {
 
   }
 
-  lazy val flights = TableQuery[Flights]
-
 
   /*
       J O U R N E Y
@@ -240,14 +230,11 @@ package object frm {
                            arrivalDate: LocalTime,
                            flightId: Long,
                            aircraftId: Long,
-                           id: Option[Long] = None) extends Entity
+                           id: Option[Long] = None) extends LongBaseEntity
 
-  final class Journeys(tag: Tag) extends Table[Journey](tag, TableNames.journeys) {
+  final class Journeys(tag: Tag) extends BaseTable[Journey](tag, TableNames.journeys) {
 
     import CustomColumnTypes.localTimeType
-
-    // primary key column:
-    def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
 
     // property columns:
     def departureDate = column[LocalTime]("DEPARTURE_DATE")
@@ -266,7 +253,5 @@ package object frm {
 
     def aircraft = foreignKey("FK_AIRCRAFT", aircraftId, TableQuery[Fleet])(_.id)
   }
-
-  lazy val journeys = TableQuery[Journeys]
 
 }

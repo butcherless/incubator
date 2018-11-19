@@ -1,6 +1,6 @@
 package com.cmartin.learn.repository
 
-import java.time.LocalDate
+import java.time.{LocalDate, LocalTime}
 
 import com.cmartin.learn.repository.frm._
 import slick.jdbc.H2Profile.api._
@@ -9,70 +9,91 @@ import slick.lifted.TableQuery
 
 package object implementation {
 
-  object CountryRepository {
-    lazy val countries: TableQuery[Countries] = TableQuery[Countries]
+  trait BaseEntity[K] {
+    val id: K
+  }
+
+  trait BaseRepository[E <: LongBaseEntity, T <: BaseTable[E]] {
+    val entities: TableQuery[T]
+
+    def findById(id: Long) = entities.filter(_.id === id)
+
+    def count() = entities.length
+
+    def entityReturningId() = entities returning entities.map(_.id)
+  }
+
+  abstract class LongBaseEntity extends BaseEntity[Option[Long]]
+
+  object CountryRepository extends BaseRepository[Country, Countries] {
+    lazy val entities = TableQuery[Countries]
 
     def findByCodeQuery(code: String) = {
-      countries.filter(_.code === code) //.result.headOption
+      entities.filter(_.code === code) //.result.headOption
     }
 
     def insertAction(name: String, code: String) =
       entityReturningId += Country(name, code)
-
-    def count() = countries.length //.result
-
-    def entityReturningId() = countries returning countries.map(_.id)
   }
 
+  object AircraftRepository extends BaseRepository[Aircraft, Fleet] {
+    lazy val entities = TableQuery[Fleet]
 
-  object AircraftRepository {
-    lazy val aircrafts: TableQuery[Fleet] = TableQuery[Fleet]
-
-    def findById(id: Long) = aircrafts.filter(_.id === id)
-
-    def findByRegistration(registration: String) = aircrafts.filter(_.registration === registration)
+    def findByRegistration(registration: String) = entities.filter(_.registration === registration)
 
     def insertAction(typeCode: String, registration: String, airlineId: Long) =
       entityReturningId += Aircraft(typeCode, registration, airlineId)
-
-    def count() = aircrafts.length
-
-    def entityReturningId() = aircrafts returning aircrafts.map(_.id)
   }
 
-  object AirlineRepository {
-    lazy val airlines: TableQuery[Airlines] = TableQuery[Airlines]
-
-    def findById(id: Long) = airlines.filter(_.id === id)
+  object AirlineRepository extends BaseRepository[Airline, Airlines] {
+    lazy val entities = TableQuery[Airlines]
 
     def insertAction(name: String, foundationDate: LocalDate) =
       entityReturningId += Airline(name, foundationDate)
-
-    def count() = airlines.length
-
-    def entityReturningId() = airlines returning airlines.map(_.id)
   }
 
-  object AirportRepository {
-    lazy val airports = TableQuery[Airports]
-
-    def findById(id: Long) = airports.filter(_.id === id)
+  object AirportRepository extends BaseRepository[Airport, Airports] {
+    lazy val entities = TableQuery[Airports]
 
     def insertAction(name: String, iataCode: String, icaoCode: String, countryId: Long) =
       entityReturningId += Airport(name, iataCode, icaoCode, countryId)
 
-    def count() = airports.length
-
-    def entityReturningId() = airports returning airports.map(_.id)
-
     def findByCountryCode(code: String) = {
       val query = for {
-        airport <- airports
+        airport <- entities
         country <- airport.country if country.code === code
       } yield airport
 
       query
     }
   }
+
+  object FlightRepository extends BaseRepository[Flight, Flights] {
+    lazy val entities = TableQuery[Flights]
+
+    def insertAction(code: String, alias: String, departure: LocalTime, arrival: LocalTime, routeId: Long) =
+      entityReturningId += Flight(code, alias, departure, arrival, routeId)
+
+    def findByCode(code: String) = entities.filter(_.code === code).result
+
+    def findByOrigin(origin: String) = {
+      val query = for {
+        flight <- entities
+        route <- flight.route
+        airport <- route.origin if airport.iataCode === origin
+      } yield flight
+
+      query.result
+    }
+
+  }
+
+  object JourneyRepository extends BaseRepository[Journey, Journeys] {
+    lazy val entities = TableQuery[Journeys]
+
+    def insertAction(departureDate: LocalTime, arrivalDate: LocalTime, flightId: Long, aircraftId: Long) =
+      entityReturningId += Journey(departureDate, arrivalDate, flightId, aircraftId)
+  }
+
 
 }
