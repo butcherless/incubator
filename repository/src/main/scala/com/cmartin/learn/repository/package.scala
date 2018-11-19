@@ -157,6 +157,7 @@ package object frm {
                           alias: String,
                           schedDeparture: LocalTime,
                           schedArrival: LocalTime,
+                          airlineId: Long,
                           routeId: Long,
                           id: Option[Long] = None) extends LongBaseEntity
 
@@ -169,16 +170,15 @@ package object frm {
 
     def alias = column[String]("ALIAS")
 
-    //TODO Custom Column Mappings, LocalTime
     def schedDeparture = column[LocalTime]("SCHEDULED_DEPARTURE")
 
-    //TODO Custom Column Mappings, LocalTime
     def schedArrival = column[LocalTime]("SCHEDULED_ARRIVAL")
 
     // foreign columns:
+    def airlineId = column[Long]("AIRLINE_ID")
     def routeId = column[Long]("ROUTE_ID")
 
-    def * = (code, alias, schedDeparture, schedArrival, routeId, id.?) <> (Flight.tupled, Flight.unapply)
+    def * = (code, alias, schedDeparture, schedArrival,airlineId, routeId, id.?) <> (Flight.tupled, Flight.unapply)
 
     // foreign keys
     def route = foreignKey("FK_ROUTE", routeId, TableQuery[Routes])(_.id)

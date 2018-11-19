@@ -72,8 +72,8 @@ package object implementation {
   object FlightRepository extends BaseRepository[Flight, Flights] {
     lazy val entities = TableQuery[Flights]
 
-    def insertAction(code: String, alias: String, departure: LocalTime, arrival: LocalTime, routeId: Long) =
-      entityReturningId += Flight(code, alias, departure, arrival, routeId)
+    def insertAction(code: String, alias: String, departure: LocalTime, arrival: LocalTime, airlineId: Long, routeId: Long) =
+      entityReturningId += Flight(code, alias, departure, arrival, airlineId, routeId)
 
     def findByCode(code: String) = entities.filter(_.code === code).result
 

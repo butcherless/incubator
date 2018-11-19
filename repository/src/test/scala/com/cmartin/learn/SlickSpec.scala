@@ -215,7 +215,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     val countryCount = db.run(CountryRepository.count.result).futureValue
     val airportCount = db.run(AirportRepository.count.result).futureValue
 
-    countryCount shouldBe 3
+    countryCount shouldBe 4
     airportCount shouldBe 8
 
     val esResults = db.run(AirportRepository.findByCountryCode(esCountry._2).result).futureValue
@@ -259,7 +259,11 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   def populateDatabase() = {
     for {
       esId <- CountryRepository.insertAction(esCountry._1, esCountry._2)
-      airlineId <- AirlineRepository.insertAction(aeaAirline._1, aeaAirline._2)
+      aeaId <- AirlineRepository.insertAction(aeaAirline._1, aeaAirline._2)
+
+      noId <- CountryRepository.insertAction(noCountry._1, noCountry._2)
+      ibkId <- AirlineRepository.insertAction(ibkAirline._1, ibkAirline._2)
+
       madId <- AirportRepository.insertAction(madAirport._1, madAirport._2, madAirport._3, esId)
       tfnId <- AirportRepository.insertAction(tfnAirport._1, tfnAirport._2, tfnAirport._3, esId)
       bcnId <- AirportRepository.insertAction(bcnAirport._1, bcnAirport._2, bcnAirport._3, esId)
@@ -277,9 +281,9 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
       - <- RouteRepository.insertAction(261.0, bcnId, madId) // 4 destinations
       - <- RouteRepository.insertAction(261.0, bcnId, lgwId)
       bcnTfnId <- RouteRepository.insertAction(1185.0, bcnId, tfnId) // 3 destinations
-      aircraftId <- AircraftRepository.insertAction(ecMigAircraft._1, ecMigAircraft._2, airlineId)
-      ux9059Id <- FlightRepository.insertAction(flightUx9059._1, flightUx9059._2, flightUx9059._3, flightUx9059._4, madTfnId)
-      d85756Id <- FlightRepository.insertAction(flightD85756._1, flightD85756._2, flightD85756._3, flightD85756._4, bcnTfnId)
+      aircraftId <- AircraftRepository.insertAction(ecMigAircraft._1, ecMigAircraft._2, aeaId)
+      ux9059Id <- FlightRepository.insertAction(flightUx9059._1, flightUx9059._2, flightUx9059._3, flightUx9059._4, aeaId, madTfnId)
+      d85756Id <- FlightRepository.insertAction(flightD85756._1, flightD85756._2, flightD85756._3, flightD85756._4, ibkId, bcnTfnId)
       _ <- JourneyRepository.insertAction(journeyTime._1, journeyTime._2, ux9059Id, aircraftId)
     } yield Unit
   }
@@ -296,6 +300,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
 
   // T E S T   D A T A
   val esCountry = ("Spain", "ES")
+  val noCountry = ("Norway", "NO")
   val ukCountry = ("United Kingdom", "UK")
   val brCountry = ("Brasil", "BR")
 
@@ -314,6 +319,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   val gigAirport = ("Tom Jobim International Airport", "GIG", "SBGL")
 
   val aeaAirline = ("Air Europa", LocalDate.of(1986, 11, 21))
+  val ibsAirline = ("Iberia Express", LocalDate.of(2011, 10, 6))
   val ibkAirline = ("Norwegian Air International", LocalDate.of(1993, 1, 22))
 
   val flightUx9059 = ("ux9059", "aea9059", LocalTime.of(7, 5), LocalTime.of(8, 55))
