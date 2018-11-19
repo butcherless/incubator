@@ -25,16 +25,6 @@ package object implementation {
 
   abstract class LongBaseEntity extends BaseEntity[Option[Long]]
 
-  object CountryRepository extends BaseRepository[Country, Countries] {
-    lazy val entities = TableQuery[Countries]
-
-    def findByCodeQuery(code: String) = {
-      entities.filter(_.code === code) //.result.headOption
-    }
-
-    def insertAction(name: String, code: String) =
-      entityReturningId += Country(name, code)
-  }
 
   object AircraftRepository extends BaseRepository[Aircraft, Fleet] {
     lazy val entities = TableQuery[Fleet]
@@ -68,6 +58,17 @@ package object implementation {
     }
   }
 
+  object CountryRepository extends BaseRepository[Country, Countries] {
+    lazy val entities = TableQuery[Countries]
+
+    def findByCodeQuery(code: String) = {
+      entities.filter(_.code === code) //.result.headOption
+    }
+
+    def insertAction(name: String, code: String) =
+      entityReturningId += Country(name, code)
+  }
+
   object FlightRepository extends BaseRepository[Flight, Flights] {
     lazy val entities = TableQuery[Flights]
 
@@ -95,5 +96,23 @@ package object implementation {
       entityReturningId += Journey(departureDate, arrivalDate, flightId, aircraftId)
   }
 
+
+  object RouteRepository extends BaseRepository[Route, Routes] {
+    lazy val entities = TableQuery[Routes]
+
+    def insertAction(distance: Double, originId: Long, destinationId: Long) =
+      entityReturningId += Route(distance, originId, destinationId)
+
+    def findDestinationsByOrigin(iataCode: String) = {
+      val query = for {
+        route <- entities
+        airport <- route.destination
+        origin <- route.origin if origin.iataCode === iataCode
+      } yield airport
+
+      query.result
+    }
+
+  }
 
 }

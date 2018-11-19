@@ -151,40 +151,6 @@ package object frm {
 
 
   /*
-      R O U T E
-   */
-  final case class Route(distance: Double,
-                         originId: Long,
-                         destinationId: Long,
-                         id: Option[Long] = None) extends LongBaseEntity
-
-  final class Routes(tag: Tag) extends BaseTable[Route](tag, TableNames.routes) {
-
-    // property columns:
-    def distance = column[Double]("DISTANCE")
-
-    // foreign key columns:
-    def originId = column[Long]("ORIGIN_ID")
-
-    def destinationId = column[Long]("DESTINATION_ID")
-
-    def * = (distance, originId, destinationId, id.?) <> (Route.tupled, Route.unapply)
-
-    // foreign keys
-    def origin = foreignKey("FK_ORIGIN", originId, TableQuery[Airports])(origin =>
-      origin.id, onDelete = ForeignKeyAction.Cascade)
-
-    def destination = foreignKey("FK_DESTINATION", destinationId, TableQuery[Airports])(destination =>
-      destination.id, onDelete = ForeignKeyAction.Cascade)
-
-    // indexes, compound
-    def originDestinationIndex = index("origin_destination_index", (originId, destinationId), unique = true)
-  }
-
-  lazy val routes = TableQuery[Routes]
-
-
-  /*
       F L I G H T
   */
   final case class Flight(code: String,
@@ -252,6 +218,37 @@ package object frm {
     def flight = foreignKey("FK_FLIGHT", flightId, TableQuery[Flights])(_.id)
 
     def aircraft = foreignKey("FK_AIRCRAFT", aircraftId, TableQuery[Fleet])(_.id)
+  }
+
+  /*
+      R O U T E
+  */
+  final case class Route(distance: Double,
+                         originId: Long,
+                         destinationId: Long,
+                         id: Option[Long] = None) extends LongBaseEntity
+
+  final class Routes(tag: Tag) extends BaseTable[Route](tag, TableNames.routes) {
+
+    // property columns:
+    def distance = column[Double]("DISTANCE")
+
+    // foreign key columns:
+    def originId = column[Long]("ORIGIN_ID")
+
+    def destinationId = column[Long]("DESTINATION_ID")
+
+    def * = (distance, originId, destinationId, id.?) <> (Route.tupled, Route.unapply)
+
+    // foreign keys
+    def origin = foreignKey("FK_ORIGIN", originId, TableQuery[Airports])(origin =>
+      origin.id, onDelete = ForeignKeyAction.Cascade)
+
+    def destination = foreignKey("FK_DESTINATION", destinationId, TableQuery[Airports])(destination =>
+      destination.id, onDelete = ForeignKeyAction.Cascade)
+
+    // indexes, compound
+    def originDestinationIndex = index("origin_destination_index", (originId, destinationId), unique = true)
   }
 
 }
