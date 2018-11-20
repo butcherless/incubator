@@ -1,7 +1,7 @@
 package com.cmartin.learn.repository
 
 import java.sql.Date
-import java.time.{LocalDate, LocalTime}
+import java.time.{LocalDate, LocalDateTime, LocalTime}
 
 import com.cmartin.learn.repository.implementation.LongBaseEntity
 import slick.jdbc.H2Profile.api._
@@ -176,9 +176,10 @@ package object frm {
 
     // foreign columns:
     def airlineId = column[Long]("AIRLINE_ID")
+
     def routeId = column[Long]("ROUTE_ID")
 
-    def * = (code, alias, schedDeparture, schedArrival,airlineId, routeId, id.?) <> (Flight.tupled, Flight.unapply)
+    def * = (code, alias, schedDeparture, schedArrival, airlineId, routeId, id.?) <> (Flight.tupled, Flight.unapply)
 
     // foreign keys
     def route = foreignKey("FK_ROUTE", routeId, TableQuery[Routes])(_.id)
@@ -250,5 +251,16 @@ package object frm {
     // indexes, compound
     def originDestinationIndex = index("origin_destination_index", (originId, destinationId), unique = true)
   }
+
+
+  /*
+      P O S I T I O N
+  */
+
+  final case class Point(longitude: Float, latitude: Float)
+
+  final case class Coordinates(point: Point, altitude: Float)
+
+  final case class Position(coordinates: Coordinates, dateTime: LocalDateTime)
 
 }
