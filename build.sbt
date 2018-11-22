@@ -63,7 +63,7 @@ lazy val repository = (project in file("repository"))
     commonSettings,
     name := "repository",
     libraryDependencies ++= Seq(slick, slickPool, logback, h2Database, scalaTest)
-  ).dependsOn(common)
+  ).dependsOn(common, test)
 
 lazy val service = (project in file("service"))
   .settings(
@@ -86,6 +86,12 @@ lazy val web = (project in file("web"))
     libraryDependencies ++= Seq(scalaLogging, logback, scalaTest)
   ).dependsOn(common, controller, service)
 
+lazy val test = (project in file("test"))
+  .settings(
+    commonSettings,
+    name := "test"
+  )
+
 // quick research deps
 
-lazy val sttp = "com.softwaremill.sttp" %% "core" % "1.4.2"
+lazy val sttp = "com.softwaremill.sttp" %% "core" % "1.5.0"

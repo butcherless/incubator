@@ -4,6 +4,7 @@ import java.time.{LocalDate, LocalTime}
 
 import com.cmartin.learn.repository.frm._
 import com.cmartin.learn.repository.implementation._
+import com.cmartin.learn.test.Constants
 import org.scalatest.OptionValues._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Seconds, Span}
@@ -18,19 +19,13 @@ import scala.concurrent.duration._
 class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFutures {
   implicit override val patienceConfig: PatienceConfig = PatienceConfig(timeout = Span(5, Seconds))
 
-  val registrationMIG = "ec-mig"
-  val registrationMNS = "ec-mns"
-  val barajasIataCode = "MAD"
-  val madDestinationCount = 4
-
-  val tableCount = 7
   var db: Database = _
 
 
   it should "create the aviation database" in {
     val tables = db.run(MTable.getTables).futureValue
 
-    tables.size shouldBe tableCount
+    tables.size shouldBe Constants.tableCount
     tables.count(_.name.name == TableNames.airlines) shouldBe 1
     tables.count(_.name.name == TableNames.airports) shouldBe 1
     tables.count(_.name.name == TableNames.countries) shouldBe 1
@@ -45,7 +40,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
 
     val resultAction = for {
       airlineId <- AirlineRepository.insertAction(aeaAirline._1, aeaAirline._2)
-      aircraftId <- AircraftRepository.insertAction(TypeCodes.BOEING_787_800, registrationMIG, airlineId)
+      aircraftId <- AircraftRepository.insertAction(TypeCodes.BOEING_787_800, Constants.registrationMIG, airlineId)
       airlineCount <- AirlineRepository.count.result
       aircraftCount <- AircraftRepository.count().result
       airline <- AirlineRepository.findById(airlineId).result
@@ -64,7 +59,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     results._2.nonEmpty shouldBe true
     val aircraft = results._4.head
     aircraft.typeCode shouldEqual TypeCodes.BOEING_787_800
-    aircraft.registration shouldEqual registrationMIG
+    aircraft.registration shouldEqual Constants.registrationMIG
     aircraft.airlineId shouldEqual airline.id.value
   }
 
@@ -72,8 +67,8 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
 
     val resultAction = for {
       airlineId <- AirlineRepository.insertAction(aeaAirline._1, aeaAirline._2)
-      _ <- AircraftRepository.insertAction(TypeCodes.BOEING_787_800, registrationMIG, airlineId)
-      aircrafts <- AircraftRepository.findByRegistration(registrationMIG).result
+      _ <- AircraftRepository.insertAction(TypeCodes.BOEING_787_800, Constants.registrationMIG, airlineId)
+      aircrafts <- AircraftRepository.findByRegistration(Constants.registrationMIG).result
     } yield aircrafts
 
     val aircrafts = db.run(resultAction).futureValue
@@ -82,23 +77,23 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     val aircraft = aircrafts.head
     aircraft.id.value should be > 0L
     aircraft.typeCode shouldBe TypeCodes.BOEING_787_800
-    aircraft.registration shouldBe registrationMIG
+    aircraft.registration shouldBe Constants.registrationMIG
   }
 
   it should "update an aircraft into the database" in {
     //TODO implement Repository function
     val updateAction = for {
       airlineId <- AirlineRepository.insertAction(aeaAirline._1, aeaAirline._2)
-      _ <- AircraftRepository.insertAction(TypeCodes.BOEING_787_800, registrationMIG, airlineId)
-      _ <- AircraftRepository.findByRegistration(registrationMIG).map(a => a.registration).update(registrationMNS)
-      seq <- AircraftRepository.findByRegistration(registrationMNS).result
+      _ <- AircraftRepository.insertAction(TypeCodes.BOEING_787_800, Constants.registrationMIG, airlineId)
+      _ <- AircraftRepository.findByRegistration(Constants.registrationMIG).map(a => a.registration).update(Constants.registrationMNS)
+      seq <- AircraftRepository.findByRegistration(Constants.registrationMNS).result
     } yield seq
 
     val seq = db.run(updateAction).futureValue
 
     seq.size shouldBe 1
     val aircraft = seq.head
-    aircraft.registration shouldBe registrationMNS
+    aircraft.registration shouldBe Constants.registrationMNS
   }
 
   it should "delete an aircraft from the dataase" in {
@@ -113,7 +108,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     initialCount shouldBe 1
 
     val finalAction = for {
-      _ <- AircraftRepository.findByRegistration(registrationMIG).delete
+      _ <- AircraftRepository.findByRegistration(Constants.registrationMIG).delete
       count <- AircraftRepository.count.result
     } yield count
 
@@ -183,7 +178,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     Await.result(db.run(resultAction), 2 seconds)
 
     val res = db.run(RouteRepository.findDestinationsByOrigin(madAirport._2)).futureValue
-    res.size shouldBe madDestinationCount
+    res.size shouldBe Constants.madDestinationCount
   }
 
   it should "retrieve flight by code" in {
@@ -202,7 +197,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     val resultAction = populateDatabase()
     Await.result(db.run(resultAction), 2 seconds)
 
-    val res = db.run(FlightRepository.findByOrigin(barajasIataCode)).futureValue
+    val res = db.run(FlightRepository.findByOrigin(Constants.barajasIataCode)).futureValue
 
     res.size shouldBe expectedFlightCount
     val flight = res.head
@@ -316,10 +311,10 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
 
   val TestCountries = Seq(Country(esCountry._1, esCountry._2), ukCountry, brCountry)
 
-  val ecMigAircraft = (TypeCodes.BOEING_787_800, registrationMIG)
+  val ecMigAircraft = (TypeCodes.BOEING_787_800, Constants.registrationMIG)
 
 
-  val madAirport = ("Madrid Barajas", barajasIataCode, "LEMD")
+  val madAirport = ("Madrid Barajas", Constants.barajasIataCode, "LEMD")
   val tfnAirport = ("Tenerife Norte", "TFN", "GXCO")
   val bcnAirport = ("Barcelona International", "BCN", "LEBL")
   val lhrAirport = ("London Heathrow", "LHR", "EGLL")
