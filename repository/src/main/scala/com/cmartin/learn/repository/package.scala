@@ -3,7 +3,7 @@ package com.cmartin.learn.repository
 import java.sql.Date
 import java.time.{LocalDate, LocalDateTime, LocalTime}
 
-import com.cmartin.learn.repository.implementation.LongBaseEntity
+import com.cmartin.learn.repository.spec.{BaseTable, LongBaseEntity}
 import slick.jdbc.H2Profile.api._
 
 package object frm {
@@ -44,15 +44,6 @@ package object frm {
 
   }
 
-
-  trait Entity {
-    def id: Option[Long]
-  }
-
-  abstract class BaseTable[E <: LongBaseEntity](tag: Tag, tableName: String) extends Table[E](tag, tableName) {
-    // primary key column:
-    def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
-  }
 
   /*
       A I R C R A F T

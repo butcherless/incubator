@@ -290,7 +290,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
       d85756Id <- FlightRepository.insertAction(flightD85756._1, flightD85756._2, flightD85756._3, flightD85756._4, ibkId, bcnTfnId)
 
       _ <- JourneyRepository.insertAction(journeyTime._1, journeyTime._2, ux9059Id, aircraftId)
-    } yield Unit
+    } yield ()
   }
 
 
@@ -303,7 +303,15 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     db.close
   }
 
-  // T E S T   D A T A
+  /*
+    _____         _     ____        _
+   |_   _|__  ___| |_  |  _ \  __ _| |_ __ _
+     | |/ _ \/ __| __| | | | |/ _` | __/ _` |
+     | |  __/\__ \ |_  | |_| | (_| | || (_| |
+     |_|\___||___/\__| |____/ \__,_|\__\__,_|
+
+   */
+
   val esCountry = ("Spain", "ES")
   val noCountry = ("Norway", "NO")
   val ukCountry = ("United Kingdom", "UK")

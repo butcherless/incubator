@@ -3,27 +3,12 @@ package com.cmartin.learn.repository
 import java.time.{LocalDate, LocalTime}
 
 import com.cmartin.learn.repository.frm._
+import com.cmartin.learn.repository.spec.BaseRepository
 import slick.jdbc.H2Profile.api._
 import slick.lifted.TableQuery
 
 
 package object implementation {
-
-  trait BaseEntity[K] {
-    val id: K
-  }
-
-  trait BaseRepository[E <: LongBaseEntity, T <: BaseTable[E]] {
-    val entities: TableQuery[T]
-
-    def findById(id: Long) = entities.filter(_.id === id)
-
-    def count() = entities.length
-
-    def entityReturningId() = entities returning entities.map(_.id)
-  }
-
-  abstract class LongBaseEntity extends BaseEntity[Option[Long]]
 
 
   object AircraftRepository extends BaseRepository[Aircraft, Fleet] {
