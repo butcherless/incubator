@@ -11,27 +11,29 @@ import slick.lifted.TableQuery
 package object implementation {
 
 
-  object AircraftRepository extends BaseRepository[Aircraft, Fleet] {
+  class AircraftRepository(implicit db: Database) extends BaseRepository[Aircraft, Fleet](db) {
     lazy val entities = TableQuery[Fleet]
 
-    def findByRegistration(registration: String) = entities.filter(_.registration === registration)
+    def findByRegistration(registration: String) =
+      db.run(entities.filter(_.registration === registration).result)
 
-    def insertAction(typeCode: String, registration: String, airlineId: Long) =
-      entityReturningId += Aircraft(typeCode, registration, airlineId)
+    def insert(aircraft: Aircraft) =
+      db.run(entityReturningId += aircraft)
   }
 
-  object AirlineRepository extends BaseRepository[Airline, Airlines] {
+  class AirlineRepository(implicit db: Database) extends BaseRepository[Airline, Airlines](db) {
     lazy val entities = TableQuery[Airlines]
 
-    def insertAction(name: String, foundationDate: LocalDate) =
-      entityReturningId += Airline(name, foundationDate)
+    def insert(airline: Airline) =
+      db.run(entityReturningId += airline)
   }
 
-  object AirportRepository extends BaseRepository[Airport, Airports] {
+
+  class AirportRepository(implicit db: Database) extends BaseRepository[Airport, Airports](db) {
     lazy val entities = TableQuery[Airports]
 
-    def insertAction(name: String, iataCode: String, icaoCode: String, countryId: Long) =
-      entityReturningId += Airport(name, iataCode, icaoCode, countryId)
+    def insert(airport: Airport) =
+      db.run(entityReturningId += airport)
 
     def findByCountryCode(code: String) = {
       val query = for {
@@ -39,21 +41,32 @@ package object implementation {
         country <- airport.country if country.code === code
       } yield airport
 
-      query
+      db.run(query.result.headOption)
     }
   }
 
-  object CountryRepository extends BaseRepository[Country, Countries] {
+  class CountryRepository(implicit db: Database) extends BaseRepository[Country, Countries](db) {
     lazy val entities = TableQuery[Countries]
 
+  def insert(country:Country) =
+    db.run(entityReturningId += country)
+
+
+  def findByCode(code: String) = {
+          db.run(entities.filter(_.code === code).result.headOption)
+        }
+
+  /*
     def findByCodeQuery(code: String) = {
       entities.filter(_.code === code) //.result.headOption
     }
 
     def insertAction(name: String, code: String) =
       entityReturningId += Country(name, code)
+      */
   }
 
+  /*
   object FlightRepository extends BaseRepository[Flight, Flights] {
     lazy val entities = TableQuery[Flights]
 
@@ -99,5 +112,5 @@ package object implementation {
     }
 
   }
-
+*/
 }

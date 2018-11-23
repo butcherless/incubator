@@ -8,78 +8,47 @@ import com.cmartin.learn.test.Constants
 import org.scalatest.OptionValues._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Seconds, Span}
-import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
+import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 import slick.jdbc.H2Profile.api._
 import slick.jdbc.meta.MTable
 
-import scala.concurrent.Await
+import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
-class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFutures {
+class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with ScalaFutures {
   implicit override val patienceConfig: PatienceConfig = PatienceConfig(timeout = Span(5, Seconds))
 
-  var db: Database = _
+  implicit var db: Database = _
 
+  it should "insert an aircraft into the database" in new Repos {
 
-  it should "create the aviation database" in {
-    val tables = db.run(MTable.getTables).futureValue
+    val aircraftFuture = for {
+      airlineId <- airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2))
+      aircraftId <- aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, Constants.registrationMIG, airlineId))
+    } yield aircraftId
 
-    tables.size shouldBe Constants.tableCount
-    tables.count(_.name.name == TableNames.airlines) shouldBe 1
-    tables.count(_.name.name == TableNames.airports) shouldBe 1
-    tables.count(_.name.name == TableNames.countries) shouldBe 1
-    tables.count(_.name.name == TableNames.fleet) shouldBe 1
-    tables.count(_.name.name == TableNames.flights) shouldBe 1
-    tables.count(_.name.name == TableNames.journeys) shouldBe 1
-    tables.count(_.name.name == TableNames.routes) shouldBe 1
+    val aircraftId = aircraftFuture.futureValue.value
+    aircraftId should be > 0L
   }
 
+  it should "retrieve an aircraft from the database" in new Repos {
 
-  it should "insert an aircraft into the database" in {
+    val aircraftFuture: Future[Option[Aircraft]] = for {
+      airlineId <- airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2))
+      aircraftId <- aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, Constants.registrationMIG, airlineId))
+      aircraft <- aircraftRepo.findById(aircraftId)
+    } yield aircraft
 
-    val resultAction = for {
-      airlineId <- AirlineRepository.insertAction(aeaAirline._1, aeaAirline._2)
-      aircraftId <- AircraftRepository.insertAction(TypeCodes.BOEING_787_800, Constants.registrationMIG, airlineId)
-      airlineCount <- AirlineRepository.count.result
-      aircraftCount <- AircraftRepository.count().result
-      airline <- AirlineRepository.findById(airlineId).result
-      aircraft <- AircraftRepository.findById(aircraftId).result
-    } yield (airlineCount, airline, aircraftCount, aircraft)
-
-    val results = db.run(resultAction).futureValue
-
-    results._1 shouldBe 1
-    results._2.nonEmpty shouldBe true
-    val airline = results._2.head
-    airline.name shouldEqual aeaAirline._1
-    airline.foundationDate shouldEqual aeaAirline._2
-
-    results._3 shouldBe 1
-    results._2.nonEmpty shouldBe true
-    val aircraft = results._4.head
+    val aircraft = aircraftFuture.futureValue.value
+    aircraft.id.value should be > 0L
     aircraft.typeCode shouldEqual TypeCodes.BOEING_787_800
     aircraft.registration shouldEqual Constants.registrationMIG
-    aircraft.airlineId shouldEqual airline.id.value
+    aircraft.airlineId should be > 0L
+
   }
 
-  it should "retrieve an aircraft from the database" in {
-
-    val resultAction = for {
-      airlineId <- AirlineRepository.insertAction(aeaAirline._1, aeaAirline._2)
-      _ <- AircraftRepository.insertAction(TypeCodes.BOEING_787_800, Constants.registrationMIG, airlineId)
-      aircrafts <- AircraftRepository.findByRegistration(Constants.registrationMIG).result
-    } yield aircrafts
-
-    val aircrafts = db.run(resultAction).futureValue
-
-    aircrafts.size shouldBe 1
-    val aircraft = aircrafts.head
-    aircraft.id.value should be > 0L
-    aircraft.typeCode shouldBe TypeCodes.BOEING_787_800
-    aircraft.registration shouldBe Constants.registrationMIG
-  }
-
+  /*
   it should "update an aircraft into the database" in {
     //TODO implement Repository function
     val updateAction = for {
@@ -116,22 +85,25 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
 
     finalCount shouldBe 0
   }
-
+*/
 
   /*
        COUNTRY
    */
 
-  it should "insert a country into the database" in {
-    val query = CountryRepository.insertAction(esCountry._1, esCountry._2)
-    val count = db.run(query).futureValue
+  it should "insert a country into the database" in new Repos {
+    val count = countryRepo.insert(Country(esCountry._1, esCountry._2))
 
-    count shouldBe 1
+    count.futureValue shouldBe 1
   }
 
-  it should "retrieve a country from the database" in {
-    db.run(CountryRepository.insertAction(esCountry._1, esCountry._2))
-    val countryOption = db.run(CountryRepository.findByCodeQuery(esCountry._2).result.headOption).futureValue
+
+  it should "retrieve a country from the database" in new Repos {
+    countryRepo.insert(Country(esCountry._1, esCountry._2))
+
+    val  futureCountry = countryRepo.findByCode(esCountry._2)
+
+    val countryOption = futureCountry.futureValue
 
     countryOption.value.id.value should be > 0L
     countryOption.value.name shouldBe esCountry._1
@@ -139,29 +111,26 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   }
 
 
-  it should "insert an airport and acountry" in {
-    val resultAction = for {
-      countryId <- CountryRepository.insertAction(esCountry._1, esCountry._2)
-      airportId <- AirportRepository.insertAction(madAirport._1, madAirport._2, madAirport._3, countryId)
-      airport <- AirportRepository.findById(airportId).result
-    } yield (airport, airportId, countryId)
+  it should "insert an airport and a country" in new Repos{
 
-    val result = db.run(resultAction).futureValue
+    val airportOption = for {
+           countryId <- countryRepo.insert(Country(esCountry._1, esCountry._2))
+          airportId <- airportRepo.insert(Airport(madAirport._1, madAirport._2, madAirport._3, countryId))
+          airport <- airportRepo.findById(airportId)
+    } yield airport
 
-    val airportSeq = result._1
-    val airportId = result._2
-    val countryId = result._3
 
     // asserts
-    airportSeq.size shouldBe 1
-    val airport: Airport = airportSeq.head
-    airport.id.value shouldBe airportId
+    val airport = airportOption.futureValue.value
+
+    airport.id.value should be > 0L
+    airport.countryId should be > 0L
     airport.name shouldBe madAirport._1
     airport.iataCode shouldBe madAirport._2
     airport.icaoCode shouldBe madAirport._3
-    airport.countryId shouldBe countryId
   }
 
+  /*
   it should "retrieve an Airport empty collection" in {
     val query = for {
       airport <- AirportRepository.entities
@@ -229,6 +198,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
     brResults.nonEmpty shouldBe true
     brResults.size shouldBe 3
   }
+*/
 
   /*
    _    _   ______   _        _____    ______   _____     _____
@@ -240,21 +210,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
   */
 
 
-  def createSchema() = {
-    val schemaAction = (
-      AirlineRepository.entities.schema ++
-        AirportRepository.entities.schema ++
-        CountryRepository.entities.schema ++
-        AircraftRepository.entities.schema ++
-        FlightRepository.entities.schema ++
-        JourneyRepository.entities.schema ++
-        RouteRepository.entities.schema
-      ).create
-
-    db.run(schemaAction).futureValue
-  }
-
-
+/*
   def populateDatabase() = {
     for {
       brId <- CountryRepository.insertAction(brCountry._1, brCountry._2)
@@ -292,16 +248,44 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfter with ScalaFut
       _ <- JourneyRepository.insertAction(journeyTime._1, journeyTime._2, ux9059Id, aircraftId)
     } yield ()
   }
+*/
+  trait Repos {
+    val countryRepo = new CountryRepository
+    val airportRepo = new AirportRepository
+    val airlineRepo = new AirlineRepository
+    val aircraftRepo = new AircraftRepository
+  }
 
 
-  before {
+  def createSchema() = {
+    val schemaActionList = List(
+      TableQuery[Countries],
+      TableQuery[Airlines],
+      TableQuery[Airports],
+      TableQuery[Fleet],
+      TableQuery[Routes],
+      TableQuery[Flights],
+      TableQuery[Journeys]
+    )
+    db.run(DBIO.sequence(schemaActionList.map(_.schema.create)))
+  }
+
+
+  override def beforeEach() = {
     db = Database.forConfig("h2mem")
-    createSchema()
+    val schemaActionList = List(
+      TableQuery[Countries],
+      TableQuery[Airlines],
+      TableQuery[Airports],
+      TableQuery[Fleet],
+      TableQuery[Routes],
+      TableQuery[Flights],
+      TableQuery[Journeys]
+    )
+    Await.result(createSchema(), 2 seconds)
   }
 
-  after {
-    db.close
-  }
+  override def afterEach() = db.close
 
   /*
     _____         _     ____        _

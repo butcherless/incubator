@@ -19,14 +19,17 @@ package object spec {
     */
   abstract class LongBaseEntity extends BaseEntity[Option[Long]]
 
-  trait BaseRepository[E <: LongBaseEntity, T <: BaseTable[E]] {
+  abstract class BaseRepository[E <: LongBaseEntity, T <: BaseTable[E]] ( db: Database) {
     val entities: TableQuery[T]
 
-    def findById(id: Long) = entities.filter(_.id === id)
+    def findById(id: Long) =
+      db.run(entities.filter(_.id === id).result.headOption)
 
-    def count() = entities.length
+    def count() =
+      db.run(entities.length.result)
 
-    def entityReturningId() = entities returning entities.map(_.id)
+    def entityReturningId() =
+      entities returning entities.map(_.id)
   }
 
   abstract class BaseTable[E <: LongBaseEntity](tag: Tag, tableName: String) extends Table[E](tag, tableName) {

@@ -37,20 +37,20 @@ package object poc {
     def * = (name, userId, id.?) <> (Message.tupled, Message.unapply)
   }
 
-  trait BaseRepository[E <: LongBaseEntity, T <: BaseTable[E]] {
-    val entities: TableQuery[T]
+  abstract class BaseRepository[E <: LongBaseEntity, T <: BaseTable[E]](db: Database) {
+    protected val entities: TableQuery[T]
 
     def findById(id: Long) = entities.filter(_.id === id).result
 
-    def count() = entities.length.result
+    def count() = db.run(entities.length.result)
   }
 
-  object UserRepository extends BaseRepository[User, UserTable] {
-    lazy val entities = TableQuery[UserTable]
+  class UserRepository(implicit db: Database) extends BaseRepository[User, UserTable](db) {
+    protected lazy val entities = TableQuery[UserTable]
   }
 
-  object MessageRepository extends BaseRepository[Message, MessageTable] {
-    lazy val entities = TableQuery[MessageTable]
+  class MessageRepository(implicit db: Database) extends BaseRepository[Message, MessageTable](db) {
+    protected lazy val entities = TableQuery[MessageTable]
   }
 
 }
