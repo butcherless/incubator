@@ -1,7 +1,5 @@
 package com.cmartin.learn.repository
 
-import java.time.{LocalDate, LocalTime}
-
 import com.cmartin.learn.repository.frm._
 import com.cmartin.learn.repository.spec.BaseRepository
 import slick.jdbc.H2Profile.api._
@@ -9,7 +7,6 @@ import slick.lifted.TableQuery
 
 
 package object implementation {
-
 
   class AircraftRepository(implicit db: Database) extends BaseRepository[Aircraft, Fleet](db) {
     lazy val entities = TableQuery[Fleet]
@@ -41,39 +38,29 @@ package object implementation {
         country <- airport.country if country.code === code
       } yield airport
 
-      db.run(query.result.headOption)
+      db.run(query.result)
     }
   }
 
   class CountryRepository(implicit db: Database) extends BaseRepository[Country, Countries](db) {
     lazy val entities = TableQuery[Countries]
 
-  def insert(country:Country) =
-    db.run(entityReturningId += country)
+    def insert(country: Country) =
+      db.run(entityReturningId += country)
 
 
-  def findByCode(code: String) = {
-          db.run(entities.filter(_.code === code).result.headOption)
-        }
-
-  /*
-    def findByCodeQuery(code: String) = {
-      entities.filter(_.code === code) //.result.headOption
-    }
-
-    def insertAction(name: String, code: String) =
-      entityReturningId += Country(name, code)
-      */
+    def findByCode(code: String) =
+      db.run(entities.filter(_.code === code).result.headOption)
   }
 
-  /*
-  object FlightRepository extends BaseRepository[Flight, Flights] {
+  class FlightRepository(implicit db: Database) extends BaseRepository[Flight, Flights](db) {
     lazy val entities = TableQuery[Flights]
 
-    def insertAction(code: String, alias: String, departure: LocalTime, arrival: LocalTime, airlineId: Long, routeId: Long) =
-      entityReturningId += Flight(code, alias, departure, arrival, airlineId, routeId)
+    def insert(flight: Flight) =
+      db.run(entityReturningId += flight)
 
-    def findByCode(code: String) = entities.filter(_.code === code).result
+    def findByCode(code: String) =
+      db.run(entities.filter(_.code === code).result.headOption)
 
     def findByOrigin(origin: String) = {
       val query = for {
@@ -82,24 +69,23 @@ package object implementation {
         airport <- route.origin if airport.iataCode === origin
       } yield flight
 
-      query.result
+      db.run(query.result)
     }
 
   }
 
-  object JourneyRepository extends BaseRepository[Journey, Journeys] {
+  class JourneyRepository(implicit db: Database) extends BaseRepository[Journey, Journeys](db) {
     lazy val entities = TableQuery[Journeys]
 
-    def insertAction(departureDate: LocalTime, arrivalDate: LocalTime, flightId: Long, aircraftId: Long) =
-      entityReturningId += Journey(departureDate, arrivalDate, flightId, aircraftId)
+    def insert(journey: Journey) =
+      db.run(entityReturningId += journey)
   }
 
-
-  object RouteRepository extends BaseRepository[Route, Routes] {
+  class RouteRepository(implicit db: Database) extends BaseRepository[Route, Routes](db) {
     lazy val entities = TableQuery[Routes]
 
-    def insertAction(distance: Double, originId: Long, destinationId: Long) =
-      entityReturningId += Route(distance, originId, destinationId)
+    def insert(route: Route) =
+      db.run(entityReturningId += route)
 
     def findDestinationsByOrigin(iataCode: String) = {
       val query = for {
@@ -108,9 +94,9 @@ package object implementation {
         origin <- route.origin if origin.iataCode === iataCode
       } yield airport
 
-      query.result
+      db.run(query.result)
     }
 
   }
-*/
+
 }

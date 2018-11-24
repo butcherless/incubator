@@ -1,4 +1,5 @@
 package com.cmartin.learn
+import scala.concurrent.duration._
 
 package object test {
 
@@ -10,5 +11,6 @@ package object test {
     val madDestinationCount = 4
     val tableCount = 7
 
+    val waitTimeout = 2.second
   }
 }

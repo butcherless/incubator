@@ -10,11 +10,9 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Seconds, Span}
 import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 import slick.jdbc.H2Profile.api._
-import slick.jdbc.meta.MTable
 
-import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
 
 class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with ScalaFutures {
   implicit override val patienceConfig: PatienceConfig = PatienceConfig(timeout = Span(5, Seconds))
@@ -45,7 +43,6 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
     aircraft.typeCode shouldEqual TypeCodes.BOEING_787_800
     aircraft.registration shouldEqual Constants.registrationMIG
     aircraft.airlineId should be > 0L
-
   }
 
   /*
@@ -101,7 +98,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
   it should "retrieve a country from the database" in new Repos {
     countryRepo.insert(Country(esCountry._1, esCountry._2))
 
-    val  futureCountry = countryRepo.findByCode(esCountry._2)
+    val futureCountry = countryRepo.findByCode(esCountry._2)
 
     val countryOption = futureCountry.futureValue
 
@@ -111,12 +108,12 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
   }
 
 
-  it should "insert an airport and a country" in new Repos{
+  it should "insert an airport and a country" in new Repos {
 
     val airportOption = for {
-           countryId <- countryRepo.insert(Country(esCountry._1, esCountry._2))
-          airportId <- airportRepo.insert(Airport(madAirport._1, madAirport._2, madAirport._3, countryId))
-          airport <- airportRepo.findById(airportId)
+      countryId <- countryRepo.insert(Country(esCountry._1, esCountry._2))
+      airportId <- airportRepo.insert(Airport(madAirport._1, madAirport._2, madAirport._3, countryId))
+      airport <- airportRepo.findById(airportId)
     } yield airport
 
 
@@ -130,75 +127,40 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
     airport.icaoCode shouldBe madAirport._3
   }
 
-  /*
-  it should "retrieve an Airport empty collection" in {
-    val query = for {
-      airport <- AirportRepository.entities
-      _ <- CountryRepository.findByCodeQuery(esCountry._2)
-    } yield airport
 
-    val results = db.run(query.result).futureValue
+  it should "retrieve an Airport empty collection" in new Repos {
+    val countries = airportRepo.findByCountryCode(esCountry._2).futureValue
 
-    results.isEmpty shouldBe true
+    countries.isEmpty shouldBe true
   }
 
-  it should "retrieve destinations airports for an origin airport" in {
-    val resultAction = populateDatabase()
-    Await.result(db.run(resultAction), 2 seconds)
+  it should "retrieve destinations airports for an origin airport" in new Repos {
+    Await.result(populateDatabase, Constants.waitTimeout)
 
-    val res = db.run(RouteRepository.findDestinationsByOrigin(madAirport._2)).futureValue
-    res.size shouldBe Constants.madDestinationCount
+    val destinations = routeRepo.findDestinationsByOrigin(madAirport._2).futureValue
+    destinations.size shouldBe Constants.madDestinationCount
   }
 
-  it should "retrieve flight by code" in {
-    val resultAction = populateDatabase()
-    Await.result(db.run(resultAction), 2 seconds)
+  it should "retrieve flight by code" in new Repos {
+    Await.result(populateDatabase, Constants.waitTimeout)
 
-    val res = db.run(FlightRepository.findByCode(flightUx9059._1)).futureValue
+    val flightOption = flightRepo.findByCode(flightUx9059._1).futureValue
 
-    res.size shouldBe 1
-    val flight = res.head
-    flight.code shouldBe flightUx9059._1
+    flightOption.value.code shouldBe flightUx9059._1
+    flightOption.value.alias shouldBe flightUx9059._2
   }
 
-  it should "retrieve all flights for a given route" in {
+  it should "retrieve all flights for a given route" in new Repos {
+    Await.result(populateDatabase, Constants.waitTimeout)
     val expectedFlightCount = 2
-    val resultAction = populateDatabase()
-    Await.result(db.run(resultAction), 2 seconds)
+    val expectedSet = Set(flightUx9059._1, flightI23942._1)
 
-    val res = db.run(FlightRepository.findByOrigin(Constants.barajasIataCode)).futureValue
+    val flights = flightRepo.findByOrigin(Constants.barajasIataCode).futureValue
 
-    res.size shouldBe expectedFlightCount
-    val flight = res.head
-    flight.code shouldBe flightUx9059._1
+    flights.size shouldBe expectedFlightCount
+    flights.map(_.code).toSet diff expectedSet shouldBe Set.empty
   }
 
-  it should "populate the database" in {
-    val expectedCountryCount = 4
-    val expectedAirportCount = 8
-
-    val resultAction = populateDatabase()
-    Await.result(db.run(resultAction), 2 seconds)
-
-    val countryCount = db.run(CountryRepository.count.result).futureValue
-    val airportCount = db.run(AirportRepository.count.result).futureValue
-
-    countryCount shouldBe expectedCountryCount
-    airportCount shouldBe expectedAirportCount
-
-    val esResults = db.run(AirportRepository.findByCountryCode(esCountry._2).result).futureValue
-    esResults.nonEmpty shouldBe true
-    esResults.size shouldBe 3
-
-    val ukResults = db.run(AirportRepository.findByCountryCode(ukCountry._2).result).futureValue
-    ukResults.nonEmpty shouldBe true
-    ukResults.size shouldBe 2
-
-    val brResults = db.run(AirportRepository.findByCountryCode(brCountry._2).result).futureValue
-    brResults.nonEmpty shouldBe true
-    brResults.size shouldBe 3
-  }
-*/
 
   /*
    _    _   ______   _        _____    ______   _____     _____
@@ -210,50 +172,55 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
   */
 
 
-/*
   def populateDatabase() = {
-    for {
-      brId <- CountryRepository.insertAction(brCountry._1, brCountry._2)
-      esId <- CountryRepository.insertAction(esCountry._1, esCountry._2)
-      noId <- CountryRepository.insertAction(noCountry._1, noCountry._2)
-      ukId <- CountryRepository.insertAction(ukCountry._1, ukCountry._2)
+    new Repos {
+      val insert = for {
+        brId <- countryRepo.insert(Country(brCountry._1, brCountry._2))
+        esId <- countryRepo.insert(Country(esCountry._1, esCountry._2))
+        noId <- countryRepo.insert(Country(noCountry._1, noCountry._2))
+        ukId <- countryRepo.insert(Country(ukCountry._1, ukCountry._2))
 
-      aeaId <- AirlineRepository.insertAction(aeaAirline._1, aeaAirline._2)
-      ibsId <- AirlineRepository.insertAction(ibsAirline._1, ibsAirline._2)
-      ibkId <- AirlineRepository.insertAction(ibkAirline._1, ibkAirline._2)
+        aeaId <- airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2))
+        ibsId <- airlineRepo.insert(Airline(ibsAirline._1, ibsAirline._2))
+        ibkId <- airlineRepo.insert(Airline(ibkAirline._1, ibkAirline._2))
 
-      madId <- AirportRepository.insertAction(madAirport._1, madAirport._2, madAirport._3, esId)
-      tfnId <- AirportRepository.insertAction(tfnAirport._1, tfnAirport._2, tfnAirport._3, esId)
-      bcnId <- AirportRepository.insertAction(bcnAirport._1, bcnAirport._2, bcnAirport._3, esId)
-      lhrId <- AirportRepository.insertAction(lhrAirport._1, lhrAirport._2, lhrAirport._3, ukId)
-      lgwId <- AirportRepository.insertAction(lgwAirport._1, lgwAirport._2, lgwAirport._3, ukId)
-      _ <- AirportRepository.insertAction(bsbAirport._1, bsbAirport._2, bsbAirport._3, brId)
-      _ <- AirportRepository.insertAction(gigAirport._1, gigAirport._2, gigAirport._3, brId)
-      _ <- AirportRepository.insertAction(ssaAirport._1, ssaAirport._2, ssaAirport._3, brId)
+        madId <- airportRepo.insert(Airport(madAirport._1, madAirport._2, madAirport._3, esId))
+        tfnId <- airportRepo.insert(Airport(tfnAirport._1, tfnAirport._2, tfnAirport._3, esId))
+        bcnId <- airportRepo.insert(Airport(bcnAirport._1, bcnAirport._2, bcnAirport._3, esId))
+        lhrId <- airportRepo.insert(Airport(lhrAirport._1, lhrAirport._2, lhrAirport._3, ukId))
+        lgwId <- airportRepo.insert(Airport(lgwAirport._1, lgwAirport._2, lgwAirport._3, ukId))
+        _ <- airportRepo.insert(Airport(bsbAirport._1, bsbAirport._2, bsbAirport._3, brId))
+        _ <- airportRepo.insert(Airport(gigAirport._1, gigAirport._2, gigAirport._3, brId))
+        _ <- airportRepo.insert(Airport(ssaAirport._1, ssaAirport._2, ssaAirport._3, brId))
 
-      madTfnId <- RouteRepository.insertAction(957.0, madId, tfnId)
-      - <- RouteRepository.insertAction(671.0, madId, lhrId)
-      - <- RouteRepository.insertAction(261.0, madId, bcnId)
-      - <- RouteRepository.insertAction(655.0, madId, lgwId)
-      - <- RouteRepository.insertAction(261.0, bcnId, madId) // 4 destinations
-      - <- RouteRepository.insertAction(261.0, bcnId, lgwId)
-      bcnTfnId <- RouteRepository.insertAction(1185.0, bcnId, tfnId) // 3 destinations
+        madTfnId <- routeRepo.insert(Route(957.0, madId, tfnId))
+        - <- routeRepo.insert(Route(671.0, madId, lhrId))
+        - <- routeRepo.insert(Route(261.0, madId, bcnId))
+        - <- routeRepo.insert(Route(655.0, madId, lgwId))
+        - <- routeRepo.insert(Route(261.0, bcnId, madId)) // 4 destinations
+        - <- routeRepo.insert(Route(261.0, bcnId, lgwId))
+        bcnTfnId <- routeRepo.insert(Route(1185.0, bcnId, tfnId)) // 3 destinations
 
-      aircraftId <- AircraftRepository.insertAction(ecMigAircraft._1, ecMigAircraft._2, aeaId)
+        aircraftId <- aircraftRepo.insert(Aircraft(ecMigAircraft._1, ecMigAircraft._2, aeaId))
 
-      ux9059Id <- FlightRepository.insertAction(flightUx9059._1, flightUx9059._2, flightUx9059._3, flightUx9059._4, aeaId, madTfnId)
-      _ <- FlightRepository.insertAction(flightI23942._1, flightI23942._2, flightI23942._3, flightI23942._4, ibsId, madTfnId)
-      d85756Id <- FlightRepository.insertAction(flightD85756._1, flightD85756._2, flightD85756._3, flightD85756._4, ibkId, bcnTfnId)
+        ux9059Id <- flightRepo.insert(Flight(flightUx9059._1, flightUx9059._2, flightUx9059._3, flightUx9059._4, aeaId, madTfnId))
+        _ <- flightRepo.insert(Flight(flightI23942._1, flightI23942._2, flightI23942._3, flightI23942._4, ibsId, madTfnId))
+        d85756Id <- flightRepo.insert(Flight(flightD85756._1, flightD85756._2, flightD85756._3, flightD85756._4, ibkId, bcnTfnId))
 
-      _ <- JourneyRepository.insertAction(journeyTime._1, journeyTime._2, ux9059Id, aircraftId)
-    } yield ()
+        _ <- journeyRepo.insert(Journey(journeyTime._1, journeyTime._2, ux9059Id, aircraftId))
+      } yield ()
+    }.insert
   }
-*/
+
+
   trait Repos {
-    val countryRepo = new CountryRepository
-    val airportRepo = new AirportRepository
-    val airlineRepo = new AirlineRepository
     val aircraftRepo = new AircraftRepository
+    val airlineRepo = new AirlineRepository
+    val airportRepo = new AirportRepository
+    val countryRepo = new CountryRepository
+    val routeRepo = new RouteRepository
+    val flightRepo = new FlightRepository
+    val journeyRepo = new JourneyRepository
   }
 
 
@@ -273,16 +240,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
 
   override def beforeEach() = {
     db = Database.forConfig("h2mem")
-    val schemaActionList = List(
-      TableQuery[Countries],
-      TableQuery[Airlines],
-      TableQuery[Airports],
-      TableQuery[Fleet],
-      TableQuery[Routes],
-      TableQuery[Flights],
-      TableQuery[Journeys]
-    )
-    Await.result(createSchema(), 2 seconds)
+    Await.result(createSchema(), Constants.waitTimeout)
   }
 
   override def afterEach() = db.close
