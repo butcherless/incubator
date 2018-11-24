@@ -94,6 +94,15 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
     count.futureValue shouldBe 1
   }
 
+  it should "WIP insert a sequence of countries into the database" in new Repos {
+    val countrySequence = Seq(Country(esCountry._1, esCountry._2), Country(ukCountry._1, ukCountry._2))
+    val ids = countryRepo.insert(countrySequence).futureValue
+
+    ids.nonEmpty shouldBe true
+    ids.size shouldBe countrySequence.size
+    ids.forall(_ > 0L) shouldBe true
+  }
+
 
   it should "retrieve a country from the database" in new Repos {
     countryRepo.insert(Country(esCountry._1, esCountry._2))

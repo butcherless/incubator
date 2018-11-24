@@ -1,7 +1,10 @@
 package com.cmartin.learn.repository
 
+import slick.jdbc
 import slick.jdbc.H2Profile.api._
 import slick.lifted.{TableQuery, Tag}
+
+import scala.concurrent.Future
 
 package object spec {
 
@@ -19,17 +22,46 @@ package object spec {
     */
   abstract class LongBaseEntity extends BaseEntity[Option[Long]]
 
-  abstract class BaseRepository[E <: LongBaseEntity, T <: BaseTable[E]] ( db: Database) {
+  abstract class BaseRepository[E <: LongBaseEntity, T <: BaseTable[E]](db: Database) {
     val entities: TableQuery[T]
 
-    def findById(id: Long) =
-      db.run(entities.filter(_.id === id).result.headOption)
+    /**
+      * Retrieve the entity option
+      *
+      * @param id identifier for the entity to found
+      * @return Some(e) or None
+      */
+    def findById(id: Long): Future[Option[E]] = db.run(entities.filter(_.id === id).result.headOption)
 
-    def count() =
-      db.run(entities.length.result)
+    /**
+      * Retrieve the repository entity count
+      *
+      * @return number of entities in the repo
+      */
+    def count(): Future[Int] = db.run(entities.length.result)
 
-    def entityReturningId() =
-      entities returning entities.map(_.id)
+    /**
+      * Helper for insert operations
+      *
+      * @return id for the entity added
+      */
+    def entityReturningId(): jdbc.H2Profile.ReturningInsertActionComposer[E, Long] = entities returning entities.map(_.id)
+
+    /**
+      * Inserts the entity returning the generated identifier
+      *
+      * @param e entity to be added
+      * @return entity id after the insert
+      */
+    def insert(e: E): Future[Long] = db.run(entityReturningId += e)
+
+    /**
+      * Inserts a sequence of entities returning the generated sequence of identifiers
+      *
+      * @param seq entity sequence
+      * @return generated identifier sequence after the insert
+      */
+    def insert(seq: Seq[E]): Future[Seq[Long]] = db.run(entities returning entities.map(_.id) ++= seq)
   }
 
   abstract class BaseTable[E <: LongBaseEntity](tag: Tag, tableName: String) extends Table[E](tag, tableName) {
