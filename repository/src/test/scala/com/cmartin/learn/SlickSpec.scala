@@ -94,7 +94,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
     count.futureValue shouldBe 1
   }
 
-  it should "WIP insert a sequence of countries into the database" in new Repos {
+  it should "insert a sequence of countries into the database" in new Repos {
     val countrySequence = Seq(Country(esCountry._1, esCountry._2), Country(ukCountry._1, ukCountry._2))
     val ids = countryRepo.insert(countrySequence).futureValue
 
@@ -103,19 +103,45 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
     ids.forall(_ > 0L) shouldBe true
   }
 
-
   it should "retrieve a country from the database" in new Repos {
     countryRepo.insert(Country(esCountry._1, esCountry._2))
 
-    val futureCountry = countryRepo.findByCode(esCountry._2)
-
-    val countryOption = futureCountry.futureValue
+    val countryOption = countryRepo.findByCode(esCountry._2).futureValue
 
     countryOption.value.id.value should be > 0L
     countryOption.value.name shouldBe esCountry._1
     countryOption.value.code shouldBe esCountry._2
   }
 
+  it should "update a country from the database" in new Repos {
+    val countryId = countryRepo.insert(Country(esCountry._1, esCountry._2)).futureValue
+    val updateResult = countryRepo.update(Country(esCountry._1.toUpperCase, esCountry._2.toUpperCase, Option(countryId)))
+    val countryOption = countryRepo.findById(countryId).futureValue
+    val countryCount = countryRepo.count().futureValue
+
+    countryId should be > 0L
+    updateResult.futureValue shouldBe 1
+    countryCount shouldBe 1
+    countryOption.value.code.forall(_.isUpper) shouldBe true
+    countryOption.value.name.forall(_.isUpper) shouldBe true
+    countryOption.value.id.value shouldBe countryId
+  }
+
+  it should "WIP delete a country from the database" in new Repos {
+    val countryId = countryRepo.insert(Country(esCountry._1, esCountry._2)).futureValue
+    val initialCount = countryRepo.count().futureValue
+    val deleteResult = countryRepo.delete(countryId).futureValue
+    val finalCount = countryRepo.count().futureValue
+
+    countryId should be > 0L
+    initialCount shouldBe 1
+    deleteResult shouldBe 1
+    finalCount  shouldBe 0
+  }
+
+  /*
+      A I R P O R T
+   */
 
   it should "insert an airport and a country" in new Repos {
 

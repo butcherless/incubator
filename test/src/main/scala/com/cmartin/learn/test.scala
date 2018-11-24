@@ -11,6 +11,6 @@ package object test {
     val madDestinationCount = 4
     val tableCount = 7
 
-    val waitTimeout = 2.second
+    val waitTimeout = 5.second
   }
 }

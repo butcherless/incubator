@@ -62,6 +62,22 @@ package object spec {
       * @return generated identifier sequence after the insert
       */
     def insert(seq: Seq[E]): Future[Seq[Long]] = db.run(entities returning entities.map(_.id) ++= seq)
+
+    /**
+      * Updates the entity in the repository
+      *
+      * @param e entity to be updated
+      * @return number of entities updated
+      */
+    def update(e: E) = db.run(entities.filter(_.id === e.id).update(e))
+
+    /**
+      * Deletes the entity with the identifier supplied
+      *
+      * @param id entity identifier
+      * @return number of entites affected
+      */
+    def delete(id: Long) = db.run(entities.filter(_.id === id).delete)
   }
 
   abstract class BaseTable[E <: LongBaseEntity](tag: Tag, tableName: String) extends Table[E](tag, tableName) {
