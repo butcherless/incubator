@@ -76,6 +76,16 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
     finalCount.futureValue shouldBe 0
   }
 
+  it should "retrieve an airline from the database" in new Repos {
+    val airlineId = airlineRepo.insert(Airline(ibsAirline._1, ibsAirline._2)).futureValue
+
+    val airlineOption = airlineRepo.findById(airlineId).futureValue
+
+    airlineOption.value.id.value should be > 0L
+    airlineOption.value.name shouldBe ibsAirline._1
+    airlineOption.value.foundationDate shouldBe ibsAirline._2
+  }
+
   /*
        COUNTRY
    */
