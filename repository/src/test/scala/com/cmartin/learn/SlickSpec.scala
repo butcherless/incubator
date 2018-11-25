@@ -45,44 +45,36 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
     aircraft.airlineId should be > 0L
   }
 
-  /*
-  it should "update an aircraft into the database" in {
-    //TODO implement Repository function
-    val updateAction = for {
-      airlineId <- AirlineRepository.insertAction(aeaAirline._1, aeaAirline._2)
-      _ <- AircraftRepository.insertAction(TypeCodes.BOEING_787_800, Constants.registrationMIG, airlineId)
-      _ <- AircraftRepository.findByRegistration(Constants.registrationMIG).map(a => a.registration).update(Constants.registrationMNS)
-      seq <- AircraftRepository.findByRegistration(Constants.registrationMNS).result
-    } yield seq
+  it should "update an aircraft into the database" in new Repos {
+    val aircraftResult = for {
+      airlineId <- airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2))
+      _ <- aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, Constants.registrationMIG, airlineId))
+      aircraft <- aircraftRepo.findByRegistration(Constants.registrationMIG)
+      _ <- aircraftRepo.update(aircraft.value.copy(registration = Constants.registrationMNS))
+      aircraft <- aircraftRepo.findByRegistration(Constants.registrationMNS)
+    } yield aircraft
 
-    val seq = db.run(updateAction).futureValue
-
-    seq.size shouldBe 1
-    val aircraft = seq.head
-    aircraft.registration shouldBe Constants.registrationMNS
+    val aircraft = aircraftResult.futureValue
+    aircraft.value.registration shouldBe Constants.registrationMNS
   }
 
-  it should "delete an aircraft from the dataase" in {
-    val initialAction = for {
-      airlineId <- AirlineRepository.insertAction(aeaAirline._1, aeaAirline._2)
-      _ <- AircraftRepository.insertAction(ecMigAircraft._1, ecMigAircraft._2, airlineId)
-      count <- AircraftRepository.count.result
+  it should "delete an aircraft from the dataase" in new Repos {
+    val initialCount = for {
+      airlineId <- airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2))
+      _ <- aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, Constants.registrationMIG, airlineId))
+      count <- aircraftRepo.count
     } yield count
 
-    val initialCount = db.run(initialAction).futureValue
+    initialCount.futureValue shouldBe 1
 
-    initialCount shouldBe 1
-
-    val finalAction = for {
-      _ <- AircraftRepository.findByRegistration(Constants.registrationMIG).delete
-      count <- AircraftRepository.count.result
+    val finalCount = for {
+      aircraft <- aircraftRepo.findByRegistration(Constants.registrationMIG)
+      _ <- aircraftRepo.delete(aircraft.value.id.value)
+      count <- aircraftRepo.count
     } yield count
 
-    val finalCount = db.run(finalAction).futureValue
-
-    finalCount shouldBe 0
+    finalCount.futureValue shouldBe 0
   }
-*/
 
   /*
        COUNTRY
@@ -127,7 +119,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
     countryOption.value.id.value shouldBe countryId
   }
 
-  it should "WIP delete a country from the database" in new Repos {
+  it should "delete a country from the database" in new Repos {
     val countryId = countryRepo.insert(Country(esCountry._1, esCountry._2)).futureValue
     val initialCount = countryRepo.count().futureValue
     val deleteResult = countryRepo.delete(countryId).futureValue
@@ -136,7 +128,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
     countryId should be > 0L
     initialCount shouldBe 1
     deleteResult shouldBe 1
-    finalCount  shouldBe 0
+    finalCount shouldBe 0
   }
 
   /*

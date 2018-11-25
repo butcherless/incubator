@@ -12,7 +12,7 @@ package object implementation {
     lazy val entities = TableQuery[Fleet]
 
     def findByRegistration(registration: String) =
-      db.run(entities.filter(_.registration === registration).result)
+      db.run(entities.filter(_.registration === registration).result.headOption)
   }
 
   class AirlineRepository(implicit db: Database) extends BaseRepository[Airline, Airlines](db) {

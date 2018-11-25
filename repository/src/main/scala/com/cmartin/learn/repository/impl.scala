@@ -2,9 +2,7 @@ package com.cmartin.learn.repository
 
 import java.util.UUID
 
-import com.cmartin.learn.repository.frm.{Countries, Country}
 import com.cmartin.learn.repository.spec.SimpleRepository
-import slick.lifted.TableQuery
 
 import scala.collection.mutable.TreeSet
 
@@ -65,16 +63,6 @@ package object impl {
 
   object MemoryRepository extends MemoryRepository {
     def apply(): MemoryRepository = new MemoryRepository()
-  }
-
-
-  class CountryDbio(countries: TableQuery[Countries]) {
-
-    import slick.jdbc.H2Profile.api._
-
-    def findById(id: Long): Query[Countries, Country, Seq] = for {
-      user <- countries.filter(_.id === 1L)
-    } yield user
   }
 
 }
