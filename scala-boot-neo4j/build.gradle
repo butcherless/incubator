@@ -41,7 +41,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-devtools")
 
 
-    compile 'org.neo4j.driver:neo4j-java-driver:1.7.0',
+    compile 'org.neo4j.driver:neo4j-java-driver:1.7.1',
             "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}",
             "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}",
             'org.apache.commons:commons-lang3:3.8.1'
