@@ -198,6 +198,47 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
     flights.map(_.code).toSet diff expectedSet shouldBe Set.empty
   }
 
+  it should "retrieve aircraft list from an airline" in new Repos {
+    Await.result(populateDatabase, Constants.waitTimeout)
+    val expectedAircfraftCount = 2
+
+    val aircrafts = aircraftRepo.findByAirlineName(aeaAirline._1).futureValue
+
+    aircrafts.size shouldBe expectedAircfraftCount
+  }
+
+  ignore should "retrieve airline list from a country" in new Repos {
+
+    // TODO val airlines =  airlineRepo.findByCountryCode(esCountry._2).futureValue
+
+  }
+
+  it should "retrieve airport list from a country" in new Repos {
+    Await.result(populateDatabase, Constants.waitTimeout)
+    val expectedCountryCount = 3
+
+    val airports = airportRepo.findByCountryCode(esCountry._2).futureValue
+    airports.size shouldBe expectedCountryCount
+  }
+
+  it should "retrieve route list from its origin" in new Repos {
+    Await.result(populateDatabase, Constants.waitTimeout)
+    val expectedRouteCount = 3
+
+    val routes = routeRepo.findByIataOrigin(bcnAirport._2).futureValue
+
+    routes.size shouldBe expectedRouteCount
+  }
+
+  it should "retrieve route list from its destination" in new Repos {
+    Await.result(populateDatabase, Constants.waitTimeout)
+    val expectedRouteCount = 2
+
+    val routes = routeRepo.findByIataDestination(tfnAirport._2).futureValue
+
+    routes.size shouldBe expectedRouteCount
+  }
+
 
   /*
    _    _   ______   _        _____    ______   _____     _____
@@ -235,10 +276,11 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
         - <- routeRepo.insert(Route(261.0, madId, bcnId))
         - <- routeRepo.insert(Route(655.0, madId, lgwId))
         - <- routeRepo.insert(Route(261.0, bcnId, madId)) // 4 destinations
-        - <- routeRepo.insert(Route(261.0, bcnId, lgwId))
+        - <- routeRepo.insert(Route(599.0, bcnId, lgwId))
         bcnTfnId <- routeRepo.insert(Route(1185.0, bcnId, tfnId)) // 3 destinations
 
         aircraftId <- aircraftRepo.insert(Aircraft(ecMigAircraft._1, ecMigAircraft._2, aeaId))
+        _ <- aircraftRepo.insert(Aircraft(ecLvlAircraft._1, ecLvlAircraft._2, aeaId))
 
         ux9059Id <- flightRepo.insert(Flight(flightUx9059._1, flightUx9059._2, flightUx9059._3, flightUx9059._4, aeaId, madTfnId))
         _ <- flightRepo.insert(Flight(flightI23942._1, flightI23942._2, flightI23942._3, flightI23942._4, ibsId, madTfnId))
@@ -299,6 +341,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
   val TestCountries = Seq(Country(esCountry._1, esCountry._2), ukCountry, brCountry)
 
   val ecMigAircraft = (TypeCodes.BOEING_787_800, Constants.registrationMIG)
+  val ecLvlAircraft = (TypeCodes.AIRBUS_330_200, Constants.registrationLVL)
 
 
   val madAirport = ("Madrid Barajas", Constants.barajasIataCode, "LEMD")
