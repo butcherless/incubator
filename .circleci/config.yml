@@ -44,7 +44,7 @@ jobs:
       - run:
           name: compile, test and run
           command: |
-                   sbt ";clean ;coverage ;assembly ;coverageReport; coverageAggregate"
+                   sbt -mem 2048 ";clean ;coverage ;assembly ;coverageReport; coverageAggregate"
                    bash <(curl -s https://codecov.io/bash) -t db92a4a7-4ab4-49ab-9ba9-164a43a25009
 
 workflows:
