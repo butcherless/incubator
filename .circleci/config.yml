@@ -29,12 +29,12 @@ jobs:
 
   build_sbt:
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: circleci/openjdk:11-jdk
 
     working_directory: ~/repo
 
     environment:
-      JVM_OPTS: -Xmx2048m
+      JVM_OPTS: -Xmx3072m
       TERM: dumb
 
     steps:
