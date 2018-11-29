@@ -26,9 +26,16 @@ package object implementation {
   }
 
   class AirlineRepository(implicit db: Database) extends BaseRepository[Airline, Airlines](db) {
-    def findByCountryCode(countryCode: String) = ??? // TODO
-
     lazy val entities = TableQuery[Airlines]
+
+    def findByCountryCode(code: String) = {
+      val query = for {
+        airline <- entities
+        country <- airline.country if country.code === code
+      } yield airline
+
+      db.run(query.result)
+    }
   }
 
 
@@ -67,7 +74,6 @@ package object implementation {
 
       db.run(query.result)
     }
-
   }
 
   class JourneyRepository(implicit db: Database) extends BaseRepository[Journey, Journeys](db) {
@@ -75,6 +81,8 @@ package object implementation {
   }
 
   class RouteRepository(implicit db: Database) extends BaseRepository[Route, Routes](db) {
+    lazy val entities = TableQuery[Routes]
+
     def findByIataDestination(iataCode: String) = {
       val query = for {
         route <- entities
@@ -92,20 +100,6 @@ package object implementation {
 
       db.run(query.result)
     }
-
-    lazy val entities = TableQuery[Routes]
-
-    // TODO move to AirportRepository
-    def findDestinationsByOrigin(iataCode: String) = {
-      val query = for {
-        route <- entities
-        airport <- route.destination
-        origin <- route.origin if origin.iataCode === iataCode
-      } yield airport
-
-      db.run(query.result)
-    }
-
   }
 
 }

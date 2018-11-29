@@ -22,7 +22,8 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
   it should "insert an aircraft into the database" in new Repos {
 
     val aircraftFuture = for {
-      airlineId <- airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2))
+      countryId <- countryRepo.insert(Country(esCountry._1, esCountry._2))
+      airlineId <- airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2, countryId))
       aircraftId <- aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, Constants.registrationMIG, airlineId))
     } yield aircraftId
 
@@ -33,7 +34,8 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
   it should "retrieve an aircraft from the database" in new Repos {
 
     val aircraftFuture: Future[Option[Aircraft]] = for {
-      airlineId <- airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2))
+      countryId <- countryRepo.insert(Country(esCountry._1, esCountry._2))
+      airlineId <- airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2, countryId))
       aircraftId <- aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, Constants.registrationMIG, airlineId))
       aircraft <- aircraftRepo.findById(aircraftId)
     } yield aircraft
@@ -47,7 +49,8 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
 
   it should "update an aircraft into the database" in new Repos {
     val aircraftResult = for {
-      airlineId <- airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2))
+      countryId <- countryRepo.insert(Country(esCountry._1, esCountry._2))
+      airlineId <- airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2, countryId))
       _ <- aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, Constants.registrationMIG, airlineId))
       aircraft <- aircraftRepo.findByRegistration(Constants.registrationMIG)
       _ <- aircraftRepo.update(aircraft.value.copy(registration = Constants.registrationMNS))
@@ -60,7 +63,8 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
 
   it should "delete an aircraft from the dataase" in new Repos {
     val initialCount = for {
-      airlineId <- airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2))
+      countryId <- countryRepo.insert(Country(esCountry._1, esCountry._2))
+      airlineId <- airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2, countryId))
       _ <- aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, Constants.registrationMIG, airlineId))
       count <- aircraftRepo.count
     } yield count
@@ -77,13 +81,17 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
   }
 
   it should "retrieve an airline from the database" in new Repos {
-    val airlineId = airlineRepo.insert(Airline(ibsAirline._1, ibsAirline._2)).futureValue
+    val airlineOption = for {
+      countryId <- countryRepo.insert(Country(esCountry._1, esCountry._2))
+      airlineId <- airlineRepo.insert(Airline(ibsAirline._1, ibsAirline._2, countryId))
+      airline <- airlineRepo.findById(airlineId)
+    } yield airline
 
-    val airlineOption = airlineRepo.findById(airlineId).futureValue
+    val airline: Option[Airline] = airlineOption.futureValue
 
-    airlineOption.value.id.value should be > 0L
-    airlineOption.value.name shouldBe ibsAirline._1
-    airlineOption.value.foundationDate shouldBe ibsAirline._2
+    airline.value.id.value should be > 0L
+    airline.value.name shouldBe ibsAirline._1
+    airline.value.foundationDate shouldBe ibsAirline._2
   }
 
   /*
@@ -174,7 +182,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
   it should "retrieve destinations airports for an origin airport" in new Repos {
     Await.result(populateDatabase, Constants.waitTimeout)
 
-    val destinations = routeRepo.findDestinationsByOrigin(madAirport._2).futureValue
+    val destinations = routeRepo.findByIataOrigin(madAirport._2).futureValue
     destinations.size shouldBe Constants.madDestinationCount
   }
 
@@ -207,10 +215,13 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
     aircrafts.size shouldBe expectedAircfraftCount
   }
 
-  ignore should "retrieve airline list from a country" in new Repos {
+  it should "retrieve airline list from a country" in new Repos {
+    Await.result(populateDatabase, Constants.waitTimeout)
+    val expectedAirlineCount = 2
 
-    // TODO val airlines =  airlineRepo.findByCountryCode(esCountry._2).futureValue
+    val airlines =  airlineRepo.findByCountryCode(esCountry._2).futureValue
 
+    airlines.size shouldBe expectedAirlineCount
   }
 
   it should "retrieve airport list from a country" in new Repos {
@@ -258,9 +269,9 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
         noId <- countryRepo.insert(Country(noCountry._1, noCountry._2))
         ukId <- countryRepo.insert(Country(ukCountry._1, ukCountry._2))
 
-        aeaId <- airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2))
-        ibsId <- airlineRepo.insert(Airline(ibsAirline._1, ibsAirline._2))
-        ibkId <- airlineRepo.insert(Airline(ibkAirline._1, ibkAirline._2))
+        aeaId <- airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2, esId))
+        ibsId <- airlineRepo.insert(Airline(ibsAirline._1, ibsAirline._2, esId))
+        ibkId <- airlineRepo.insert(Airline(ibkAirline._1, ibkAirline._2, noId))
 
         madId <- airportRepo.insert(Airport(madAirport._1, madAirport._2, madAirport._3, esId))
         tfnId <- airportRepo.insert(Airport(tfnAirport._1, tfnAirport._2, tfnAirport._3, esId))

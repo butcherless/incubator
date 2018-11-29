@@ -75,6 +75,7 @@ package object frm {
    */
   final case class Airline(name: String,
                            foundationDate: LocalDate,
+                           countryId: Long,
                            id: Option[Long] = None) extends LongBaseEntity
 
   final class Airlines(tag: Tag) extends BaseTable[Airline](tag, TableNames.airlines) {
@@ -86,7 +87,13 @@ package object frm {
 
     def foundationDate = column[LocalDate]("FOUNDATION_DATE")
 
-    def * = (name, foundationDate, id.?) <> (Airline.tupled, Airline.unapply)
+    // foreign columns:
+    def countryId = column[Long]("COUNTRY_ID")
+
+    def * = (name, foundationDate, countryId, id.?) <> (Airline.tupled, Airline.unapply)
+
+    // foreign keys
+    def country = foreignKey("FK_COUNTRY_AIRLINE", countryId, TableQuery[Countries])(_.id)
   }
 
 
@@ -135,7 +142,7 @@ package object frm {
     def * = (name, iataCode, icaoCode, countryId, id.?) <> (Airport.tupled, Airport.unapply)
 
     // foreign keys
-    def country = foreignKey("FK_COUNTRY", countryId, TableQuery[Countries])(_.id)
+    def country = foreignKey("FK_COUNTRY_AIRPORT", countryId, TableQuery[Countries])(_.id)
 
     // indexes
     def iataIndex = index("iataCode_index", iataCode, unique = true)
