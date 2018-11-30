@@ -30,7 +30,8 @@ targetCompatibility = 1.8
 
 ext {
     scalaVersion = "2.12.7"
-    jacksonVersion = "2.9.6"
+    jacksonVersion = "2.9.7"
+    neo4jDriver = '1.7.1'
 }
 
 //mainClassName = "com.cmartin.research.ScalaApplication"
@@ -41,7 +42,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-devtools")
 
 
-    compile 'org.neo4j.driver:neo4j-java-driver:1.7.1',
+    compile "org.neo4j.driver:neo4j-java-driver:${neo4jDriver}",
             "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}",
             "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}",
             'org.apache.commons:commons-lang3:3.8.1'
