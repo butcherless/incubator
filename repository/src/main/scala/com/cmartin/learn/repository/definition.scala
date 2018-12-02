@@ -9,20 +9,21 @@ import scala.concurrent.Future
 package object spec {
 
   /**
-    * Database entity
+    * Database entity based on a type and an identifier
     *
-    * @tparam K identifier or key
+    * @tparam T type for the entity
+    * @tparam I identifier for the entity
     */
-  trait BaseEntity[K] {
-    val id: K
+  trait Entity[T, I] {
+    val id: Option[I]
   }
 
-  /**
-    * Entity based on a Long Identifier
-    */
-  abstract class LongBaseEntity extends BaseEntity[Option[Long]]
+  abstract class BaseTable[T <: Entity[T, Long]](tag: Tag, tableName: String) extends Table[T](tag, tableName) {
+    // primary key column:
+    def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
+  }
 
-  abstract class BaseRepository[E <: LongBaseEntity, T <: BaseTable[E]](db: Database) {
+  abstract class BaseRepository[E <: Entity[E, Long], T <: BaseTable[E]](db: Database) {
     val entities: TableQuery[T]
 
     /**
@@ -78,11 +79,6 @@ package object spec {
       * @return number of entites affected
       */
     def delete(id: Long) = db.run(entities.filter(_.id === id).delete)
-  }
-
-  abstract class BaseTable[E <: LongBaseEntity](tag: Tag, tableName: String) extends Table[E](tag, tableName) {
-    // primary key column:
-    def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
   }
 
 

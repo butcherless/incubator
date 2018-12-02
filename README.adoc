@@ -228,6 +228,7 @@ Finders:
 
 == Links
 * Thanks to *FlightRadar24*: https://www.flightradar24.com/
+* https://github.com/gonmarques/slick-repo
 * Spring data neo4j: https://docs.spring.io/spring-data/neo4j/docs/5.0.5.RELEASE/reference/html/
 * Example: https://github.com/bijukunjummen/spring-boot-scala-web
 * The great Josh Long: https://github.com/spring-tips/scala/blob/master/src/main/scala/tweets/tweets.scala

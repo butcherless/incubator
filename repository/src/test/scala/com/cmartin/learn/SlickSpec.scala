@@ -14,12 +14,11 @@ import slick.jdbc.H2Profile.api._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{Await, Future}
 
-//import DatabaseExecutor.executeOperation
-
 class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with ScalaFutures {
   implicit override val patienceConfig: PatienceConfig = PatienceConfig(timeout = Span(5, Seconds))
 
   implicit var db: Database = _
+
 
   it should "insert an aircraft into the database" in new Repos {
 
@@ -221,7 +220,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
     Await.result(populateDatabase, Constants.waitTimeout)
     val expectedAirlineCount = 2
 
-    val airlines =  airlineRepo.findByCountryCode(esCountry._2).futureValue
+    val airlines = airlineRepo.findByCountryCode(esCountry._2).futureValue
 
     airlines.size shouldBe expectedAirlineCount
   }

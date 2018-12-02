@@ -3,7 +3,7 @@ package com.cmartin.learn.repository
 import java.sql.Date
 import java.time.{LocalDate, LocalDateTime, LocalTime}
 
-import com.cmartin.learn.repository.spec.{BaseTable, LongBaseEntity}
+import com.cmartin.learn.repository.spec.{BaseTable, Entity}
 import slick.jdbc.H2Profile.api._
 
 package object frm {
@@ -52,7 +52,7 @@ package object frm {
   final case class Aircraft(typeCode: String,
                             registration: String,
                             airlineId: Long,
-                            id: Option[Long] = None) extends LongBaseEntity
+                            id: Option[Long] = None) extends Entity[Aircraft, Long]
 
   final class Fleet(tag: Tag) extends BaseTable[Aircraft](tag, TableNames.fleet) {
 
@@ -76,7 +76,7 @@ package object frm {
   final case class Airline(name: String,
                            foundationDate: LocalDate,
                            countryId: Long,
-                           id: Option[Long] = None) extends LongBaseEntity
+                           id: Option[Long] = None) extends Entity[Airline, Long]
 
   final class Airlines(tag: Tag) extends BaseTable[Airline](tag, TableNames.airlines) {
 
@@ -102,7 +102,7 @@ package object frm {
    */
   final case class Country(name: String,
                            code: String,
-                           id: Option[Long] = None) extends LongBaseEntity
+                           id: Option[Long] = None) extends Entity[Country, Long]
 
   final class Countries(tag: Tag) extends BaseTable[Country](tag, TableNames.countries) {
 
@@ -125,7 +125,7 @@ package object frm {
                            iataCode: String,
                            icaoCode: String,
                            countryId: Long,
-                           id: Option[Long] = None) extends LongBaseEntity
+                           id: Option[Long] = None) extends Entity[Airport, Long]
 
   final class Airports(tag: Tag) extends BaseTable[Airport](tag, TableNames.airports) {
 
@@ -158,7 +158,7 @@ package object frm {
                           schedArrival: LocalTime,
                           airlineId: Long,
                           routeId: Long,
-                          id: Option[Long] = None) extends LongBaseEntity
+                          id: Option[Long] = None) extends Entity[Flight, Long]
 
   final class Flights(tag: Tag) extends BaseTable[Flight](tag, TableNames.flights) {
 
@@ -196,7 +196,7 @@ package object frm {
                            arrivalDate: LocalTime,
                            flightId: Long,
                            aircraftId: Long,
-                           id: Option[Long] = None) extends LongBaseEntity
+                           id: Option[Long] = None) extends Entity[Journey, Long]
 
   final class Journeys(tag: Tag) extends BaseTable[Journey](tag, TableNames.journeys) {
 
@@ -226,7 +226,7 @@ package object frm {
   final case class Route(distance: Double,
                          originId: Long,
                          destinationId: Long,
-                         id: Option[Long] = None) extends LongBaseEntity
+                         id: Option[Long] = None) extends Entity[Route, Long]
 
   final class Routes(tag: Tag) extends BaseTable[Route](tag, TableNames.routes) {
 
