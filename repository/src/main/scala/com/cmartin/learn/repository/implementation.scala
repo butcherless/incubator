@@ -9,18 +9,19 @@ import scala.concurrent.Future
 
 package object implementation {
 
-  object DatabaseExecutor {
-    val db = Database.forConfig("mysql")
-    implicit def executeOperation[T](databaseOperation: DBIO[T]): Future[T] = {
-      db.run(databaseOperation)
-    }
-  }
+//  object DatabaseExecutor {
+//    val db = Database.forConfig("mysql")
+//    implicit def executeOperation[T](databaseOperation: DBIO[T]): Future[T] = {
+//      db.run(databaseOperation)
+//    }
+//  }
+
   class AircraftRepository(implicit db: Database) extends BaseRepository[Aircraft, Fleet](db) {
 
     lazy val entities = TableQuery[Fleet]
 
     def findByRegistration(registration: String) =
-      entities.filter(_.registration === registration).result.headOption
+      db.run(entities.filter(_.registration === registration).result.headOption)
 
     def findByAirlineName(name: String) = {
 

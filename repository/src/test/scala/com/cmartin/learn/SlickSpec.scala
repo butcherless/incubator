@@ -14,7 +14,7 @@ import slick.jdbc.H2Profile.api._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{Await, Future}
 
-import DatabaseExecutor.executeOperation
+//import DatabaseExecutor.executeOperation
 
 class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with ScalaFutures {
   implicit override val patienceConfig: PatienceConfig = PatienceConfig(timeout = Span(5, Seconds))

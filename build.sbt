@@ -14,6 +14,7 @@ lazy val commonSettings = Seq(
     "-unchecked",                        // Enable additional warnings where generated code depends on assumptions.
     "-feature",                          // Emit warning and location for usages of features that should be imported explicitly.
     "-language:higherKinds",             // Allow higher-kinded types
+    "-language:implicitConversions",
     "-language:postfixOps"
   )
 )
