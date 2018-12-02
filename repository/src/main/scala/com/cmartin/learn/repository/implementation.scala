@@ -5,14 +5,22 @@ import com.cmartin.learn.repository.spec.BaseRepository
 import slick.jdbc.H2Profile.api._
 import slick.lifted.TableQuery
 
+import scala.concurrent.Future
 
 package object implementation {
 
+  object DatabaseExecutor {
+    val db = Database.forConfig("mysql")
+    implicit def executeOperation[T](databaseOperation: DBIO[T]): Future[T] = {
+      db.run(databaseOperation)
+    }
+  }
   class AircraftRepository(implicit db: Database) extends BaseRepository[Aircraft, Fleet](db) {
+
     lazy val entities = TableQuery[Fleet]
 
     def findByRegistration(registration: String) =
-      db.run(entities.filter(_.registration === registration).result.headOption)
+      entities.filter(_.registration === registration).result.headOption
 
     def findByAirlineName(name: String) = {
 
