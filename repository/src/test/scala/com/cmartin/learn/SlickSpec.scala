@@ -2,7 +2,7 @@ package com.cmartin.learn
 
 import java.time.{LocalDate, LocalTime}
 
-import com.cmartin.learn.repository.frm._
+import com.cmartin.learn.repository.tables._
 import com.cmartin.learn.repository.implementation._
 import com.cmartin.learn.test.Constants
 import org.scalatest.OptionValues._

@@ -1,7 +1,7 @@
 package com.cmartin.learn.repository
 
-import com.cmartin.learn.repository.frm._
-import com.cmartin.learn.repository.spec.BaseRepository
+import com.cmartin.learn.repository.tables._
+import com.cmartin.learn.repository.definition.BaseRepository
 import slick.jdbc.H2Profile.api._
 import slick.lifted.TableQuery
 

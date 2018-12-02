@@ -3,10 +3,10 @@ package com.cmartin.learn.repository
 import java.sql.Date
 import java.time.{LocalDate, LocalDateTime, LocalTime}
 
-import com.cmartin.learn.repository.spec.{BaseTable, Entity}
+import com.cmartin.learn.repository.definition.{BaseTable, Entity}
 import slick.jdbc.H2Profile.api._
 
-package object frm {
+package object tables {
 
   object TableNames {
     val airlines = "AIRLINES"

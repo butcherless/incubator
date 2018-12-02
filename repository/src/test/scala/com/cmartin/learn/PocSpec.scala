@@ -1,6 +1,6 @@
-package com.cmartin.learn
+package com.cmartin.learn.repository
 
-import com.cmartin.learn.poc._
+import com.cmartin.learn.repository.poc._
 import org.scalatest._
 
 

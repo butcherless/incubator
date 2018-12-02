@@ -6,7 +6,7 @@ import slick.lifted.{TableQuery, Tag}
 
 import scala.concurrent.Future
 
-package object spec {
+package object definition {
 
   /**
     * Database entity based on a type and an identifier
@@ -82,23 +82,6 @@ package object spec {
   }
 
 
-  /*
-      POC
-   */
 
-  trait SimpleRepository[M[_], T, K] {
-
-    def findAll(filter: (T) => Boolean): M[List[T]]
-
-    def findById(k: K): M[T]
-
-    def remove(t: T): M[K]
-
-    def removeAll(filter: (T) => Boolean): M[List[K]]
-
-    def save(t: T): M[K]
-
-    def count(): M[Long]
-  }
 
 }

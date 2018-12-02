@@ -2,7 +2,7 @@ package com.cmartin.learn.repository
 
 import java.util.UUID
 
-import com.cmartin.learn.repository.spec.SimpleRepository
+import com.cmartin.learn.repository.poc.SimpleRepository
 
 import scala.collection.mutable.TreeSet
 
