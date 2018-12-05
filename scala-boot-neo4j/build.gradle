@@ -31,7 +31,7 @@ targetCompatibility = 1.8
 ext {
     scalaVersion = "2.12.8"
     jacksonVersion = "2.9.7"
-    neo4jDriver = '1.7.1'
+    neo4jDriver = '1.7.2'
 }
 
 //mainClassName = "com.cmartin.research.ScalaApplication"
