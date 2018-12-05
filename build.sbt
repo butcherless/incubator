@@ -5,7 +5,7 @@ lazy val projectVersion = "1.0.0-SNAPSHOT"
 lazy val commonSettings = Seq(
   organization := "com.cmartin.learn",
   version := projectVersion,
-  scalaVersion := "2.12.7",
+  scalaVersion := "2.12.8",
   scalacOptions ++= Seq( // some of the Rob Norris tpolecat options
     "-deprecation",                      // Emit warning and location for usages of deprecated APIs.
     "-encoding", "utf-8",                // Specify character encoding used by source files.

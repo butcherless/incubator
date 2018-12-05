@@ -29,7 +29,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 ext {
-    scalaVersion = "2.12.7"
+    scalaVersion = "2.12.8"
     jacksonVersion = "2.9.7"
     neo4jDriver = '1.7.1'
 }
