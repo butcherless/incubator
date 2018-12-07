@@ -1,9 +1,11 @@
 package com.cmartin.learn.repository
 
-import com.cmartin.learn.repository.tables._
 import com.cmartin.learn.repository.definition.BaseRepository
+import com.cmartin.learn.repository.tables._
 import slick.jdbc.H2Profile.api._
 import slick.lifted.TableQuery
+
+import scala.concurrent.Future
 
 package object implementation {
 
@@ -11,30 +13,30 @@ package object implementation {
 
     lazy val entities = TableQuery[Fleet]
 
-    def findByRegistration(registration: String) =
-      db.run(entities.filter(_.registration === registration).result.headOption)
+    def findByRegistration(registration: String): Future[Option[Aircraft]] =
+      entities.filter(_.registration === registration).result.headOption
 
-    def findByAirlineName(name: String) = {
+    def findByAirlineName(name: String): Future[Seq[Aircraft]] = {
 
       val query = for {
         aircraft <- entities
         airline <- aircraft.airline if airline.name === name
       } yield aircraft
 
-      db.run(query.result)
+      query.result
     }
   }
 
   class AirlineRepository(implicit db: Database) extends BaseRepository[Airline, Airlines](db) {
     lazy val entities = TableQuery[Airlines]
 
-    def findByCountryCode(code: String) = {
+    def findByCountryCode(code: String): Future[Seq[Airline]] = {
       val query = for {
         airline <- entities
         country <- airline.country if country.code === code
       } yield airline
 
-      db.run(query.result)
+      query.result
     }
   }
 
@@ -42,37 +44,35 @@ package object implementation {
   class AirportRepository(implicit db: Database) extends BaseRepository[Airport, Airports](db) {
     lazy val entities = TableQuery[Airports]
 
-    def findByCountryCode(code: String) = {
+    def findByCountryCode(code: String): Future[Seq[Airport]] = {
       val query = for {
         airport <- entities
         country <- airport.country if country.code === code
       } yield airport
 
-      db.run(query.result)
+      query.result
     }
   }
 
   class CountryRepository(implicit db: Database) extends BaseRepository[Country, Countries](db) {
     lazy val entities = TableQuery[Countries]
 
-    def findByCode(code: String) =
-      db.run(entities.filter(_.code === code).result.headOption)
+    def findByCode(code: String): Future[Option[Country]] = entities.filter(_.code === code).result.headOption
   }
 
   class FlightRepository(implicit db: Database) extends BaseRepository[Flight, Flights](db) {
     lazy val entities = TableQuery[Flights]
 
-    def findByCode(code: String) =
-      db.run(entities.filter(_.code === code).result.headOption)
+    def findByCode(code: String): Future[Option[Flight]] = entities.filter(_.code === code).result.headOption
 
-    def findByOrigin(origin: String) = {
+    def findByOrigin(origin: String): Future[Seq[Flight]] = {
       val query = for {
         flight <- entities
         route <- flight.route
         airport <- route.origin if airport.iataCode === origin
       } yield flight
 
-      db.run(query.result)
+      query.result
     }
   }
 
@@ -83,22 +83,22 @@ package object implementation {
   class RouteRepository(implicit db: Database) extends BaseRepository[Route, Routes](db) {
     lazy val entities = TableQuery[Routes]
 
-    def findByIataDestination(iataCode: String) = {
+    def findByIataDestination(iataCode: String): Future[Seq[Route]] = {
       val query = for {
         route <- entities
         airport <- route.destination if airport.iataCode === iataCode
       } yield route
 
-      db.run(query.result)
+      query.result
     }
 
-    def findByIataOrigin(iataCode: String) = {
+    def findByIataOrigin(iataCode: String): Future[Seq[Route]] = {
       val query = for {
         route <- entities
         airport <- route.origin if airport.iataCode === iataCode
       } yield route
 
-      db.run(query.result)
+      query.result
     }
   }
 

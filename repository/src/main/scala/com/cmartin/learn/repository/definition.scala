@@ -3,6 +3,7 @@ package com.cmartin.learn.repository
 import slick.jdbc
 import slick.jdbc.H2Profile.api._
 import slick.lifted.{TableQuery, Tag}
+import slick.sql.SqlAction
 
 import scala.concurrent.Future
 
@@ -26,20 +27,24 @@ package object definition {
   abstract class BaseRepository[E <: Entity[E, Long], T <: BaseTable[E]](db: Database) {
     val entities: TableQuery[T]
 
+    protected implicit def executeFromDb[A](action: SqlAction[A, NoStream, _ <: slick.dbio.Effect]): Future[A] = db.run(action)
+
+    def findAll(): Future[Seq[E]] = entities.result
+
     /**
       * Retrieve the entity option
       *
       * @param id identifier for the entity to found
       * @return Some(e) or None
       */
-    def findById(id: Long): Future[Option[E]] = db.run(entities.filter(_.id === id).result.headOption)
+    def findById(id: Long): Future[Option[E]] = entities.filter(_.id === id).result.headOption
 
     /**
       * Retrieve the repository entity count
       *
       * @return number of entities in the repo
       */
-    def count(): Future[Int] = db.run(entities.length.result)
+    def count(): Future[Int] = entities.length.result
 
     /**
       * Helper for insert operations
@@ -54,7 +59,7 @@ package object definition {
       * @param e entity to be added
       * @return entity id after the insert
       */
-    def insert(e: E): Future[Long] = db.run(entityReturningId += e)
+    def insert(e: E): Future[Long] = entityReturningId += e
 
     /**
       * Inserts a sequence of entities returning the generated sequence of identifiers
@@ -62,7 +67,7 @@ package object definition {
       * @param seq entity sequence
       * @return generated identifier sequence after the insert
       */
-    def insert(seq: Seq[E]): Future[Seq[Long]] = db.run(entities returning entities.map(_.id) ++= seq)
+    def insert(seq: Seq[E]): Future[Seq[Long]] = entities returning entities.map(_.id) ++= seq
 
     /**
       * Updates the entity in the repository
@@ -70,7 +75,7 @@ package object definition {
       * @param e entity to be updated
       * @return number of entities updated
       */
-    def update(e: E) = db.run(entities.filter(_.id === e.id).update(e))
+    def update(e: E): Future[Int] = entities.filter(_.id === e.id).update(e)
 
     /**
       * Deletes the entity with the identifier supplied
@@ -78,10 +83,8 @@ package object definition {
       * @param id entity identifier
       * @return number of entites affected
       */
-    def delete(id: Long) = db.run(entities.filter(_.id === id).delete)
+    def delete(id: Long): Future[Int] = entities.filter(_.id === id).delete
   }
-
-
 
 
 }

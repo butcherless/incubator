@@ -2,8 +2,8 @@ package com.cmartin.learn
 
 import java.time.{LocalDate, LocalTime}
 
-import com.cmartin.learn.repository.tables._
 import com.cmartin.learn.repository.implementation._
+import com.cmartin.learn.repository.tables._
 import com.cmartin.learn.test.Constants
 import org.scalatest.OptionValues._
 import org.scalatest.concurrent.ScalaFutures
@@ -148,6 +148,14 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
     initialCount shouldBe 1
     deleteResult shouldBe 1
     finalCount shouldBe 0
+  }
+
+  it should "retrieve all countries from the database" in new Repos {
+    Await.result(populateDatabase, Constants.waitTimeout)
+
+    val countries = countryRepo.findAll().futureValue
+
+    countries.nonEmpty shouldBe true
   }
 
   /*
