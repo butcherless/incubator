@@ -1,8 +1,7 @@
-package com.cmartin.learn.repository
+package com.cmartin.learn
 
-import com.cmartin.learn.repository.poc._
-import org.scalatest._
-
+import com.cmartin.learn.repository.definition.echo
+import org.scalatest.{FlatSpec, Matchers}
 
 class PocSpec extends FlatSpec with Matchers {
 

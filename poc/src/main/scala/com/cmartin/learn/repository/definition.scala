@@ -1,6 +1,6 @@
 package com.cmartin.learn.repository
 
-package object poc {
+package object definition {
 
   def echo(x: Int) = x
 
@@ -22,4 +22,5 @@ package object poc {
 
     def count(): M[Long]
   }
+
 }

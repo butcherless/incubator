@@ -2,11 +2,11 @@ package com.cmartin.learn.repository
 
 import java.util.UUID
 
-import com.cmartin.learn.repository.poc.SimpleRepository
+import com.cmartin.learn.repository.definition.SimpleRepository
 
 import scala.collection.mutable.TreeSet
 
-package object impl {
+package object implementation {
 
   case class Aircraft(k: String = "", typeCode: String, registration: String)
 
