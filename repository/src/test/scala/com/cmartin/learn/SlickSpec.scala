@@ -115,7 +115,7 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
   }
 
   it should "retrieve a country from the database" in new Repos {
-    countryRepo.insert(Country(esCountry._1, esCountry._2))
+    Await.result(countryRepo.insert(Country(esCountry._1, esCountry._2)), Constants.waitTimeout)
 
     val countryOption = countryRepo.findByCode(esCountry._2).futureValue
 

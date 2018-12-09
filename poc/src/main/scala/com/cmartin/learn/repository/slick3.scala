@@ -172,4 +172,5 @@ package object slick3 {
       query.result
     }
   }
+
 }

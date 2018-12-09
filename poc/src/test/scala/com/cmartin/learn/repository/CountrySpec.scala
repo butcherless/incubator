@@ -24,14 +24,14 @@ class CountrySpec extends FlatSpec with Matchers with BeforeAndAfterEach with Sc
   }
 
 
-  it should "WIP find Country table name" in {
+  it should "find Country table name" in {
     val tables = db.run(MTable.getTables).futureValue
 
     tables.size shouldBe 1
 
     val table = tables.head
     table.name.name shouldBe TableNames.countries
-    table.name.catalog.value shouldBe "AVIATION"
+    table.name.catalog.value shouldBe "AVIATIONPOC"
 
     val debugMessage = s"-------> result: $table"
 

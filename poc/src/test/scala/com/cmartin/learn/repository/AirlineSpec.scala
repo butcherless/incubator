@@ -13,7 +13,7 @@ import slick.jdbc.H2Profile.api._
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class AirlinesSpec extends FlatSpec with Matchers with BeforeAndAfterEach with ScalaFutures {
+class AirlineSpec extends FlatSpec with Matchers with BeforeAndAfterEach with ScalaFutures {
   implicit override val patienceConfig: PatienceConfig = PatienceConfig(timeout = Span(5, Seconds))
 
   implicit var db: Database = _

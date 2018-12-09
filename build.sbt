@@ -72,7 +72,8 @@ lazy val repository = (project in file("repository"))
   .settings(
     commonSettings,
     name := "repository",
-    libraryDependencies ++= Seq(slick, slickPool, logback, h2Database, scalaTest)
+    libraryDependencies ++= Seq(slick, slickPool, logback, h2Database, scalaTest),
+    parallelExecution in Test := false
   ).dependsOn(common, test)
 
 lazy val service = (project in file("service"))
