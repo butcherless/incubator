@@ -106,8 +106,8 @@ lazy val poc = (project in file("poc"))
   .settings(
     commonSettings,
     name := "poc",
-    libraryDependencies ++= Seq(scalaTest)
-  )
+    libraryDependencies ++= Seq(slick, slickPool, logback, h2Database, scalaTest)
+  ).dependsOn(test)
 
 // quick research deps
 lazy val sttp = "com.softwaremill.sttp" %% "core" % "1.5.0"
