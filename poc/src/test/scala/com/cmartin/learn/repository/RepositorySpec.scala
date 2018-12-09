@@ -1,6 +1,6 @@
-package com.cmartin.learn
+package com.cmartin.learn.repository
 
-import com.cmartin.learn.repository.impl.{Aircraft, MemoryRepository}
+import com.cmartin.learn.repository.implementation.{Aircraft, MemoryRepository}
 import org.scalatest.OptionValues._
 import org.scalatest.{FlatSpec, Matchers}
 
