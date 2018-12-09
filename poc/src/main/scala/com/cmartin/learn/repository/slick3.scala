@@ -1,5 +1,8 @@
 package com.cmartin.learn.repository
 
+import java.sql.Date
+import java.time.{LocalDate, LocalTime}
+
 import slick.jdbc
 import slick.jdbc.H2Profile.api._
 import slick.lifted.{TableQuery, Tag}
@@ -10,6 +13,7 @@ import scala.concurrent.Future
 package object slick3 {
 
   object TableNames {
+    val airlines = "AIRLINES"
     val countries = "COUNTRIES"
   }
 
@@ -84,6 +88,24 @@ package object slick3 {
     def delete(id: Long): Future[Int] = entities.filter(_.id === id).delete
   }
 
+  /*
+    maps the custom types of the application to the database
+ */
+  object CustomColumnTypes {
+
+    implicit val localDateType =
+      MappedColumnType.base[LocalDate, Date](
+        ld => Date.valueOf(ld),
+        dt => dt.toLocalDate
+      )
+
+    implicit val localTimeType =
+      MappedColumnType.base[LocalTime, String](
+        lt => lt.toString,
+        st => LocalTime.parse(st)
+      )
+
+  }
 
   /*
       C O U N T R Y
@@ -111,4 +133,43 @@ package object slick3 {
     def findByCode(code: String): Future[Option[Country]] = entities.filter(_.code === code).result.headOption
   }
 
+
+  /*
+      A I R L I N E
+   */
+  final case class Airline(name: String,
+                           foundationDate: LocalDate,
+                           countryId: Long,
+                           id: Option[Long] = None) extends Entity[Airline, Long]
+
+  final class Airlines(tag: Tag) extends BaseTable[Airline](tag, TableNames.airlines) {
+
+    import CustomColumnTypes.localDateType
+
+    // property columns:
+    def name = column[String]("NAME")
+
+    def foundationDate = column[LocalDate]("FOUNDATION_DATE")
+
+    // foreign columns:
+    def countryId = column[Long]("COUNTRY_ID")
+
+    def * = (name, foundationDate, countryId, id.?) <> (Airline.tupled, Airline.unapply)
+
+    // foreign keys
+    def country = foreignKey("FK_COUNTRY_AIRLINE", countryId, TableQuery[Countries])(_.id)
+  }
+
+  class AirlineRepository(implicit db: Database) extends BaseRepository[Airline, Airlines](db) {
+    lazy val entities = TableQuery[Airlines]
+
+    def findByCountryCode(code: String): Future[Seq[Airline]] = {
+      val query = for {
+        airline <- entities
+        country <- airline.country if country.code === code
+      } yield airline
+
+      query.result
+    }
+  }
 }

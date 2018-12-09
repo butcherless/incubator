@@ -11,7 +11,7 @@ import slick.jdbc.meta.MTable
 
 import scala.concurrent.Await
 
-class Slick3Spec extends FlatSpec with Matchers with BeforeAndAfterEach with ScalaFutures {
+class CountrySpec extends FlatSpec with Matchers with BeforeAndAfterEach with ScalaFutures {
   implicit override val patienceConfig: PatienceConfig = PatienceConfig(timeout = Span(5, Seconds))
 
   implicit var db: Database = _
@@ -38,6 +38,7 @@ class Slick3Spec extends FlatSpec with Matchers with BeforeAndAfterEach with Sca
     println(s"\n$debugMessage\n")
   }
 
+
   val schemaActionList = List(
     TableQuery[Countries]
   )
@@ -46,17 +47,12 @@ class Slick3Spec extends FlatSpec with Matchers with BeforeAndAfterEach with Sca
     db.run(DBIO.sequence(schemaActionList.map(_.schema.create)))
   }
 
-  def dropSchema() = {
-    db.run(DBIO.sequence(schemaActionList.map(_.schema.drop)))
-  }
-
   override def beforeEach() = {
     db = Database.forConfig("h2mem")
     Await.result(createSchema(), Constants.waitTimeout)
   }
 
   override def afterEach() = {
-    Await.result(dropSchema(), Constants.waitTimeout)
     db.close
   }
 
