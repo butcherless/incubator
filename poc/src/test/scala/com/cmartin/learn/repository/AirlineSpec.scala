@@ -10,14 +10,11 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class AirlinesSpec extends EntitySpec {
 
-<<<<<<< HEAD:poc/src/test/scala/com/cmartin/learn/repository/AirlineSpec.scala
-=======
   val tableList = List(
     TableQuery[Countries],
     TableQuery[Airlines]
   )
 
->>>>>>> refactor test hierarchy:poc/src/test/scala/com/cmartin/learn/repository/AirlinesSpec.scala
   it should "retrieve an airline from the database" in new Repos {
 
     val airlineOption = for {

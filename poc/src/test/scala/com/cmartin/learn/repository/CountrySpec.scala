@@ -1,10 +1,6 @@
 package com.cmartin.learn.repository
 
-<<<<<<< HEAD
-import com.cmartin.learn.repository.slick3.{Country, CountryRepository, TableNames}
-=======
 import com.cmartin.learn.repository.slick3.{Countries, Country, CountryRepository}
->>>>>>> refactor test hierarchy
 import org.scalatest.OptionValues._
 import slick.jdbc.meta.MTable
 import slick.lifted.TableQuery
