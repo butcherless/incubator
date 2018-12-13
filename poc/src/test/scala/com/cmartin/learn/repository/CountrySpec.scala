@@ -1,23 +1,12 @@
 package com.cmartin.learn.repository
 
-import com.cmartin.learn.repository.slick3.{Countries, Country, CountryRepository, TableNames}
-import com.cmartin.learn.test.Constants
+import com.cmartin.learn.repository.slick3.{Country, CountryRepository, TableNames}
 import org.scalatest.OptionValues._
-import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.time.{Seconds, Span}
-import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
-import slick.jdbc.H2Profile.api._
 import slick.jdbc.meta.MTable
 
-import scala.concurrent.Await
+class CountrySpec extends EntitySpec {
 
-class CountrySpec extends FlatSpec with Matchers with BeforeAndAfterEach with ScalaFutures {
-  implicit override val patienceConfig: PatienceConfig = PatienceConfig(timeout = Span(5, Seconds))
-
-  implicit var db: Database = _
-
-  it should "insert a country into the database" in {
-    val countryRepo = new CountryRepository
+  it should "insert a country into the database" in new Repos {
     val count = countryRepo.insert(Country(esCountry._1, esCountry._2))
 
     count.futureValue shouldBe 1
@@ -27,10 +16,9 @@ class CountrySpec extends FlatSpec with Matchers with BeforeAndAfterEach with Sc
   it should "find Country table name" in {
     val tables = db.run(MTable.getTables).futureValue
 
-    tables.size shouldBe 1
+    tables.size shouldBe 2
 
     val table = tables.head
-    table.name.name shouldBe TableNames.countries
     table.name.catalog.value shouldBe "AVIATIONPOC"
 
     val debugMessage = s"-------> result: $table"
@@ -38,22 +26,8 @@ class CountrySpec extends FlatSpec with Matchers with BeforeAndAfterEach with Sc
     println(s"\n$debugMessage\n")
   }
 
-
-  val schemaActionList = List(
-    TableQuery[Countries]
-  )
-
-  def createSchema() = {
-    db.run(DBIO.sequence(schemaActionList.map(_.schema.create)))
-  }
-
-  override def beforeEach() = {
-    db = Database.forConfig("h2mem")
-    Await.result(createSchema(), Constants.waitTimeout)
-  }
-
-  override def afterEach() = {
-    db.close
+  trait Repos {
+    val countryRepo = new CountryRepository
   }
 
   /*
@@ -66,5 +40,4 @@ class CountrySpec extends FlatSpec with Matchers with BeforeAndAfterEach with Sc
    */
 
   val esCountry = ("Spain", "ES")
-
 }
