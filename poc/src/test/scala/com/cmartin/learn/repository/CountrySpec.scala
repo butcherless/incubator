@@ -1,10 +1,19 @@
 package com.cmartin.learn.repository
 
+<<<<<<< HEAD
 import com.cmartin.learn.repository.slick3.{Country, CountryRepository, TableNames}
+=======
+import com.cmartin.learn.repository.slick3.{Countries, Country, CountryRepository}
+>>>>>>> refactor test hierarchy
 import org.scalatest.OptionValues._
 import slick.jdbc.meta.MTable
+import slick.lifted.TableQuery
 
 class CountrySpec extends EntitySpec {
+
+  val tableList = List(
+    TableQuery[Countries]
+  )
 
   it should "insert a country into the database" in new Repos {
     val count = countryRepo.insert(Country(esCountry._1, esCountry._2))
@@ -16,7 +25,7 @@ class CountrySpec extends EntitySpec {
   it should "find Country table name" in {
     val tables = db.run(MTable.getTables).futureValue
 
-    tables.size shouldBe 2
+    tables.size shouldBe 1
 
     val table = tables.head
     table.name.catalog.value shouldBe "AVIATIONPOC"
