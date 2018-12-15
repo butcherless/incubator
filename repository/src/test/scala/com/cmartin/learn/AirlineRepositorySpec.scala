@@ -2,7 +2,6 @@ package com.cmartin.learn
 
 import com.cmartin.learn.repository.implementation.{AircraftRepository, AirlineRepository, CountryRepository}
 import com.cmartin.learn.repository.tables._
-import com.cmartin.learn.test.Constants
 import com.cmartin.learn.test.Constants._
 import org.scalatest.OptionValues._
 import slick.lifted.TableQuery
@@ -39,7 +38,7 @@ class AirlineRepositorySpec extends RepositorySpec {
   }
 
   it should "retrieve airline list from a country" in new Repos {
-    Await.result(populateDatabase, Constants.waitTimeout)
+    Await.result(populateDatabase, waitTimeout)
     val expectedAirlineCount = 2
 
     val airlines = airlineRepo.findByCountryCode(esCountry._2).futureValue

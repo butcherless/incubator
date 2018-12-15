@@ -23,12 +23,6 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
 
 
 
-  it should "retrieve destinations airports for an origin airport" in new Repos {
-    Await.result(populateDatabase, Constants.waitTimeout)
-
-    val destinations = routeRepo.findByIataOrigin(madAirport._2).futureValue
-    destinations.size shouldBe Constants.madDestinationCount
-  }
 
   it should "retrieve flight by code" in new Repos {
     Await.result(populateDatabase, Constants.waitTimeout)
@@ -53,23 +47,6 @@ class SlickSpec extends FlatSpec with Matchers with BeforeAndAfterEach with Scal
 
 
 
-  it should "retrieve route list from its origin" in new Repos {
-    Await.result(populateDatabase, Constants.waitTimeout)
-    val expectedRouteCount = 3
-
-    val routes = routeRepo.findByIataOrigin(bcnAirport._2).futureValue
-
-    routes.size shouldBe expectedRouteCount
-  }
-
-  it should "retrieve route list from its destination" in new Repos {
-    Await.result(populateDatabase, Constants.waitTimeout)
-    val expectedRouteCount = 2
-
-    val routes = routeRepo.findByIataDestination(tfnAirport._2).futureValue
-
-    routes.size shouldBe expectedRouteCount
-  }
 
 
   /*
