@@ -18,6 +18,7 @@ package object tables {
     val routes = "ROUTES"
   }
 
+  //TODO refactor to common
   object TypeCodes {
     val AIRBUS_320 = "A320"
     val AIRBUS_330_200 = "A332"

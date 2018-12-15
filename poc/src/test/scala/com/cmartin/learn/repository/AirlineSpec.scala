@@ -8,7 +8,7 @@ import slick.lifted.TableQuery
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class AirlinesSpec extends EntitySpec {
+class AirlineSpec extends EntitySpec {
 
   val tableList = List(
     TableQuery[Countries],
