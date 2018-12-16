@@ -2,12 +2,11 @@ package com.cmartin.learn
 
 import com.cmartin.learn.repository.implementation._
 import com.cmartin.learn.repository.tables._
-import com.cmartin.learn.test.Constants
 import com.cmartin.learn.test.Constants._
 import slick.lifted.TableQuery
-import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class RouteRepositorySpec extends RepositorySpec {
   val tableList = List(
@@ -27,14 +26,14 @@ class RouteRepositorySpec extends RepositorySpec {
 
 
   it should "retrieve destinations airports for an origin airport" in new Repos {
-    Await.result(populateDatabase, Constants.waitTimeout)
+    Await.result(populateDatabase, waitTimeout)
 
     val destinations = routeRepo.findByIataOrigin(madAirport._2).futureValue
-    destinations.size shouldBe Constants.madDestinationCount
+    destinations.size shouldBe madDestinationCount
   }
 
   it should "retrieve route list from its origin" in new Repos {
-    Await.result(populateDatabase, Constants.waitTimeout)
+    Await.result(populateDatabase, waitTimeout)
     val expectedRouteCount = 3
 
     val routes = routeRepo.findByIataOrigin(bcnAirport._2).futureValue
@@ -43,7 +42,7 @@ class RouteRepositorySpec extends RepositorySpec {
   }
 
   it should "retrieve route list from its destination" in new Repos {
-    Await.result(populateDatabase, Constants.waitTimeout)
+    Await.result(populateDatabase, waitTimeout)
     val expectedRouteCount = 2
 
     val routes = routeRepo.findByIataDestination(tfnAirport._2).futureValue

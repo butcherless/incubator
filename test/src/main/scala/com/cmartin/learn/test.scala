@@ -1,6 +1,6 @@
 package com.cmartin.learn
 
-import java.time.LocalDate
+import java.time.{LocalDate, LocalTime}
 
 import scala.concurrent.duration._
 
@@ -38,6 +38,12 @@ package object test {
     val ecMigAircraft = (TypeCodes.BOEING_787_800, Constants.registrationMIG)
     val ecLvlAircraft = (TypeCodes.AIRBUS_330_200, Constants.registrationLVL)
 
+    val flightUx9059 = ("ux9059", "aea9059", LocalTime.of(7, 5), LocalTime.of(8, 55))
+    val flightD85756 = ("d85756", "ibk6ty", LocalTime.of(8, 0), LocalTime.of(10, 25))
+    val flightI23942 = ("i23942", "ibs3942", LocalTime.of(8, 40), LocalTime.of(10, 30))
+
+    val journeyTime = (LocalTime.of(7, 19), LocalTime.of(8, 41))
+
   }
 
   //TODO refactor to common
@@ -50,3 +56,12 @@ package object test {
   }
 
 }
+
+/*
+  _____         _     ____        _
+ |_   _|__  ___| |_  |  _ \  __ _| |_ __ _
+   | |/ _ \/ __| __| | | | |/ _` | __/ _` |
+   | |  __/\__ \ |_  | |_| | (_| | || (_| |
+   |_|\___||___/\__| |____/ \__,_|\__\__,_|
+
+ */
