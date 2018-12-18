@@ -29,12 +29,12 @@ lazy val h2Version           = "1.4.197"
 lazy val json4sVersion       = "3.6.2"
 lazy val logbackVersion      = "1.2.3"
 lazy val playJsonVersion     = "2.6.11"
-lazy val scalaLoggingVersion = "3.9.0"
+lazy val scalaLoggingVersion = "3.9.2"
 lazy val scalazVersion       = "7.2.27"
 lazy val scalatestVersion    = "3.0.5"
 lazy val slf4jVersion        = "1.7.25"
 lazy val slickVersion        = "3.2.3"
-lazy val specs2Version       = "4.3.5"
+lazy val specs2Version       = "4.3.6"
 lazy val utestVersion        = "0.6.6"
 
 lazy val akkaHttp     = "com.typesafe.akka" %% "akka-http" % akkaHttpVersion
@@ -112,4 +112,4 @@ lazy val poc = (project in file("poc"))
   ).dependsOn(test)
 
 // quick research deps
-lazy val sttp = "com.softwaremill.sttp" %% "core" % "1.5.1"
+lazy val sttp = "com.softwaremill.sttp" %% "core" % "1.5.2"
