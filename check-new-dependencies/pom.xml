@@ -16,12 +16,12 @@
     <dependency>
       <groupId>com.typesafe.scala-logging</groupId>
       <artifactId>scala-logging_2.12</artifactId>
-      <version>3.9.0</version>
+      <version>3.9.2</version>
     </dependency>
     <dependency>
       <groupId>com.typesafe.akka</groupId>
       <artifactId>akka-http_2.12</artifactId>
-      <version>10.1.5</version>
+      <version>10.1.6</version>
     </dependency>
     <dependency>
       <groupId>com.typesafe.akka</groupId>
@@ -31,7 +31,7 @@
     <dependency>
       <groupId>org.specs2</groupId>
       <artifactId>specs2-core_2.12</artifactId>
-      <version>4.3.5</version>
+      <version>4.3.6</version>
     </dependency>
     <dependency>
       <groupId>org.typelevel</groupId>
@@ -131,7 +131,7 @@
     <dependency>
     <groupId>com.softwaremill.sttp</groupId>
     <artifactId>core_2.12</artifactId>
-    <version>1.5.1</version>
+    <version>1.5.2</version>
     </dependency>
   </dependencies>
 </project>

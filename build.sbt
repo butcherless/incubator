@@ -21,14 +21,14 @@ lazy val commonSettings = Seq(
 
 // third party deps
 
-lazy val akkaHttpVersion     = "10.1.5"
+lazy val akkaHttpVersion     = "10.1.6"
 lazy val akkaVersion         = "2.5.19"
 lazy val catsVersion         = "1.5.0"
 lazy val configVersion       = "1.3.3"
 lazy val h2Version           = "1.4.197"
 lazy val json4sVersion       = "3.6.2"
 lazy val logbackVersion      = "1.2.3"
-lazy val playJsonVersion     = "2.6.11"
+lazy val playJsonVersion     = "2.6.13"
 lazy val scalaLoggingVersion = "3.9.2"
 lazy val scalazVersion       = "7.2.27"
 lazy val scalatestVersion    = "3.0.5"
