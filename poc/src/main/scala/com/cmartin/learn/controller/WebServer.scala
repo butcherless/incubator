@@ -30,6 +30,7 @@ object WebServer {
     // and use it for every request
     val numbers = Source.fromIterator(() =>
       Iterator.continually(Random.nextInt()))
+    var counter = 0
 
     val route =
       path("random") {
@@ -39,7 +40,8 @@ object WebServer {
               ContentTypes.`text/plain(UTF-8)`,
               // transform each number to a chunk of bytes
               numbers.map(n =>{
-                logger.debug(s"number: $n")
+                counter = counter + 1
+                logger.debug(s"number: $n, counter=${counter}")
                 ByteString(s"$n\n")
               })
             )
