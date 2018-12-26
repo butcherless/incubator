@@ -45,12 +45,11 @@ class CountryRepositorySpec extends RepositorySpec {
 
   it should "update a country from the database" in new Repos {
     val countryId = countryRepo.insert(Country(esCountry._1, esCountry._2)).futureValue
-    val updateResult = countryRepo.update(Country(esCountry._1.toUpperCase, esCountry._2.toUpperCase, Option(countryId)))
+    Await.result(countryRepo.update(Country(esCountry._1.toUpperCase, esCountry._2.toUpperCase, Option(countryId))), waitTimeout)
     val countryOption = countryRepo.findById(countryId).futureValue
     val countryCount = countryRepo.count().futureValue
 
     countryId should be > 0L
-    updateResult.futureValue shouldBe 1
     countryCount shouldBe 1
     countryOption.value.code.forall(_.isUpper) shouldBe true
     countryOption.value.name.forall(_.isUpper) shouldBe true
