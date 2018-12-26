@@ -107,7 +107,7 @@ lazy val poc = (project in file("poc"))
   .settings(
     commonSettings,
     name := "poc",
-    libraryDependencies ++= Seq(slick, slickPool, logback, h2Database, scalaTest),
+    libraryDependencies ++= Seq(akkaHttp, akkaStream, scalaLogging, slick, slickPool, logback, h2Database, scalaTest),
     parallelExecution in Test := false
   ).dependsOn(test)
 
