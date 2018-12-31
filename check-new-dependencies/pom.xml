@@ -106,7 +106,7 @@
     <dependency>
       <groupId>org.codehaus.groovy</groupId>
       <artifactId>groovy-all</artifactId>
-      <version>2.5.0</version>
+      <version>2.5.5</version>
     </dependency>
     <dependency>
       <groupId>org.spockframework</groupId>
@@ -116,7 +116,7 @@
     <dependency>
       <groupId>org.scala-sbt</groupId>
       <artifactId>sbt</artifactId>
-      <version>1.2.7</version>
+      <version>1.2.8</version>
     </dependency>
     <dependency>
       <groupId>net.virtual-void</groupId>
