@@ -1,6 +1,7 @@
 import sbt.Keys.libraryDependencies
 
 lazy val projectVersion = "1.0.0-SNAPSHOT"
+scalaVersion := "2.12.8"
 
 lazy val commonSettings = Seq(
   organization := "com.cmartin.learn",
@@ -26,7 +27,7 @@ lazy val akkaVersion         = "2.5.19"
 lazy val catsVersion         = "1.5.0"
 lazy val configVersion       = "1.3.3"
 lazy val h2Version           = "1.4.197"
-lazy val json4sVersion       = "3.6.2"
+lazy val json4sVersion       = "3.6.3"
 lazy val logbackVersion      = "1.2.3"
 lazy val playJsonVersion     = "2.6.13"
 lazy val scalaLoggingVersion = "3.9.2"
