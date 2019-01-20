@@ -29,7 +29,7 @@ lazy val configVersion       = "1.3.3"
 lazy val h2Version           = "1.4.197"
 lazy val json4sVersion       = "3.6.3"
 lazy val logbackVersion      = "1.2.3"
-lazy val playJsonVersion     = "2.6.13"
+lazy val playJsonVersion     = "2.7.0"
 lazy val scalaLoggingVersion = "3.9.2"
 lazy val scalazVersion       = "7.2.27"
 lazy val scalatestVersion    = "3.0.5"
@@ -113,4 +113,4 @@ lazy val poc = (project in file("poc"))
   ).dependsOn(test)
 
 // quick research deps
-lazy val sttp = "com.softwaremill.sttp" %% "core" % "1.5.4"
+lazy val sttp = "com.softwaremill.sttp" %% "core" % "1.5.7"
