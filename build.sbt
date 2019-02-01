@@ -24,7 +24,7 @@ lazy val commonSettings = Seq(
 
 lazy val akkaHttpVersion     = "10.1.7"
 lazy val akkaVersion         = "2.5.20"
-lazy val catsVersion         = "1.5.0"
+lazy val catsVersion         = "1.6.0"
 lazy val configVersion       = "1.3.3"
 lazy val h2Version           = "1.4.197"
 lazy val json4sVersion       = "3.6.4"
@@ -34,7 +34,7 @@ lazy val scalaLoggingVersion = "3.9.2"
 lazy val scalazVersion       = "7.2.27"
 lazy val scalatestVersion    = "3.0.5"
 lazy val slf4jVersion        = "1.7.25"
-lazy val slickVersion        = "3.2.3"
+lazy val slickVersion        = "3.3.0"
 lazy val specs2Version       = "4.4.1"
 lazy val utestVersion        = "0.6.6"
 

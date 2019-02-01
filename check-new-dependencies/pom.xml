@@ -36,7 +36,7 @@
     <dependency>
       <groupId>org.typelevel</groupId>
       <artifactId>cats-core_2.12</artifactId>
-      <version>1.5.0</version>
+      <version>1.6.0</version>
     </dependency>
     <dependency>
       <groupId>org.scalaz</groupId>
@@ -132,6 +132,12 @@
     <groupId>com.softwaremill.sttp</groupId>
     <artifactId>core_2.12</artifactId>
     <version>1.5.42</version>
+    </dependency>
+    <dependency>
+      <groupId>com.typesafe.slick</groupId>
+      <artifactId>slick_2.12</artifactId>
+      <version>3.3.0</version>
+      <type>bundle</type>
     </dependency>
   </dependencies>
 </project>
