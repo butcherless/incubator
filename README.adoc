@@ -224,7 +224,10 @@ A _Route_ has a starting _Airport_ and a destination _Airport_.
 
 Finders:
 
-
+== Plugins
+* https://github.com/scoverage/sbt-scoverage/releases
+* https://github.com/rtimush/sbt-updates/releases
+* https://github.com/sbt/sbt-assembly/releases
 
 == Links
 * Thanks to *FlightRadar24*: https://www.flightradar24.com/
