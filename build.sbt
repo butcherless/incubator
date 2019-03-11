@@ -35,7 +35,7 @@ lazy val scalazVersion       = "7.2.27"
 lazy val scalatestVersion    = "3.0.6"
 lazy val slf4jVersion        = "1.7.25"
 lazy val slickVersion        = "3.3.0"
-lazy val specs2Version       = "4.4.1"
+lazy val specs2Version       = "4.5.1"
 lazy val utestVersion        = "0.6.6"
 
 lazy val akkaHttp     = "com.typesafe.akka" %% "akka-http" % akkaHttpVersion
