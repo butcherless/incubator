@@ -17,7 +17,7 @@ lazy val commonSettings = Seq(
     "-language:higherKinds",             // Allow higher-kinded types
     "-language:implicitConversions",
     "-language:postfixOps"
-  )
+  ),
 )
 
 // third party deps
@@ -113,4 +113,4 @@ lazy val poc = (project in file("poc"))
   ).dependsOn(test)
 
 // quick research deps
-lazy val sttp = "com.softwaremill.sttp" %% "core" % "1.5.12"
+lazy val sttp = "com.softwaremill.sttp" %% "core" % "1.5.14"
