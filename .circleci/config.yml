@@ -7,7 +7,8 @@ jobs:
   build_gradle:
     docker:
       # specify the version you desire here
-      - image: circleci/11-jdk-stretch
+
+      - image: 11-jdk-stretch
 
     working_directory: ~/repo
 
