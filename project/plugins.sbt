@@ -1,3 +1,3 @@
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.6.0-RC2")
-addSbtPlugin("com.blstream" % "sbt-search-maven-plugin" % "0.2.0")
-addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.4.0")
+addSbtPlugin("org.jmotor.sbt" % "sbt-dependency-updates" % "1.2.0")
+addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.9")
