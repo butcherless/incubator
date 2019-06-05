@@ -1,7 +1,7 @@
 package com.cmartin.learn
 
 import com.cmartin.learn.app.MainApp
-import com.cmartin.learn.service.spec.{ GAV, Library }
+import com.cmartin.learn.service.spec.{GAV, Library}
 import com.typesafe.scalalogging.Logger
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -26,10 +26,10 @@ package object logic {
         Thread.sleep(d)
         logger.debug(s"I'm $patch, wait $d")
         Some(buildGav(patch))
+      } else
+      Future {
+        None
       }
-    else Future {
-      None
-    }
   }
 
   def processResults(list: List[Library]) = {

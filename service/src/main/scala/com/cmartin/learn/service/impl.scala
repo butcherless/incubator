@@ -2,13 +2,13 @@ package com.cmartin.learn.service
 
 import com.cmartin.learn.service.spec._
 import com.softwaremill.sttp._
-import com.typesafe.config.{ Config, ConfigFactory }
+import com.typesafe.config.{Config, ConfigFactory}
 import com.typesafe.scalalogging.Logger
 import org.json4s.native.JsonMethods.parse
-import org.json4s.{ DefaultFormats, JValue }
+import org.json4s.{DefaultFormats, JValue}
 
 import scala.concurrent.Future
-import scala.util.{ Failure, Success, Try }
+import scala.util.{Failure, Success, Try}
 
 package object impl {
 
@@ -19,29 +19,29 @@ package object impl {
   }
 
   class JsonNexusRepository(settings: NexusSettings) extends NexusRepository {
-    val logger: Logger = Logger[JsonNexusRepository]
-    implicit val backend = HttpURLConnectionBackend()
+    val logger: Logger        = Logger[JsonNexusRepository]
+    implicit val backend      = HttpURLConnectionBackend()
     implicit lazy val formats = DefaultFormats
 
     import scala.concurrent.ExecutionContext.Implicits.global
 
     override def getVersions(artifactName: String, repositoryName: String): Try[List[GAV]] = {
       for {
-        endpoint <- buildEndpoint(artifactName, repositoryName)
-        response <- getJsonResponse(endpoint)
-        jsonString <- getJsonString(response)
+        endpoint    <- buildEndpoint(artifactName, repositoryName)
+        response    <- getJsonResponse(endpoint)
+        jsonString  <- getJsonString(response)
         coordinates <- getCoordinates(jsonString)
-        _ <- traceResponse(response)
-        _ <- traceCoordinates(coordinates)
+        _           <- traceResponse(response)
+        _           <- traceCoordinates(coordinates)
       } yield coordinates
     }
 
     override def getGavFiles(gav: GAV, repositoryName: String): Try[List[Library]] = {
       for {
-        endpoint <- buildGavFilesEndpoint(gav, repositoryName)
-        response <- getJsonResponse(endpoint)
+        endpoint   <- buildGavFilesEndpoint(gav, repositoryName)
+        response   <- getJsonResponse(endpoint)
         jsonString <- getJsonString(response)
-        files <- getFiles(gav, jsonString)
+        files      <- getFiles(gav, jsonString)
       } yield files
     }
 
@@ -50,19 +50,18 @@ package object impl {
         val files = getGavFiles(gav, repositoryName)
         files match {
           case Success(list) => list
-          case Failure(_) => List.empty[Library]
+          case Failure(_)    => List.empty[Library]
         }
       }
     }
 
     def getGavFiles(gs: List[GAV])(implicit rn: String) = {
-      Try(
-        gs.flatMap(g => {
-          val endpoint = buildGavFilesEndpoint2(g, rn)
-          val response = getJsonResponse2(endpoint)
-          val jsonString = getJsonString2(response)
-          getFiles2(g, jsonString)
-        }))
+      Try(gs.flatMap(g => {
+        val endpoint   = buildGavFilesEndpoint2(g, rn)
+        val response   = getJsonResponse2(endpoint)
+        val jsonString = getJsonString2(response)
+        getFiles2(g, jsonString)
+      }))
     }
 
     /*
@@ -72,10 +71,11 @@ package object impl {
     |  __  | |  __|   | |      |  ___/  |  __|   |  _  /   \___ \
     | |  | | | |____  | |____  | |      | |____  | | \ \   ____) |
     |_|  |_| |______| |______| |_|      |______| |_|  \_\ |_____/
-    */
+     */
 
     private def buildEndpoint(artifactName: String, repositoryName: String): Try[Uri] = {
-      val endpoint: Uri = uri"${settings.getSearchUri()}?a=${artifactName}&repositoryId=${repositoryName}"
+      val endpoint: Uri =
+        uri"${settings.getSearchUri()}?a=${artifactName}&repositoryId=${repositoryName}"
       this.logger.trace(s"uri: ${endpoint}")
 
       Try(endpoint)
@@ -83,7 +83,8 @@ package object impl {
 
     private def buildGavFilesEndpoint(gav: GAV, repositoryName: String): Try[Uri] = {
       val groupIdPath = gav.groupId.replace('.', '/')
-      val endpoint: Uri = uri"${settings.getGavFilesUri()}/${repositoryName}/content/${groupIdPath}/${gav.artifactId}/${gav.version}/"
+      val endpoint: Uri =
+        uri"${settings.getGavFilesUri()}/${repositoryName}/content/${groupIdPath}/${gav.artifactId}/${gav.version}/"
       this.logger.trace(s"uri: ${endpoint}")
 
       Try(endpoint)
@@ -107,7 +108,7 @@ package object impl {
     private def getJsonString(response: Response[String]) = {
       response.body match {
         case Right(r) => Success(r.toString)
-        case Left(e) => Failure(new RuntimeException(s"${e.toString}"))
+        case Left(e)  => Failure(new RuntimeException(s"${e.toString}"))
       }
     }
 
@@ -117,41 +118,58 @@ package object impl {
 
     private def getFiles(gav: GAV, jsonString: String): Try[List[Library]] = {
       Try(
-        (parse(jsonString) \\ "data")
-          .children
-          .map(extractLibrary(gav, _)))
+        (parse(jsonString) \\ "data").children
+          .map(extractLibrary(gav, _))
+      )
     }
 
     private def getFiles2(gav: GAV, jsonString: String): List[Library] = {
-      (parse(jsonString) \\ "data")
-        .children
+      (parse(jsonString) \\ "data").children
         .map(extractLibrary(gav, _))
     }
 
     private def getCoordinates(jsonString: String): Try[List[GAV]] = {
       Try(
-        (parse(jsonString) \\ "data")
-          .children
-          .map(extractArtifact(_)))
+        (parse(jsonString) \\ "data").children
+          .map(extractArtifact(_))
+      )
     }
 
     private def extractLibrary(gav: GAV, value: JValue): Library = {
-      Library(gav.groupId, gav.artifactId, gav.version, (value \ "lastModified").extract[String], (value \ "text").extract[String])
+      Library(
+        gav.groupId,
+        gav.artifactId,
+        gav.version,
+        (value \ "lastModified").extract[String],
+        (value \ "text").extract[String]
+      )
     }
 
     private def extractArtifact(value: JValue): GAV = {
-      GAV((value \ "groupId").extract[String], (value \ "artifactId").extract[String], (value \ "version").extract[String])
+      GAV(
+        (value \ "groupId").extract[String],
+        (value \ "artifactId").extract[String],
+        (value \ "version").extract[String]
+      )
     }
 
     private def traceResponse(response: Response[String]): Try[Unit] = {
-      val contentType = response.header(HeaderNames.ContentType).getOrElse(Unit)
+      val contentType   = response.header(HeaderNames.ContentType).getOrElse(Unit)
       val contentLength = response.header(HeaderNames.ContentLength).getOrElse(Unit)
 
-      Try(logger.trace(s"response={status=${response.code}, contentLength=${contentLength}, contentType=${contentType}}"))
+      Try(
+        logger.trace(
+          s"response={status=${response.code}, contentLength=${contentLength}, contentType=${contentType}}"
+        )
+      )
     }
 
     private def traceCoordinates(coordinates: List[GAV]): Try[Unit] = {
-      Try(logger.trace(s"retrieved ${coordinates.size} artifacts, printing up to 5 elements: ${coordinates.take(5).toString()}"))
+      Try(
+        logger.trace(
+          s"retrieved ${coordinates.size} artifacts, printing up to 5 elements: ${coordinates.take(5).toString()}"
+        )
+      )
     }
 
   }
@@ -165,7 +183,8 @@ package object impl {
     NexusSettings(
       config.getString("nexus.host"),
       config.getInt("nexus.port"),
-      config.getString("nexus.repo"))
+      config.getString("nexus.repo")
+    )
   }
 
   /*
@@ -187,4 +206,3 @@ package object impl {
   //val uri = Uri("https://search.maven.org/solrsearch/select?q=g:com.typesafe.play%20AND%20a:play-json_2.12&core=gav")
 
 }
-

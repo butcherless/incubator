@@ -25,8 +25,8 @@ package object spec {
   }
 
   /**
-   * P.O.C.
-   */
+    * P.O.C.
+    */
   trait AbstractNexusRepository[M[_]] {
 
     def operationOne(s: String): M[Int]

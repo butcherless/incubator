@@ -1,26 +1,26 @@
 package com.cmartin.learn.repository
 
 import java.sql.Date
-import java.time.{ LocalDate, LocalDateTime, LocalTime }
+import java.time.{LocalDate, LocalDateTime, LocalTime}
 
-import com.cmartin.learn.repository.definition.{ BaseTable, Entity }
+import com.cmartin.learn.repository.definition.{BaseTable, Entity}
 import slick.jdbc.H2Profile.api._
 
 package object tables {
 
   object TableNames {
-    val airlines = "AIRLINES"
-    val airports = "AIRPORTS"
+    val airlines  = "AIRLINES"
+    val airports  = "AIRPORTS"
     val countries = "COUNTRIES"
-    val fleet = "FLEET"
-    val flights = "FLIGHTS"
-    val journeys = "JOURNEYS"
-    val routes = "ROUTES"
+    val fleet     = "FLEET"
+    val flights   = "FLIGHTS"
+    val journeys  = "JOURNEYS"
+    val routes    = "ROUTES"
   }
 
   //TODO refactor to common
   object TypeCodes {
-    val AIRBUS_320 = "A320"
+    val AIRBUS_320     = "A320"
     val AIRBUS_330_200 = "A332"
     val AIRBUS_350_900 = "A359"
     val BOEING_737_800 = "B738"
@@ -29,18 +29,14 @@ package object tables {
 
   /*
     maps the custom types of the application to the database
- */
+   */
   object CustomColumnTypes {
 
     implicit val localDateType =
-      MappedColumnType.base[LocalDate, Date](
-        ld => Date.valueOf(ld),
-        dt => dt.toLocalDate)
+      MappedColumnType.base[LocalDate, Date](ld => Date.valueOf(ld), dt => dt.toLocalDate)
 
     implicit val localTimeType =
-      MappedColumnType.base[LocalTime, String](
-        lt => lt.toString,
-        st => LocalTime.parse(st))
+      MappedColumnType.base[LocalTime, String](lt => lt.toString, st => LocalTime.parse(st))
 
   }
 
@@ -48,10 +44,11 @@ package object tables {
       A I R C R A F T
    */
   final case class Aircraft(
-    typeCode: String,
-    registration: String,
-    airlineId: Long,
-    id: Option[Long] = None) extends Entity[Aircraft, Long]
+      typeCode: String,
+      registration: String,
+      airlineId: Long,
+      id: Option[Long] = None
+  ) extends Entity[Aircraft, Long]
 
   final class Fleet(tag: Tag) extends BaseTable[Aircraft](tag, TableNames.fleet) {
 
@@ -73,10 +70,11 @@ package object tables {
       A I R L I N E
    */
   final case class Airline(
-    name: String,
-    foundationDate: LocalDate,
-    countryId: Long,
-    id: Option[Long] = None) extends Entity[Airline, Long]
+      name: String,
+      foundationDate: LocalDate,
+      countryId: Long,
+      id: Option[Long] = None
+  ) extends Entity[Airline, Long]
 
   final class Airlines(tag: Tag) extends BaseTable[Airline](tag, TableNames.airlines) {
 
@@ -99,10 +97,8 @@ package object tables {
   /*
       C O U N T R Y
    */
-  final case class Country(
-    name: String,
-    code: String,
-    id: Option[Long] = None) extends Entity[Country, Long]
+  final case class Country(name: String, code: String, id: Option[Long] = None)
+      extends Entity[Country, Long]
 
   final class Countries(tag: Tag) extends BaseTable[Country](tag, TableNames.countries) {
 
@@ -121,11 +117,12 @@ package object tables {
       A I R P O R T
    */
   final case class Airport(
-    name: String,
-    iataCode: String,
-    icaoCode: String,
-    countryId: Long,
-    id: Option[Long] = None) extends Entity[Airport, Long]
+      name: String,
+      iataCode: String,
+      icaoCode: String,
+      countryId: Long,
+      id: Option[Long] = None
+  ) extends Entity[Airport, Long]
 
   final class Airports(tag: Tag) extends BaseTable[Airport](tag, TableNames.airports) {
 
@@ -150,15 +147,16 @@ package object tables {
 
   /*
       F L I G H T
-  */
+   */
   final case class Flight(
-    code: String,
-    alias: String,
-    schedDeparture: LocalTime,
-    schedArrival: LocalTime,
-    airlineId: Long,
-    routeId: Long,
-    id: Option[Long] = None) extends Entity[Flight, Long]
+      code: String,
+      alias: String,
+      schedDeparture: LocalTime,
+      schedArrival: LocalTime,
+      airlineId: Long,
+      routeId: Long,
+      id: Option[Long] = None
+  ) extends Entity[Flight, Long]
 
   final class Flights(tag: Tag) extends BaseTable[Flight](tag, TableNames.flights) {
 
@@ -178,7 +176,8 @@ package object tables {
 
     def routeId = column[Long]("ROUTE_ID")
 
-    def * = (code, alias, schedDeparture, schedArrival, airlineId, routeId, id.?) <> (Flight.tupled, Flight.unapply)
+    def * =
+      (code, alias, schedDeparture, schedArrival, airlineId, routeId, id.?) <> (Flight.tupled, Flight.unapply)
 
     // foreign keys
     def route = foreignKey("FK_ROUTE", routeId, TableQuery[Routes])(_.id)
@@ -192,11 +191,12 @@ package object tables {
       J O U R N E Y
    */
   final case class Journey(
-    departureDate: LocalTime,
-    arrivalDate: LocalTime,
-    flightId: Long,
-    aircraftId: Long,
-    id: Option[Long] = None) extends Entity[Journey, Long]
+      departureDate: LocalTime,
+      arrivalDate: LocalTime,
+      flightId: Long,
+      aircraftId: Long,
+      id: Option[Long] = None
+  ) extends Entity[Journey, Long]
 
   final class Journeys(tag: Tag) extends BaseTable[Journey](tag, TableNames.journeys) {
 
@@ -212,7 +212,8 @@ package object tables {
 
     def aircraftId = column[Long]("AIRCRAFT_ID")
 
-    def * = (departureDate, arrivalDate, flightId, aircraftId, id.?) <> (Journey.tupled, Journey.unapply)
+    def * =
+      (departureDate, arrivalDate, flightId, aircraftId, id.?) <> (Journey.tupled, Journey.unapply)
 
     // foreign keys
     def flight = foreignKey("FK_FLIGHT", flightId, TableQuery[Flights])(_.id)
@@ -222,12 +223,13 @@ package object tables {
 
   /*
       R O U T E
-  */
+   */
   final case class Route(
-    distance: Double,
-    originId: Long,
-    destinationId: Long,
-    id: Option[Long] = None) extends Entity[Route, Long]
+      distance: Double,
+      originId: Long,
+      destinationId: Long,
+      id: Option[Long] = None
+  ) extends Entity[Route, Long]
 
   final class Routes(tag: Tag) extends BaseTable[Route](tag, TableNames.routes) {
 
@@ -242,19 +244,26 @@ package object tables {
     def * = (distance, originId, destinationId, id.?) <> (Route.tupled, Route.unapply)
 
     // foreign keys
-    def origin = foreignKey("FK_ORIGIN", originId, TableQuery[Airports])(origin =>
-      origin.id, onDelete = ForeignKeyAction.Cascade)
+    def origin =
+      foreignKey("FK_ORIGIN", originId, TableQuery[Airports])(
+        origin => origin.id,
+        onDelete = ForeignKeyAction.Cascade
+      )
 
-    def destination = foreignKey("FK_DESTINATION", destinationId, TableQuery[Airports])(destination =>
-      destination.id, onDelete = ForeignKeyAction.Cascade)
+    def destination =
+      foreignKey("FK_DESTINATION", destinationId, TableQuery[Airports])(
+        destination => destination.id,
+        onDelete = ForeignKeyAction.Cascade
+      )
 
     // indexes, compound
-    def originDestinationIndex = index("origin_destination_index", (originId, destinationId), unique = true)
+    def originDestinationIndex =
+      index("origin_destination_index", (originId, destinationId), unique = true)
   }
 
   /*
       P O S I T I O N
-  */
+   */
 
   final case class Point(longitude: Float, latitude: Float)
 

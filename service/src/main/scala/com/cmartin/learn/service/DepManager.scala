@@ -1,9 +1,9 @@
 package com.cmartin.learn.service
 
-import com.typesafe.config.{ Config, ConfigFactory }
+import com.typesafe.config.{Config, ConfigFactory}
 import com.typesafe.scalalogging.Logger
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Failure
 
 object Test {
@@ -13,7 +13,7 @@ object Test {
     val f = Future("hello")
     val res = f.onComplete {
       case scala.util.Success(value) => "success"
-      case Failure(exception) => "failure"
+      case Failure(exception)        => "failure"
     }
   }
 }
@@ -27,7 +27,7 @@ object DepManager extends App {
   lazy val logger = Logger[DepManager]
 
   // http get request to nexus
-  val artifactName = "scs-multicanal-perfilado"
+  val artifactName   = "scs-multicanal-perfilado"
   val repositoryName = "mutua-releases-lib"
 
   def init(): Settings = {
@@ -35,7 +35,8 @@ object DepManager extends App {
     val settings = Settings(
       config.getString("nexus.host"),
       config.getInt("nexus.port"),
-      config.getString("nexus.repo"))
+      config.getString("nexus.repo")
+    )
     logger.info(settings.toString)
     settings
   }

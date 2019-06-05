@@ -1,6 +1,6 @@
 package com.cmartin.learn
 
-import java.time.{ LocalDate, LocalTime }
+import java.time.{LocalDate, LocalTime}
 
 import scala.concurrent.duration._
 
@@ -13,7 +13,7 @@ package object test {
     val barajasIataCode = "MAD"
 
     val madDestinationCount = 4
-    val tableCount = 7
+    val tableCount          = 7
 
     val waitTimeout = 5.second
 
@@ -48,7 +48,7 @@ package object test {
 
   //TODO refactor to common
   object TypeCodes {
-    val AIRBUS_320 = "A320"
+    val AIRBUS_320     = "A320"
     val AIRBUS_330_200 = "A332"
     val AIRBUS_350_900 = "A359"
     val BOEING_737_800 = "B738"

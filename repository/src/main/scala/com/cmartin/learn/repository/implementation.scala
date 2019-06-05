@@ -20,7 +20,7 @@ package object implementation {
 
       val query = for {
         aircraft <- entities
-        airline <- aircraft.airline if airline.name === name
+        airline  <- aircraft.airline if airline.name === name
       } yield aircraft
 
       query.result
@@ -56,18 +56,20 @@ package object implementation {
   class CountryRepository(implicit db: Database) extends BaseRepository[Country, Countries](db) {
     lazy val entities = TableQuery[Countries]
 
-    def findByCode(code: String): Future[Option[Country]] = entities.filter(_.code === code).result.headOption
+    def findByCode(code: String): Future[Option[Country]] =
+      entities.filter(_.code === code).result.headOption
   }
 
   class FlightRepository(implicit db: Database) extends BaseRepository[Flight, Flights](db) {
     lazy val entities = TableQuery[Flights]
 
-    def findByCode(code: String): Future[Option[Flight]] = entities.filter(_.code === code).result.headOption
+    def findByCode(code: String): Future[Option[Flight]] =
+      entities.filter(_.code === code).result.headOption
 
     def findByOrigin(origin: String): Future[Seq[Flight]] = {
       val query = for {
-        flight <- entities
-        route <- flight.route
+        flight  <- entities
+        route   <- flight.route
         airport <- route.origin if airport.iataCode === origin
       } yield flight
 
@@ -84,7 +86,7 @@ package object implementation {
 
     def findByIataDestination(iataCode: String): Future[Seq[Route]] = {
       val query = for {
-        route <- entities
+        route   <- entities
         airport <- route.destination if airport.iataCode === iataCode
       } yield route
 
@@ -93,7 +95,7 @@ package object implementation {
 
     def findByIataOrigin(iataCode: String): Future[Seq[Route]] = {
       val query = for {
-        route <- entities
+        route   <- entities
         airport <- route.origin if airport.iataCode === iataCode
       } yield route
 

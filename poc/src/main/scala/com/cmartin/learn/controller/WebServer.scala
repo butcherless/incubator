@@ -2,7 +2,7 @@ package com.cmartin.learn.controller
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.{ ContentTypes, HttpEntity }
+import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl._
@@ -19,7 +19,7 @@ import scala.util.Random
 object WebServer {
   def main(args: Array[String]) {
 
-    implicit val system = ActorSystem()
+    implicit val system       = ActorSystem()
     implicit val materializer = ActorMaterializer()
     // needed for the future flatMap/onComplete in the end
     implicit val executionContext = system.dispatcher
@@ -28,8 +28,7 @@ object WebServer {
 
     // streams are re-usable so we can define it here
     // and use it for every request
-    val numbers = Source.fromIterator(() =>
-      Iterator.continually(Random.nextInt()))
+    val numbers = Source.fromIterator(() => Iterator.continually(Random.nextInt()))
     var counter = 0
 
     val route =
@@ -43,7 +42,9 @@ object WebServer {
                 counter = counter + 1
                 logger.debug(s"number: $n, counter=${counter}")
                 ByteString(s"$n\n")
-              })))
+              })
+            )
+          )
         }
       }
 
@@ -51,7 +52,7 @@ object WebServer {
     println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
     StdIn.readLine() // let it run until user presses return
     bindingFuture
-      .flatMap(_.unbind()) // trigger unbinding from the port
+      .flatMap(_.unbind())                 // trigger unbinding from the port
       .onComplete(_ => system.terminate()) // and shutdown when done
   }
 }

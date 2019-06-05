@@ -12,13 +12,14 @@ package object implementation {
 
   object Aircraft {
     implicit val ord = new Ordering[Aircraft] {
+
       /**
-       * Comparator for dependencies classes
-       *
-       * @param c1 one dependency
-       * @param c2 another one dependency
-       * @return 0 if equals, -1 if less than, +1 if greater than
-       */
+        * Comparator for dependencies classes
+        *
+        * @param c1 one dependency
+        * @param c2 another one dependency
+        * @return 0 if equals, -1 if less than, +1 if greater than
+        */
       def compare(a1: Aircraft, a2: Aircraft): Int = {
         a1.k.compareTo(a2.k)
       }
