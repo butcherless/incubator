@@ -1,11 +1,10 @@
 package com.cmartin.learn.service
 
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.{ Config, ConfigFactory }
 import com.typesafe.scalalogging.Logger
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.Failure
-
 
 object Test {
 
@@ -36,8 +35,7 @@ object DepManager extends App {
     val settings = Settings(
       config.getString("nexus.host"),
       config.getInt("nexus.port"),
-      config.getString("nexus.repo")
-    )
+      config.getString("nexus.repo"))
     logger.info(settings.toString)
     settings
   }

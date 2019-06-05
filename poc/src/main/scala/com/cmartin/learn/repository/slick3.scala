@@ -1,11 +1,11 @@
 package com.cmartin.learn.repository
 
 import java.sql.Date
-import java.time.{LocalDate, LocalTime}
+import java.time.{ LocalDate, LocalTime }
 
 import slick.jdbc
 import slick.jdbc.H2Profile.api._
-import slick.lifted.{TableQuery, Tag}
+import slick.lifted.{ TableQuery, Tag }
 import slick.sql.SqlAction
 
 import scala.concurrent.Future
@@ -34,57 +34,57 @@ package object slick3 {
     def findAll(): Future[Seq[E]] = entities.result
 
     /**
-      * Retrieve the entity option
-      *
-      * @param id identifier for the entity to found
-      * @return Some(e) or None
-      */
+     * Retrieve the entity option
+     *
+     * @param id identifier for the entity to found
+     * @return Some(e) or None
+     */
     def findById(id: Long): Future[Option[E]] = entities.filter(_.id === id).result.headOption
 
     /**
-      * Retrieve the repository entity count
-      *
-      * @return number of entities in the repo
-      */
+     * Retrieve the repository entity count
+     *
+     * @return number of entities in the repo
+     */
     def count(): Future[Int] = entities.length.result
 
     /**
-      * Helper for insert operations
-      *
-      * @return id for the entity added
-      */
+     * Helper for insert operations
+     *
+     * @return id for the entity added
+     */
     def entityReturningId(): jdbc.H2Profile.ReturningInsertActionComposer[E, Long] = entities returning entities.map(_.id)
 
     /**
-      * Inserts the entity returning the generated identifier
-      *
-      * @param e entity to be added
-      * @return entity id after the insert
-      */
+     * Inserts the entity returning the generated identifier
+     *
+     * @param e entity to be added
+     * @return entity id after the insert
+     */
     def insert(e: E): Future[Long] = entityReturningId += e
 
     /**
-      * Inserts a sequence of entities returning the generated sequence of identifiers
-      *
-      * @param seq entity sequence
-      * @return generated identifier sequence after the insert
-      */
+     * Inserts a sequence of entities returning the generated sequence of identifiers
+     *
+     * @param seq entity sequence
+     * @return generated identifier sequence after the insert
+     */
     def insert(seq: Seq[E]): Future[Seq[Long]] = entities returning entities.map(_.id) ++= seq
 
     /**
-      * Updates the entity in the repository
-      *
-      * @param e entity to be updated
-      * @return number of entities updated
-      */
+     * Updates the entity in the repository
+     *
+     * @param e entity to be updated
+     * @return number of entities updated
+     */
     def update(e: E): Future[Int] = entities.filter(_.id === e.id).update(e)
 
     /**
-      * Deletes the entity with the identifier supplied
-      *
-      * @param id entity identifier
-      * @return number of entites affected
-      */
+     * Deletes the entity with the identifier supplied
+     *
+     * @param id entity identifier
+     * @return number of entites affected
+     */
     def delete(id: Long): Future[Int] = entities.filter(_.id === id).delete
   }
 
@@ -96,23 +96,22 @@ package object slick3 {
     implicit val localDateType =
       MappedColumnType.base[LocalDate, Date](
         ld => Date.valueOf(ld),
-        dt => dt.toLocalDate
-      )
+        dt => dt.toLocalDate)
 
     implicit val localTimeType =
       MappedColumnType.base[LocalTime, String](
         lt => lt.toString,
-        st => LocalTime.parse(st)
-      )
+        st => LocalTime.parse(st))
 
   }
 
   /*
       C O U N T R Y
    */
-  final case class Country(name: String,
-                           code: String,
-                           id: Option[Long] = None) extends Entity[Country, Long]
+  final case class Country(
+    name: String,
+    code: String,
+    id: Option[Long] = None) extends Entity[Country, Long]
 
   final class Countries(tag: Tag) extends BaseTable[Country](tag, TableNames.countries) {
 
@@ -133,14 +132,14 @@ package object slick3 {
     def findByCode(code: String): Future[Option[Country]] = entities.filter(_.code === code).result.headOption
   }
 
-
   /*
       A I R L I N E
    */
-  final case class Airline(name: String,
-                           foundationDate: LocalDate,
-                           countryId: Long,
-                           id: Option[Long] = None) extends Entity[Airline, Long]
+  final case class Airline(
+    name: String,
+    foundationDate: LocalDate,
+    countryId: Long,
+    id: Option[Long] = None) extends Entity[Airline, Long]
 
   final class Airlines(tag: Tag) extends BaseTable[Airline](tag, TableNames.airlines) {
 

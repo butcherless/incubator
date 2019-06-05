@@ -2,13 +2,13 @@ package com.cmartin.learn.service
 
 import com.cmartin.learn.service.spec._
 import com.softwaremill.sttp._
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.{ Config, ConfigFactory }
 import com.typesafe.scalalogging.Logger
 import org.json4s.native.JsonMethods.parse
-import org.json4s.{DefaultFormats, JValue}
+import org.json4s.{ DefaultFormats, JValue }
 
 import scala.concurrent.Future
-import scala.util.{Failure, Success, Try}
+import scala.util.{ Failure, Success, Try }
 
 package object impl {
 
@@ -24,7 +24,6 @@ package object impl {
     implicit lazy val formats = DefaultFormats
 
     import scala.concurrent.ExecutionContext.Implicits.global
-
 
     override def getVersions(artifactName: String, repositoryName: String): Try[List[GAV]] = {
       for {
@@ -63,8 +62,7 @@ package object impl {
           val response = getJsonResponse2(endpoint)
           val jsonString = getJsonString2(response)
           getFiles2(g, jsonString)
-        })
-      )
+        }))
     }
 
     /*
@@ -75,7 +73,6 @@ package object impl {
     | |  | | | |____  | |____  | |      | |____  | | \ \   ____) |
     |_|  |_| |______| |______| |_|      |______| |_|  \_\ |_____/
     */
-
 
     private def buildEndpoint(artifactName: String, repositoryName: String): Try[Uri] = {
       val endpoint: Uri = uri"${settings.getSearchUri()}?a=${artifactName}&repositoryId=${repositoryName}"
@@ -122,8 +119,7 @@ package object impl {
       Try(
         (parse(jsonString) \\ "data")
           .children
-          .map(extractLibrary(gav, _))
-      )
+          .map(extractLibrary(gav, _)))
     }
 
     private def getFiles2(gav: GAV, jsonString: String): List[Library] = {
@@ -136,8 +132,7 @@ package object impl {
       Try(
         (parse(jsonString) \\ "data")
           .children
-          .map(extractArtifact(_))
-      )
+          .map(extractArtifact(_)))
     }
 
     private def extractLibrary(gav: GAV, value: JValue): Library = {
@@ -170,10 +165,8 @@ package object impl {
     NexusSettings(
       config.getString("nexus.host"),
       config.getInt("nexus.port"),
-      config.getString("nexus.repo")
-    )
+      config.getString("nexus.repo"))
   }
-
 
   /*
     _        ______    _____               _____  __     __       _____    ____    _____    ______
@@ -185,7 +178,6 @@ package object impl {
 
 
    */
-
 
   //  implicit val system = ActorSystem()
   // implicit val materializer = ActorMaterializer()

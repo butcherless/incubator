@@ -1,11 +1,11 @@
 package com.cmartin.learn.app
 
 import com.cmartin.learn.logic._
-import com.cmartin.learn.service.impl.{JsonNexusRepository, getNexusSettings}
+import com.cmartin.learn.service.impl.{ JsonNexusRepository, getNexusSettings }
 import com.cmartin.learn.service.spec._
 import com.typesafe.scalalogging.Logger
 
-import scala.util.{Success, Try}
+import scala.util.{ Success, Try }
 
 class MainApp
 
@@ -21,20 +21,15 @@ object MainApp extends App {
 
   logger.info(s"MainApp starts at: ${initInstant} instant")
 
-
   val temp: Try[List[Library]] = repository.getVersions(artifactName, repoName)
     .map(x => x
       .flatMap(g => repository.getGavFiles(g, repoName)
-        .getOrElse(List.empty)
-      )
-    )
-
+        .getOrElse(List.empty)))
 
   val files: Try[List[Library]] = for {
     versions <- repository.getVersions(artifactName, repoName)
     files <- repository.getGavFiles(versions)
   } yield files
-
 
   val result: Unit = files match {
     case Success(list) => processResults(list)
@@ -58,4 +53,4 @@ object MainApp extends App {
 
   val r3: Future[List[List[Library]]] = Future.traverse(r2) { f => f }
 
- */
+ */ 

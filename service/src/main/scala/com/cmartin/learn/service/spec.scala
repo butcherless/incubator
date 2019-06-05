@@ -12,7 +12,6 @@ package object spec {
 
   case class GAV(groupId: String, artifactId: String, version: String)
 
-
   trait NexusRepository {
     def getVersions(artifactName: String, repositoryName: String): Try[List[GAV]]
 
@@ -26,8 +25,8 @@ package object spec {
   }
 
   /**
-    * P.O.C.
-    */
+   * P.O.C.
+   */
   trait AbstractNexusRepository[M[_]] {
 
     def operationOne(s: String): M[Int]

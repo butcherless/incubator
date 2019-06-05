@@ -2,7 +2,7 @@ package com.cmartin.learn.controller
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
+import akka.http.scaladsl.model.{ ContentTypes, HttpEntity }
 import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl._
@@ -24,7 +24,7 @@ object WebServer {
     // needed for the future flatMap/onComplete in the end
     implicit val executionContext = system.dispatcher
 
-    val logger: Logger = Logger[WebServer.type ]
+    val logger: Logger = Logger[WebServer.type]
 
     // streams are re-usable so we can define it here
     // and use it for every request
@@ -39,13 +39,11 @@ object WebServer {
             HttpEntity(
               ContentTypes.`text/plain(UTF-8)`,
               // transform each number to a chunk of bytes
-              numbers.map(n =>{
+              numbers.map(n => {
                 counter = counter + 1
                 logger.debug(s"number: $n, counter=${counter}")
                 ByteString(s"$n\n")
-              })
-            )
-          )
+              })))
         }
       }
 

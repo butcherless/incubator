@@ -1,7 +1,7 @@
 package com.cmartin.learn
 
 import com.cmartin.learn.app.MainApp
-import com.cmartin.learn.service.spec.{GAV, Library}
+import com.cmartin.learn.service.spec.{ GAV, Library }
 import com.typesafe.scalalogging.Logger
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -35,6 +35,5 @@ package object logic {
   def processResults(list: List[Library]) = {
     list.map(l => logger.trace(l.toString))
   }
-
 
 }

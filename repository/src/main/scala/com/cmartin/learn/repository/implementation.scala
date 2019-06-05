@@ -40,7 +40,6 @@ package object implementation {
     }
   }
 
-
   class AirportRepository(implicit db: Database) extends BaseRepository[Airport, Airports](db) {
     lazy val entities = TableQuery[Airports]
 
