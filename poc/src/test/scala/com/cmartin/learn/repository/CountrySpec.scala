@@ -17,7 +17,6 @@ class CountrySpec extends EntitySpec {
     count.futureValue shouldBe 1
   }
 
-
   it should "find Country table name" in {
     val tables = db.run(MTable.getTables).futureValue
 

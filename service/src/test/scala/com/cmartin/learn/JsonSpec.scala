@@ -13,21 +13,22 @@ import scala.util.Try
 
 class JsonSpec extends FlatSpec with Matchers {
 
-
   def fixture = new {
     lazy val settings: NexusSettings = getNexusSettings()
-    lazy val nexusRepo = JsonNexusRepository(settings)
+    lazy val nexusRepo               = JsonNexusRepository(settings)
   }
 
   ignore should "return a non empty coordinates (gav) list from nexus repo" in {
-    val coordinates = fixture.nexusRepo.getVersions(TestConstants.ArtifactName, TestConstants.RepositoryName)
+    val coordinates =
+      fixture.nexusRepo.getVersions(TestConstants.ArtifactName, TestConstants.RepositoryName)
 
     coordinates.success.value.nonEmpty shouldBe true
     coordinates.success.value.forall(_.version.nonEmpty)
   }
 
   ignore should "return an empty coordinates (gav) list from nexus repo" in {
-    val coordinates = fixture.nexusRepo.getVersions(TestConstants.NotExistingArtifactName, TestConstants.RepositoryName)
+    val coordinates = fixture.nexusRepo
+      .getVersions(TestConstants.NotExistingArtifactName, TestConstants.RepositoryName)
 
     coordinates.success.value.isEmpty shouldBe true
   }
@@ -39,17 +40,20 @@ class JsonSpec extends FlatSpec with Matchers {
     //coordinates.success.value.forall(_.version.nonEmpty)
   }
 
-
   ignore should "return a future list of artifacts" in {
-    val coordinates: Try[List[spec.GAV]] = fixture.nexusRepo.getVersions(TestConstants.ArtifactName, TestConstants.RepositoryName)
+    val coordinates: Try[List[spec.GAV]] =
+      fixture.nexusRepo.getVersions(TestConstants.ArtifactName, TestConstants.RepositoryName)
 
     coordinates.success.value.nonEmpty shouldBe true
 
     val gavList: List[spec.GAV] = coordinates.get
 
-    val futures: List[Future[List[Library]]] = gavList.map(fixture.nexusRepo.getAsyncGavFiles(_, TestConstants.RepositoryName))
+    val futures: List[Future[List[Library]]] =
+      gavList.map(fixture.nexusRepo.getAsyncGavFiles(_, TestConstants.RepositoryName))
 
-    val traverseResult: Future[List[List[Library]]] = Future.traverse(futures) { f => f }
+    val traverseResult: Future[List[List[Library]]] = Future.traverse(futures) { f =>
+      f
+    }
 
     traverseResult.onComplete {
       case scala.util.Success(list) => {

@@ -19,7 +19,6 @@ abstract class EntitySpec extends FlatSpec with Matchers with BeforeAndAfterEach
    */
   val tableList: Seq[TableQuery[_ <: BaseTable[_]]]
 
-
   def createSchema() = {
     db.run(DBIO.sequence(tableList.map(_.schema.create)))
   }

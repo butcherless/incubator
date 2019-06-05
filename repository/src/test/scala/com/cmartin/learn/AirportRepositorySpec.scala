@@ -21,15 +21,15 @@ class AirportRepositorySpec extends RepositorySpec {
     val airportRepo = new AirportRepository
   }
 
-
   it should "insert an airport and a country" in new Repos {
 
     val airportOption = for {
       countryId <- countryRepo.insert(Country(esCountry._1, esCountry._2))
-      airportId <- airportRepo.insert(Airport(madAirport._1, madAirport._2, madAirport._3, countryId))
+      airportId <- airportRepo.insert(
+        Airport(madAirport._1, madAirport._2, madAirport._3, countryId)
+      )
       airport <- airportRepo.findById(airportId)
     } yield airport
-
 
     // asserts
     val airport = airportOption.futureValue.value
@@ -40,7 +40,6 @@ class AirportRepositorySpec extends RepositorySpec {
     airport.iataCode shouldBe madAirport._2
     airport.icaoCode shouldBe madAirport._3
   }
-
 
   it should "retrieve an Airport empty collection" in new Repos {
     val countries = airportRepo.findByCountryCode(esCountry._2).futureValue
@@ -69,9 +68,9 @@ class AirportRepositorySpec extends RepositorySpec {
         bcnId <- airportRepo.insert(Airport(bcnAirport._1, bcnAirport._2, bcnAirport._3, esId))
         lhrId <- airportRepo.insert(Airport(lhrAirport._1, lhrAirport._2, lhrAirport._3, ukId))
         lgwId <- airportRepo.insert(Airport(lgwAirport._1, lgwAirport._2, lgwAirport._3, ukId))
-        _ <- airportRepo.insert(Airport(bsbAirport._1, bsbAirport._2, bsbAirport._3, brId))
-        _ <- airportRepo.insert(Airport(gigAirport._1, gigAirport._2, gigAirport._3, brId))
-        _ <- airportRepo.insert(Airport(ssaAirport._1, ssaAirport._2, ssaAirport._3, brId))
+        _     <- airportRepo.insert(Airport(bsbAirport._1, bsbAirport._2, bsbAirport._3, brId))
+        _     <- airportRepo.insert(Airport(gigAirport._1, gigAirport._2, gigAirport._3, brId))
+        _     <- airportRepo.insert(Airport(ssaAirport._1, ssaAirport._2, ssaAirport._3, brId))
 
       } yield ()
     }.result

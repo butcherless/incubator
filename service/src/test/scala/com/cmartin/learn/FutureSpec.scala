@@ -22,11 +22,10 @@ class FutureSpec extends AsyncFlatSpec with Matchers {
     artifact map (t => t shouldBe None)
   }
 
-
   "future for comprehension" should "aggregate results" in {
     val f1: Future[Option[GAV]] = getArtifact(1)
-    val f2 = getArtifact(2)
-    val f3 = getArtifact(3)
+    val f2                      = getArtifact(2)
+    val f3                      = getArtifact(3)
 
     val tuple: Future[(Option[GAV], Option[GAV], Option[GAV])] = for {
       r1 <- f1
@@ -41,7 +40,6 @@ class FutureSpec extends AsyncFlatSpec with Matchers {
     })
   }
 
-
   "Get artifact list future" should "return a result list" in {
     val futureOperations = List(
       getArtifact(0),
@@ -52,23 +50,21 @@ class FutureSpec extends AsyncFlatSpec with Matchers {
     )
 
     //    val futureTraverseResult: Future[List[Option[GAV]]] = Future.sequence(futureOperations)
-    val futureTraverseResult: Future[List[Option[GAV]]] = Future.traverse(futureOperations) {
-      e => e
+    val futureTraverseResult: Future[List[Option[GAV]]] = Future.traverse(futureOperations) { e =>
+      e
     }
 
-    futureTraverseResult map {
-      t => {
+    futureTraverseResult map { t =>
+      {
         t.nonEmpty shouldBe true
         t.forall(_.value.version.startsWith("1.3.")) shouldBe true
       }
     }
   }
 
-
   /*
-  *  H E L P E R S
-  */
-
+   *  H E L P E R S
+   */
 
   def getArtifact(patch: Int): Future[Option[GAV]] = {
     val d = delay(1)
@@ -77,12 +73,12 @@ class FutureSpec extends AsyncFlatSpec with Matchers {
         //        println(s"I'm $patch, wait $d")
         Thread.sleep(d)
         Some(gav1.copy(version = s"1.3.$patch"))
+      } else
+      Future {
+        //        println(s"I'm $patch, wait $d")
+        Thread.sleep(d)
+        None
       }
-    else Future {
-      //        println(s"I'm $patch, wait $d")
-      Thread.sleep(d)
-      None
-    }
   }
 
   def delay(secs: Int) = Random.nextInt(1000 * secs)

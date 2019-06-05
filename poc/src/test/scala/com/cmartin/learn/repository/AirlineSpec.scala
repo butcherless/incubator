@@ -20,7 +20,7 @@ class AirlineSpec extends EntitySpec {
     val airlineOption = for {
       countryId <- countryRepo.insert(Country(esCountry._1, esCountry._2))
       airlineId <- airlineRepo.insert(Airline(ibsAirline._1, ibsAirline._2, countryId))
-      airline <- airlineRepo.findById(airlineId)
+      airline   <- airlineRepo.findById(airlineId)
     } yield airline
 
     val airline: Option[Airline] = airlineOption.futureValue
@@ -29,7 +29,6 @@ class AirlineSpec extends EntitySpec {
     airline.value.name shouldBe ibsAirline._1
     airline.value.foundationDate shouldBe ibsAirline._2
   }
-
 
   trait Repos {
     val airlineRepo = new AirlineRepository
@@ -45,10 +44,9 @@ class AirlineSpec extends EntitySpec {
 
    */
 
-  val esCountry = ("Spain", "ES")
+  val esCountry  = ("Spain", "ES")
   val aeaAirline = ("Air Europa", LocalDate.of(1986, 11, 21))
   val ibsAirline = ("Iberia Express", LocalDate.of(2011, 10, 6))
   val ibkAirline = ("Norwegian Air International", LocalDate.of(1993, 1, 22))
-
 
 }

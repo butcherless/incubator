@@ -22,8 +22,8 @@ class FlightRepositorySpec extends RepositorySpec {
     val airlineRepo = new AirlineRepository
     val airportRepo = new AirportRepository
     val countryRepo = new CountryRepository
-    val flightRepo = new FlightRepository
-    val routeRepo = new RouteRepository
+    val flightRepo  = new FlightRepository
+    val routeRepo   = new RouteRepository
   }
 
   it should "retrieve flight by code" in new Repos {
@@ -38,7 +38,7 @@ class FlightRepositorySpec extends RepositorySpec {
   it should "retrieve all flights for a given route" in new Repos {
     Await.result(populateDatabase, waitTimeout)
     val expectedFlightCount = 2
-    val expectedSet = Set(flightUx9059._1, flightI23942._1)
+    val expectedSet         = Set(flightUx9059._1, flightI23942._1)
 
     val flights = flightRepo.findByOrigin(barajasIataCode).futureValue
 
@@ -65,9 +65,36 @@ class FlightRepositorySpec extends RepositorySpec {
         bcnTfnId <- routeRepo.insert(Route(1185.0, bcnId, tfnId)) // 3 destinations
         madTfnId <- routeRepo.insert(Route(957.0, madId, tfnId))
 
-        ux9059Id <- flightRepo.insert(Flight(flightUx9059._1, flightUx9059._2, flightUx9059._3, flightUx9059._4, aeaId, madTfnId))
-        _ <- flightRepo.insert(Flight(flightI23942._1, flightI23942._2, flightI23942._3, flightI23942._4, ibsId, madTfnId))
-        d85756Id <- flightRepo.insert(Flight(flightD85756._1, flightD85756._2, flightD85756._3, flightD85756._4, ibkId, bcnTfnId))
+        ux9059Id <- flightRepo.insert(
+          Flight(
+            flightUx9059._1,
+            flightUx9059._2,
+            flightUx9059._3,
+            flightUx9059._4,
+            aeaId,
+            madTfnId
+          )
+        )
+        _ <- flightRepo.insert(
+          Flight(
+            flightI23942._1,
+            flightI23942._2,
+            flightI23942._3,
+            flightI23942._4,
+            ibsId,
+            madTfnId
+          )
+        )
+        d85756Id <- flightRepo.insert(
+          Flight(
+            flightD85756._1,
+            flightD85756._2,
+            flightD85756._3,
+            flightD85756._4,
+            ibkId,
+            bcnTfnId
+          )
+        )
 
       } yield ()
     }.result

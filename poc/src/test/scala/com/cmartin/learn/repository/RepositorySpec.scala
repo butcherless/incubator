@@ -8,8 +8,8 @@ import scala.language.reflectiveCalls
 
 class RepositorySpec extends FlatSpec with Matchers {
 
-  val typeCodeBoeing = "B788"
-  val typeCodeAirbus = "A359"
+  val typeCodeBoeing  = "B788"
+  val typeCodeAirbus  = "A359"
   val registrationMXV = "ec-mxv"
   val registrationMIG = "ec-mig"
 
@@ -18,7 +18,7 @@ class RepositorySpec extends FlatSpec with Matchers {
   // CREATE
   it should "save an aircraft into the repository" in new Repository {
     val beforeCount = repository.count()
-    val a = newAircraft(typeCodeBoeing, registrationMIG)
+    val a           = newAircraft(typeCodeBoeing, registrationMIG)
 
     // functionality
     val aSaved = repository.save(a)
@@ -29,11 +29,10 @@ class RepositorySpec extends FlatSpec with Matchers {
     aSaved.value.matches(uuidRegex) shouldBe true
   }
 
-
   // READ
   it should "retrieve an aircraft from the repository" in new Repository {
     // preconditions
-    val a = newAircraft(typeCodeBoeing, registrationMIG)
+    val a      = newAircraft(typeCodeBoeing, registrationMIG)
     val aSaved = repository.save(a)
 
     // functionality
@@ -68,16 +67,17 @@ class RepositorySpec extends FlatSpec with Matchers {
     list.value.head.typeCode shouldEqual typeCodeAirbus
   }
 
-
   // UPDATE
   it should "update an aircraft into the repository" in new Repository {
     // preconditions
-    val a = newAircraft(typeCodeBoeing, registrationMIG)
-    val aSaved = repository.save(a)
+    val a                            = newAircraft(typeCodeBoeing, registrationMIG)
+    val aSaved                       = repository.save(a)
     val aRetrieved: Option[Aircraft] = repository.findById(aSaved.value)
 
     // functionality
-    repository.save(aRetrieved.value.copy(typeCode = typeCodeAirbus, registration = registrationMXV))
+    repository.save(
+      aRetrieved.value.copy(typeCode = typeCodeAirbus, registration = registrationMXV)
+    )
     val aUpdated = repository.findById(aSaved.value)
 
     // verifications
@@ -85,16 +85,15 @@ class RepositorySpec extends FlatSpec with Matchers {
     aUpdated.value.registration shouldEqual registrationMXV
   }
 
-
   // REMOVE
   it should "remove an aircraft from the repository" in new Repository {
     // preconditions
-    val created = newAircraft(typeCodeBoeing, registrationMIG)
-    val aSaved = repository.save(created)
+    val created     = newAircraft(typeCodeBoeing, registrationMIG)
+    val aSaved      = repository.save(created)
     val beforeCount = repository.count()
 
     // functionality
-    val retrieved = repository.findById(aSaved.value)
+    val retrieved           = repository.findById(aSaved.value)
     val res: Option[String] = repository.remove(retrieved.value)
 
     // verifications
@@ -117,7 +116,6 @@ class RepositorySpec extends FlatSpec with Matchers {
     list.value.head shouldEqual aSaved.value
   }
 
-
   /*
    _    _   ______   _        _____    ______   _____     _____
   | |  | | |  ____| | |      |  __ \  |  ____| |  __ \   / ____|
@@ -125,8 +123,7 @@ class RepositorySpec extends FlatSpec with Matchers {
   |  __  | |  __|   | |      |  ___/  |  __|   |  _  /   \___ \
   | |  | | | |____  | |____  | |      | |____  | | \ \   ____) |
   |_|  |_| |______| |______| |_|      |______| |_|  \_\ |_____/
-  */
-
+   */
 
   /*
   Test fixture
@@ -135,5 +132,6 @@ class RepositorySpec extends FlatSpec with Matchers {
     val repository = MemoryRepository()
   }
 
-  private def newAircraft(typeCode: String, registration: String) = Aircraft(typeCode = typeCode, registration = registration)
+  private def newAircraft(typeCode: String, registration: String) =
+    Aircraft(typeCode = typeCode, registration = registration)
 }

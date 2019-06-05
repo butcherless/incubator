@@ -21,9 +21,8 @@ class RouteRepositorySpec extends RepositorySpec {
     val airlineRepo = new AirlineRepository
     val airportRepo = new AirportRepository
     val countryRepo = new CountryRepository
-    val routeRepo = new RouteRepository
+    val routeRepo   = new RouteRepository
   }
-
 
   it should "retrieve destinations airports for an origin airport" in new Repos {
     Await.result(populateDatabase, waitTimeout)
@@ -69,13 +68,12 @@ class RouteRepositorySpec extends RepositorySpec {
         lhrId <- airportRepo.insert(Airport(lhrAirport._1, lhrAirport._2, lhrAirport._3, ukId))
         lgwId <- airportRepo.insert(Airport(lgwAirport._1, lgwAirport._2, lgwAirport._3, ukId))
 
-
         madTfnId <- routeRepo.insert(Route(957.0, madId, tfnId))
-        - <- routeRepo.insert(Route(671.0, madId, lhrId))
-        - <- routeRepo.insert(Route(261.0, madId, bcnId))
-        - <- routeRepo.insert(Route(655.0, madId, lgwId))
-        - <- routeRepo.insert(Route(261.0, bcnId, madId)) // 4 destinations
-        - <- routeRepo.insert(Route(599.0, bcnId, lgwId))
+        -        <- routeRepo.insert(Route(671.0, madId, lhrId))
+        -        <- routeRepo.insert(Route(261.0, madId, bcnId))
+        -        <- routeRepo.insert(Route(655.0, madId, lgwId))
+        -        <- routeRepo.insert(Route(261.0, bcnId, madId)) // 4 destinations
+        -        <- routeRepo.insert(Route(599.0, bcnId, lgwId))
         bcnTfnId <- routeRepo.insert(Route(1185.0, bcnId, tfnId)) // 3 destinations
 
       } yield ()

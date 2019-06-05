@@ -25,7 +25,8 @@ class CountryRepositorySpec extends RepositorySpec {
   }
 
   it should "insert a sequence of countries into the database" in new Repos {
-    val countrySequence = Seq(Country(esCountry._1, esCountry._2), Country(ukCountry._1, ukCountry._2))
+    val countrySequence =
+      Seq(Country(esCountry._1, esCountry._2), Country(ukCountry._1, ukCountry._2))
     val ids = countryRepo.insert(countrySequence).futureValue
 
     ids.nonEmpty shouldBe true
@@ -45,9 +46,14 @@ class CountryRepositorySpec extends RepositorySpec {
 
   it should "update a country from the database" in new Repos {
     val countryId = countryRepo.insert(Country(esCountry._1, esCountry._2)).futureValue
-    Await.result(countryRepo.update(Country(esCountry._1.toUpperCase, esCountry._2.toUpperCase, Option(countryId))), waitTimeout)
+    Await.result(
+      countryRepo.update(
+        Country(esCountry._1.toUpperCase, esCountry._2.toUpperCase, Option(countryId))
+      ),
+      waitTimeout
+    )
     val countryOption = countryRepo.findById(countryId).futureValue
-    val countryCount = countryRepo.count().futureValue
+    val countryCount  = countryRepo.count().futureValue
 
     countryId should be > 0L
     countryCount shouldBe 1
@@ -57,10 +63,10 @@ class CountryRepositorySpec extends RepositorySpec {
   }
 
   it should "delete a country from the database" in new Repos {
-    val countryId = countryRepo.insert(Country(esCountry._1, esCountry._2)).futureValue
+    val countryId    = countryRepo.insert(Country(esCountry._1, esCountry._2)).futureValue
     val initialCount = countryRepo.count().futureValue
     val deleteResult = countryRepo.delete(countryId).futureValue
-    val finalCount = countryRepo.count().futureValue
+    val finalCount   = countryRepo.count().futureValue
 
     countryId should be > 0L
     initialCount shouldBe 1
@@ -75,7 +81,6 @@ class CountryRepositorySpec extends RepositorySpec {
 
     countries.nonEmpty shouldBe true
   }
-
 
   def populateDatabase() = {
     new Repos {

@@ -1,6 +1,10 @@
 package com.cmartin.learn
 
-import com.cmartin.learn.repository.implementation.{AircraftRepository, AirlineRepository, CountryRepository}
+import com.cmartin.learn.repository.implementation.{
+  AircraftRepository,
+  AirlineRepository,
+  CountryRepository
+}
 import com.cmartin.learn.repository.tables._
 import com.cmartin.learn.test.Constants._
 import org.scalatest.OptionValues._
@@ -18,8 +22,8 @@ class AirlineRepositorySpec extends RepositorySpec {
   )
 
   trait Repos {
-    val countryRepo = new CountryRepository
-    val airlineRepo = new AirlineRepository
+    val countryRepo  = new CountryRepository
+    val airlineRepo  = new AirlineRepository
     val aircraftRepo = new AircraftRepository
   }
 
@@ -27,7 +31,7 @@ class AirlineRepositorySpec extends RepositorySpec {
     val airlineOption = for {
       countryId <- countryRepo.insert(Country(esCountry._1, esCountry._2))
       airlineId <- airlineRepo.insert(Airline(ibsAirline._1, ibsAirline._2, countryId))
-      airline <- airlineRepo.findById(airlineId)
+      airline   <- airlineRepo.findById(airlineId)
     } yield airline
 
     val airline: Option[Airline] = airlineOption.futureValue

@@ -1,6 +1,10 @@
 package com.cmartin.learn
 
-import com.cmartin.learn.repository.implementation.{AircraftRepository, AirlineRepository, CountryRepository}
+import com.cmartin.learn.repository.implementation.{
+  AircraftRepository,
+  AirlineRepository,
+  CountryRepository
+}
 import com.cmartin.learn.repository.tables._
 import com.cmartin.learn.test.Constants
 import com.cmartin.learn.test.Constants._
@@ -19,18 +23,19 @@ class AircraftRepositorySpec extends RepositorySpec {
   )
 
   trait Repos {
-    val countryRepo = new CountryRepository
-    val airlineRepo = new AirlineRepository
+    val countryRepo  = new CountryRepository
+    val airlineRepo  = new AirlineRepository
     val aircraftRepo = new AircraftRepository
   }
-
 
   it should "insert an aircraft into the database" in new Repos {
 
     val aircraftFuture = for {
       countryId <- countryRepo.insert(Country(esCountry._1, esCountry._2))
       airlineId <- airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2, countryId))
-      aircraftId <- aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, registrationMIG, airlineId))
+      aircraftId <- aircraftRepo.insert(
+        Aircraft(TypeCodes.BOEING_787_800, registrationMIG, airlineId)
+      )
     } yield aircraftId
 
     val aircraftId = aircraftFuture.futureValue
@@ -42,7 +47,9 @@ class AircraftRepositorySpec extends RepositorySpec {
     val aircraftFuture: Future[Option[Aircraft]] = for {
       countryId <- countryRepo.insert(Country(esCountry._1, esCountry._2))
       airlineId <- airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2, countryId))
-      aircraftId <- aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, registrationMIG, airlineId))
+      aircraftId <- aircraftRepo.insert(
+        Aircraft(TypeCodes.BOEING_787_800, registrationMIG, airlineId)
+      )
       aircraft <- aircraftRepo.findById(aircraftId)
     } yield aircraft
 
@@ -57,10 +64,10 @@ class AircraftRepositorySpec extends RepositorySpec {
     val aircraftResult = for {
       countryId <- countryRepo.insert(Country(esCountry._1, esCountry._2))
       airlineId <- airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2, countryId))
-      _ <- aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, registrationMIG, airlineId))
-      aircraft <- aircraftRepo.findByRegistration(registrationMIG)
-      _ <- aircraftRepo.update(aircraft.value.copy(registration = registrationMNS))
-      aircraft <- aircraftRepo.findByRegistration(registrationMNS)
+      _         <- aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, registrationMIG, airlineId))
+      aircraft  <- aircraftRepo.findByRegistration(registrationMIG)
+      _         <- aircraftRepo.update(aircraft.value.copy(registration = registrationMNS))
+      aircraft  <- aircraftRepo.findByRegistration(registrationMNS)
     } yield aircraft
 
     val aircraft = aircraftResult.futureValue
@@ -71,16 +78,16 @@ class AircraftRepositorySpec extends RepositorySpec {
     val initialCount = for {
       countryId <- countryRepo.insert(Country(esCountry._1, esCountry._2))
       airlineId <- airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2, countryId))
-      _ <- aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, registrationMIG, airlineId))
-      count <- aircraftRepo.count
+      _         <- aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, registrationMIG, airlineId))
+      count     <- aircraftRepo.count
     } yield count
 
     initialCount.futureValue shouldBe 1
 
     val finalCount = for {
       aircraft <- aircraftRepo.findByRegistration(registrationMIG)
-      _ <- aircraftRepo.delete(aircraft.value.id.value)
-      count <- aircraftRepo.count
+      _        <- aircraftRepo.delete(aircraft.value.id.value)
+      count    <- aircraftRepo.count
     } yield count
 
     finalCount.futureValue shouldBe 0
@@ -106,7 +113,7 @@ class AircraftRepositorySpec extends RepositorySpec {
         aeaId <- airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2, esId))
 
         aircraftId <- aircraftRepo.insert(Aircraft(ecMigAircraft._1, ecMigAircraft._2, aeaId))
-        _ <- aircraftRepo.insert(Aircraft(ecLvlAircraft._1, ecLvlAircraft._2, aeaId))
+        _          <- aircraftRepo.insert(Aircraft(ecLvlAircraft._1, ecLvlAircraft._2, aeaId))
 
       } yield ()
     }.result
