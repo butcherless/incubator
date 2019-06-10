@@ -113,4 +113,4 @@ lazy val poc = (project in file("poc"))
   ).dependsOn(test)
 
 // quick research deps
-lazy val sttp = "com.softwaremill.sttp" %% "core" % "1.5.17"
+lazy val sttp = "com.softwaremill.sttp" %% "core" % "1.5.19"
