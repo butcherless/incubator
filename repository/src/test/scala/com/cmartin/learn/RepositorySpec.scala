@@ -5,7 +5,9 @@ import com.cmartin.learn.test.Constants
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Seconds, Span}
 import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
+import slick.basic.DatabaseConfig
 import slick.jdbc.H2Profile.api._
+import slick.jdbc.JdbcProfile
 import slick.lifted.TableQuery
 
 import scala.concurrent.Await
@@ -35,7 +37,9 @@ abstract class RepositorySpec
   }
 
   override def beforeEach() = {
-    db = Database.forConfig("h2mem")
+    val dc = DatabaseConfig.forConfig[JdbcProfile]("h2mem")
+
+    db = dc.db
     Await.result(createSchema(), Constants.waitTimeout)
   }
 

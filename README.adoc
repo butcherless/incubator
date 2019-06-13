@@ -231,8 +231,9 @@ Finders:
 
 == Links
 * Thanks to *FlightRadar24*: https://www.flightradar24.com/
-* Slick configuration: Logging http://slick.lightbend.com/doc/3.2.3/config.html
-* https://github.com/gonmarques/slick-repo
+* Slick configuration: Logging http://slick.lightbend.com/doc/3.3.1/config.html
+* https://github.com/gonmarques/slick-repo (*amazing solution*)
+* https://techblog.agrimap.com/slick-3-data-access-patterns-788472e3c77
 * Spring data neo4j: https://docs.spring.io/spring-data/neo4j/docs/5.0.5.RELEASE/reference/html/
 * Example: https://github.com/bijukunjummen/spring-boot-scala-web
 * The great Josh Long: https://github.com/spring-tips/scala/blob/master/src/main/scala/tweets/tweets.scala

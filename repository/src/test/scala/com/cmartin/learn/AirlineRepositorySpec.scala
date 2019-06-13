@@ -1,10 +1,6 @@
 package com.cmartin.learn
 
-import com.cmartin.learn.repository.implementation.{
-  AircraftRepository,
-  AirlineRepository,
-  CountryRepository
-}
+import com.cmartin.learn.repository.implementation.{AircraftRepository, AirlineRepository, CountryRepository}
 import com.cmartin.learn.repository.tables._
 import com.cmartin.learn.test.Constants._
 import org.scalatest.OptionValues._

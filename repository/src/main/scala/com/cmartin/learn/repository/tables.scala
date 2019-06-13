@@ -78,8 +78,6 @@ package object tables {
 
   final class Airlines(tag: Tag) extends BaseTable[Airline](tag, TableNames.airlines) {
 
-    import CustomColumnTypes.localDateType
-
     // property columns:
     def name = column[String]("NAME")
 
@@ -160,8 +158,6 @@ package object tables {
 
   final class Flights(tag: Tag) extends BaseTable[Flight](tag, TableNames.flights) {
 
-    import CustomColumnTypes.localTimeType
-
     // property columns:
     def code = column[String]("CODE")
 
@@ -199,8 +195,6 @@ package object tables {
   ) extends Entity[Journey, Long]
 
   final class Journeys(tag: Tag) extends BaseTable[Journey](tag, TableNames.journeys) {
-
-    import CustomColumnTypes.localTimeType
 
     // property columns:
     def departureDate = column[LocalTime]("DEPARTURE_DATE")

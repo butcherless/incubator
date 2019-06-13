@@ -5,7 +5,7 @@ scala:
 
 build:
   ci:
-    - SBT_OPTS='-Xmx1536m'; sbt ";clean ;coverage ;test ;coverageReport; assembly"
+    - SBT_OPTS='-Xmx1536m'; sbt release
 
 jdk:
   - oraclejdk8
