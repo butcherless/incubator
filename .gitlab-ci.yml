@@ -4,13 +4,15 @@ before_script:
   - apt-get update -y
   - apt-get install apt-transport-https -y
   # Install SBT
-  - echo "deb http://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list
-  - apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
-  - apt-get update -y
-  - apt-get install sbt -y
+  - echo "deb https://dl.bintray.com/sbt/debian /" | sudo tee -a /etc/apt/sources.list.d/sbt.list
+  - sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 2EE0EA64E40A89B84B2DF73499E82A75642AC823
+#  - echo "deb http://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list
+#  - apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
+  - sudo apt-get update -y
+  - sudo apt-get install sbt -y 
   - java -version
   - sbt sbtVersion
 
 build:
   script:
-    - sbt ";clean ;assembly"
+    - sbt ";clean ;test ;assembly; dependencyUpdates"
