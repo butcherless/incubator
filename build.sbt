@@ -34,7 +34,7 @@ lazy val scalaLoggingVersion = "3.9.2"
 lazy val scalazVersion       = "7.2.27"
 lazy val scalatestVersion    = "3.0.8"
 lazy val slf4jVersion        = "1.7.25"
-lazy val slickVersion        = "3.3.1"
+lazy val slickVersion        = "3.3.2"
 lazy val specs2Version       = "4.5.1"
 lazy val utestVersion        = "0.6.6"
 
