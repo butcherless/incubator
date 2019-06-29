@@ -1,20 +1,19 @@
 language: scala
-
 group: travis_lts
-
 scala:
-  - 2.12.7
-
-jdk:
-  - oraclejdk8
+  - 2.12.8
 
 addons:
   apt:
     update: true
 
 script:
-  - cd $TRAVIS_BUILD_DIR && sbt ";clean ;coverage ;assembly ;coverageReport; coverageAggregate"
-  - cd $TRAVIS_BUILD_DIR/scala-boot-neo4j && ./gradlew clean build
-
+  - sbt ";clean ;coverage ;test ;assembly ;coverageReport"
+  - sbt coverageAggregate
+  - sbt dependencyUpdates
 after_success:
-  - cd $TRAVIS_BUILD_DIR && sbt coveralls
+  - sbt coveralls
+
+cache:
+  directories:
+    - $HOME/.sbt
