@@ -16,7 +16,8 @@ lazy val commonSettings = Seq(
     "-feature",                          // Emit warning and location for usages of features that should be imported explicitly.
     "-language:higherKinds",             // Allow higher-kinded types
     "-language:implicitConversions",
-    "-language:postfixOps"
+    "-language:postfixOps",
+    "-language:reflectiveCalls"
   ),
 )
 

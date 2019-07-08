@@ -37,7 +37,7 @@ abstract class RepositorySpec
   }
 
   override def beforeEach() = {
-    val dc = DatabaseConfig.forConfig[JdbcProfile]("h2mem")
+    val dc = DatabaseConfig.forConfig[JdbcProfile]("h2_mem")
 
     db = dc.db
     Await.result(createSchema(), Constants.waitTimeout)
