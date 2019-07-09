@@ -15,7 +15,7 @@ package object repository2 {
  */
 
   object TypeCodes {
-    val AIRBUS_320     = "A320"
+    val AIRBUS_320 = "A320"
     val AIRBUS_330_200 = "A332"
     val AIRBUS_350_900 = "A359"
     val BOEING_737_800 = "B738"
@@ -39,17 +39,24 @@ package object repository2 {
                            id: Option[Long] = None
                           ) extends Entity[Country, Long]
 
+  final case class Aircraft(typeCode: String,
+                            registration: String,
+                            airlineId: Long,
+                            id: Option[Long] = None
+                           ) extends Entity[Aircraft, Long]
+
   final case class Airline(name: String,
                            foundationDate: LocalDate,
                            countryId: Long,
                            id: Option[Long] = None
                           ) extends Entity[Airline, Long]
 
-  final case class Aircraft(typeCode: String,
-                            registration: String,
-                            airlineId: Long,
-                            id: Option[Long] = None
-                           ) extends Entity[Aircraft, Long]
+  final case class Airport(name: String,
+                           iataCode: String,
+                           icaoCode: String,
+                           countryId: Long,
+                           id: Option[Long] = None
+                          ) extends Entity[Airport, Long]
 
 
   trait Profile {
@@ -200,7 +207,27 @@ package object repository2 {
 
       // foreign keys
       def airline = foreignKey("FK_AIRLINE", airlineId, TableQuery[Airlines])(_.id)
+    }
 
+    final class Airports(tag: Tag) extends BaseTable[Airport](tag, TableNames.airports) {
+
+      // property columns:
+      def name = column[String]("NAME")
+
+      def iataCode = column[String]("IATA_CODE")
+
+      def icaoCode = column[String]("ICAO_CODE")
+
+      // foreign columns:
+      def countryId = column[Long]("COUNTRY_ID")
+
+      def * = (name, iataCode, icaoCode, countryId, id.?) <> (Airport.tupled, Airport.unapply)
+
+      // foreign keys
+      def country = foreignKey("FK_COUNTRY_AIRPORT", countryId, TableQuery[Countries])(_.id)
+
+      // indexes
+      def iataIndex = index("iataCode_index", iataCode, unique = true)
     }
 
   }

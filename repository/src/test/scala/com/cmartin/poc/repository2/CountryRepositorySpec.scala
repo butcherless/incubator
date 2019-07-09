@@ -1,7 +1,7 @@
 package com.cmartin.poc.repository2
 
-import com.cmartin.learn.test.Constants._
 import org.scalatest.OptionValues
+import com.cmartin.learn.test.Constants._
 
 import scala.concurrent.{Await, Future}
 

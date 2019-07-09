@@ -1,14 +1,17 @@
 package com.cmartin.poc.repository2
 
-import com.cmartin.learn.test.Constants.esCountry
+import com.cmartin.learn.test.Constants._
 import org.scalatest.{AsyncFlatSpec, BeforeAndAfterEach, Matchers}
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 
 import scala.concurrent.duration._
 
-abstract class BaseRepositorySpec extends AsyncFlatSpec with Matchers
-  with BeforeAndAfterEach {
+
+abstract class BaseRepositorySpec
+  extends AsyncFlatSpec
+    with Matchers
+    with BeforeAndAfterEach {
 
   val config = DatabaseConfig.forConfig[JdbcProfile]("h2_dc")
 

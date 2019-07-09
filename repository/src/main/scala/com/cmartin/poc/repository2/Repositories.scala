@@ -33,7 +33,6 @@ trait Repositories
   }
 
   class AircraftRepository(val db: JdbcBackend#DatabaseDef) extends BaseRepository[Aircraft, Fleet](db) {
-
     lazy val entities = TableQuery[Fleet]
 
     def findByRegistration(registration: String): Future[Option[Aircraft]] =
@@ -50,6 +49,18 @@ trait Repositories
     }
   }
 
+  class AirportRepository(val db: JdbcBackend#DatabaseDef) extends BaseRepository[Airport, Airports](db) {
+    lazy val entities = TableQuery[Airports]
+
+    def findByCountryCode(code: String): Future[Seq[Airport]] = {
+      val query = for {
+        airport <- entities
+        country <- airport.country if country.code === code
+      } yield airport
+
+      query.result
+    }
+  }
 
 }
 
