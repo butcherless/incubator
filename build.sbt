@@ -1,12 +1,12 @@
 import sbt.Keys.libraryDependencies
 
 lazy val projectVersion = "1.0.0-SNAPSHOT"
-scalaVersion := "2.12.8"
+scalaVersion := "2.13.0"
 
 lazy val commonSettings = Seq(
   organization := "com.cmartin.learn",
   version := projectVersion,
-  scalaVersion := "2.12.8",
+  scalaVersion := "2.13.0",
   scalacOptions ++= Seq( // some of the Rob Norris tpolecat options
     "-deprecation",                      // Emit warning and location for usages of deprecated APIs.
     "-encoding", "utf-8",                // Specify character encoding used by source files.
@@ -25,7 +25,7 @@ lazy val commonSettings = Seq(
 
 lazy val akkaHttpVersion     = "10.1.8"
 lazy val akkaVersion         = "2.5.23"
-lazy val catsVersion         = "1.6.0"
+lazy val catsVersion         = "2.0.0-M4"
 lazy val configVersion       = "1.3.4"
 lazy val h2Version           = "1.4.199"
 lazy val json4sVersion       = "3.6.7"
