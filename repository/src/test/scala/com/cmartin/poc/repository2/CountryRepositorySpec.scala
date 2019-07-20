@@ -42,14 +42,6 @@ class CountryRepositorySpec extends BaseRepositorySpec with OptionValues {
     }
   }
 
-  it should "find a country by its code" in {
-    val result = for {
-      _ <- dal.countryRepo.insert(spainCountry)
-      country <- dal.countryRepo.findByCode(spainCountry.code)
-    } yield country.value
-
-    result map { country => assert(country.code == spainCountry.code) }
-  }
 
   it should "insert a sequence of countries into the database" in {
 
@@ -89,6 +81,15 @@ class CountryRepositorySpec extends BaseRepositorySpec with OptionValues {
       assert(tuple._1 == tuple._2)
       assert(tuple._3 == 0)
     }
+  }
+
+  it should "find a country by its code" in {
+    val result = for {
+      _ <- dal.countryRepo.insert(spainCountry)
+      country <- dal.countryRepo.findByCode(spainCountry.code)
+    } yield country.value
+
+    result map { country => assert(country.code == spainCountry.code) }
   }
 
   it should "retrieve all countries from the database" in {

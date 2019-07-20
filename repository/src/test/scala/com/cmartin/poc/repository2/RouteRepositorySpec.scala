@@ -34,9 +34,7 @@ class RouteRepositorySpec extends BaseRepositorySpec with OptionValues {
 
   "Route Repository" should "insert a route into the database" in {
     val result = for {
-      countryId <- dal.countryRepo.insert(spainCountry)
-      oAirportId <- dal.airportRepo.insert(barajasAirport.copy(countryId = countryId))
-      dAirportId <- dal.airportRepo.insert(rodeosAirport.copy(countryId = countryId))
+      (oAirportId, dAirportId) <- insertCountryAirport()
       routeId <- dal.routeRepo.insert(Route(madTotfnDistance, oAirportId, dAirportId))
     } yield routeId
 
@@ -45,22 +43,33 @@ class RouteRepositorySpec extends BaseRepositorySpec with OptionValues {
 
   it should "insert a route sequence into the database" in {
     val result = for {
-      countryId <- dal.countryRepo.insert(spainCountry)
-      oAirportId <- dal.airportRepo.insert(barajasAirport.copy(countryId = countryId))
-      dAirportId <- dal.airportRepo.insert(rodeosAirport.copy(countryId = countryId))
+      (oAirportId, dAirportId) <- insertCountryAirport()
       routeSeq <- dal.routeRepo.insert(
-        Seq(Route(madTotfnDistance, oAirportId, dAirportId), Route(madTotfnDistance, dAirportId, oAirportId)))
+        Seq(Route(madTotfnDistance, oAirportId, dAirportId),
+          Route(madTotfnDistance, dAirportId, oAirportId))
+      )
     } yield routeSeq
 
     result map { seq => assert(seq.size == 2) }
+  }
+
+  it should "fail to insert a duplicate route into the database" in {
+    recoverToSucceededIf[SQLIntegrityConstraintViolationException] {
+      for {
+        (oAirportId, dAirportId) <- insertCountryAirport()
+        _ <- dal.routeRepo.insert(
+          Seq(Route(madTotfnDistance, oAirportId, dAirportId), // same route
+            Route(madTotfnDistance, oAirportId, dAirportId))
+        )
+      } yield ()
+    }
   }
 
 
   it should "fail to insert a route into the database with a missing origin airport" in {
     recoverToSucceededIf[SQLIntegrityConstraintViolationException] {
       for {
-        countryId <- dal.countryRepo.insert(spainCountry)
-        dAirportId <- dal.airportRepo.insert(rodeosAirport.copy(countryId = countryId))
+        (_, dAirportId) <- insertCountryAirport()
         _ <- dal.routeRepo.insert(Route(madTotfnDistance, 0, dAirportId))
       } yield ()
     }
@@ -69,12 +78,48 @@ class RouteRepositorySpec extends BaseRepositorySpec with OptionValues {
   it should "fail to insert a route into the database with a missing destination airport" in {
     recoverToSucceededIf[SQLIntegrityConstraintViolationException] {
       for {
-        countryId <- dal.countryRepo.insert(spainCountry)
-        oAirportId <- dal.airportRepo.insert(barajasAirport.copy(countryId = countryId))
+        (oAirportId, _) <- insertCountryAirport()
         _ <- dal.routeRepo.insert(Route(madTotfnDistance, oAirportId, 0))
       } yield ()
     }
   }
+
+  it should "find a route by its origin airport" in {
+    val result = for {
+      (oAirportId, dAirportId) <- insertCountryAirport()
+      _ <- dal.routeRepo.insert(Route(madTotfnDistance, oAirportId, dAirportId))
+      route <- dal.routeRepo.findByIataOrigin(barajasAirport.iataCode)
+    } yield (route, oAirportId, dAirportId)
+
+    result map { tuple =>
+      assert(tuple._1.size == 1)
+      val route = tuple._1
+      assert(route.head.originId == tuple._2)
+    }
+  }
+
+
+  it should "find a route by its destination airport" in {
+    val result = for {
+      (oAirportId, dAirportId) <- insertCountryAirport()
+      _ <- dal.routeRepo.insert(Route(madTotfnDistance, oAirportId, dAirportId))
+      route <- dal.routeRepo.findByIataDestination(rodeosAirport.iataCode)
+    } yield (route, oAirportId, dAirportId)
+
+    result map { tuple =>
+      assert(tuple._1.size == 1)
+      val route = tuple._1
+      assert(route.head.destinationId == tuple._3)
+    }
+  }
+
+
+  def insertCountryAirport() = for {
+    countryId <- dal.countryRepo.insert(spainCountry)
+    oAirportId <- dal.airportRepo.insert(barajasAirport.copy(countryId = countryId))
+    dAirportId <- dal.airportRepo.insert(rodeosAirport.copy(countryId = countryId))
+  } yield (oAirportId, dAirportId)
+
 
   override def beforeEach(): Unit = {
     Await.result(dal.createSchema(), timeout)

@@ -78,12 +78,14 @@ lazy val repository = (project in file("repository"))
     parallelExecution in Test := false
   ).dependsOn(common, test)
 
+
 lazy val service = (project in file("service"))
   .settings(
     commonSettings,
     name := "service",
     libraryDependencies ++= Seq(akkaActor, akkaHttp, akkaStream, config, json4sNative, playJson, scalaLogging, logback, sttp, scalaTest)
   ).dependsOn(common, repository)
+
 
 lazy val controller = (project in file("controller"))
   .settings(
@@ -92,6 +94,7 @@ lazy val controller = (project in file("controller"))
     libraryDependencies ++= Seq(scalaTest)
   ).dependsOn(common, service)
 
+
 lazy val web = (project in file("web"))
   .settings(
     commonSettings,
@@ -99,11 +102,13 @@ lazy val web = (project in file("web"))
     libraryDependencies ++= Seq(scalaLogging, logback, scalaTest)
   ).dependsOn(common, controller, service)
 
+
 lazy val test = (project in file("test"))
   .settings(
     commonSettings,
     name := "test"
   )
+
 
 lazy val poc = (project in file("poc"))
   .settings(
@@ -112,6 +117,7 @@ lazy val poc = (project in file("poc"))
     libraryDependencies ++= Seq(akkaHttp, akkaStream, scalaLogging, slick, slickPool, logback, h2Database, scalaTest),
     parallelExecution in Test := false
   ).dependsOn(test)
+
 
 // quick research deps
 lazy val sttp = "com.softwaremill.sttp" %% "core" % "1.6.3"
