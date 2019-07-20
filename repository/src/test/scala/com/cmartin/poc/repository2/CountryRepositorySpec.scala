@@ -1,7 +1,9 @@
 package com.cmartin.poc.repository2
 
-import org.scalatest.OptionValues
+import java.sql.SQLIntegrityConstraintViolationException
+
 import com.cmartin.learn.test.Constants._
+import org.scalatest.OptionValues
 
 import scala.concurrent.{Await, Future}
 
@@ -9,27 +11,44 @@ class CountryRepositorySpec extends BaseRepositorySpec with OptionValues {
 
   val spainUpperCase = Country(esCountry._1.toUpperCase, esCountry._2.toUpperCase)
   val unitedKingdom = Country(ukCountry._1, ukCountry._2)
-  val countrySequence: Seq[Country] = Seq(spain, unitedKingdom)
+  val countrySequence: Seq[Country] = Seq(spainCountry, unitedKingdom)
 
   val dal = new DatabaseAccessLayer2(config) {
+
+    import profile.api._
+
     val countryRepo = new CountryRepository(config.db)
+
+    def createSchema(): Future[Unit] = {
+      config.db.run(countries.schema.create)
+    }
+
+    def dropSchema(): Future[Unit] = {
+      config.db.run(countries.schema.drop)
+    }
+
   }
 
-  behavior of "Country Repository"
-
-  it should "insert a country into the database" in {
-    val result = dal.countryRepo.insert(spain)
+  "Country Repository" should "insert a country into the database" in {
+    val result = dal.countryRepo.insert(spainCountry)
 
     result map { id => assert(id == 1) }
   }
 
+  it should "fail to insert a duplicate country intro the database" in {
+    recoverToSucceededIf[SQLIntegrityConstraintViolationException] {
+      dal.countryRepo.insert(spainCountry)
+      dal.countryRepo.insert(spainCountry)
+    }
+  }
+
   it should "find a country by its code" in {
     val result = for {
-      _ <- dal.countryRepo.insert(spain)
-      country <- dal.countryRepo.findByCode(spain.code)
+      _ <- dal.countryRepo.insert(spainCountry)
+      country <- dal.countryRepo.findByCode(spainCountry.code)
     } yield country.value
 
-    result map { country => assert(country.code == spain.code) }
+    result map { country => assert(country.code == spainCountry.code) }
   }
 
   it should "insert a sequence of countries into the database" in {
@@ -47,7 +66,7 @@ class CountryRepositorySpec extends BaseRepositorySpec with OptionValues {
 
   it should "update a country from the database" in {
     val result = for {
-      cid <- dal.countryRepo.insert(spain)
+      cid <- dal.countryRepo.insert(spainCountry)
       uid <- dal.countryRepo.update(spainUpperCase.copy(id = Option(cid)))
       updated <- dal.countryRepo.findById(cid)
     } yield (cid, uid, updated)
@@ -61,7 +80,7 @@ class CountryRepositorySpec extends BaseRepositorySpec with OptionValues {
 
   it should "delete a country from the database" in {
     val result = for {
-      cid <- dal.countryRepo.insert(spain)
+      cid <- dal.countryRepo.insert(spainCountry)
       did <- dal.countryRepo.delete(cid)
       count <- dal.countryRepo.count()
     } yield (cid, did, count)
@@ -84,10 +103,10 @@ class CountryRepositorySpec extends BaseRepositorySpec with OptionValues {
   }
 
   override def beforeEach(): Unit = {
-    Await.result(dal.countryRepo.create, timeout)
+    Await.result(dal.createSchema(), timeout)
   }
 
   override def afterEach(): Unit = {
-    Await.result(dal.countryRepo.drop, timeout)
+    Await.result(dal.dropSchema(), timeout)
   }
 }

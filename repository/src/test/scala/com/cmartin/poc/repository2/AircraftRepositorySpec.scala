@@ -1,30 +1,61 @@
 package com.cmartin.poc.repository2
 
+import java.sql.SQLIntegrityConstraintViolationException
+
+import com.cmartin.learn.repository.tables.TypeCodes
 import com.cmartin.learn.test.Constants._
 import org.scalatest.OptionValues
 
-import scala.concurrent.Await
+import scala.concurrent.{Await, Future}
 
 class AircraftRepositorySpec extends BaseRepositorySpec with OptionValues {
 
-  behavior of "Aircraft Repository"
+  val dal = new DatabaseAccessLayer2(config) {
 
-  it should "insert an aircraft into the database" in {
+    import profile.api._
+
+    val countryRepo = new CountryRepository(config.db)
+    val airlineRepo = new AirlineRepository(config.db)
+    val aircraftRepo = new AircraftRepository(config.db)
+
+    def createSchema(): Future[Unit] = {
+      config.db.run(
+        (countries.schema ++ airlines.schema ++ fleet.schema)
+          .create)
+    }
+
+    def dropSchema(): Future[Unit] = {
+      config.db.run(fleet.schema.drop)
+      config.db.run(airlines.schema.drop)
+      config.db.run(countries.schema.drop)
+    }
+
+  }
+
+  "Aircraft Repository" should "insert an aircraft into the database" in {
     val result = for {
-      countryId <- repos.countryRepo.insert(spain)
-      airlineId <- repos.airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2, countryId))
-      aircraft <- repos.aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, registrationMIG, airlineId))
+      countryId <- dal.countryRepo.insert(spainCountry)
+      airlineId <- dal.airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2, countryId))
+      aircraft <- dal.aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, registrationMIG, airlineId))
     } yield aircraft
 
     result map { id => assert(id == 1) }
   }
 
+  it should "fail to insert an aircraft into the database with a missing airline" in {
+    recoverToSucceededIf[SQLIntegrityConstraintViolationException] {
+      for {
+        aircraft <- dal.aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, registrationMIG, 0))
+      } yield ()
+    }
+  }
+
   it should "retrieve an aircraft from the database by its registration" in {
     val result = for {
-      countryId <- repos.countryRepo.insert(spain)
-      airlineId <- repos.airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2, countryId))
-      _ <- repos.aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, registrationMIG, airlineId))
-      aircraft <- repos.aircraftRepo.findByRegistration(registrationMIG)
+      countryId <- dal.countryRepo.insert(spainCountry)
+      airlineId <- dal.airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2, countryId))
+      _ <- dal.aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, registrationMIG, airlineId))
+      aircraft <- dal.aircraftRepo.findByRegistration(registrationMIG)
     } yield aircraft.value
 
     result map { ac =>
@@ -33,28 +64,24 @@ class AircraftRepositorySpec extends BaseRepositorySpec with OptionValues {
     }
   }
 
-
   it should "retrieve aircraft list from an airline" in {
     val result = for {
-      countryId <- repos.countryRepo.insert(spain)
-      airlineId <- repos.airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2, countryId))
-      _ <- repos.aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, registrationMIG, airlineId))
-      _ <- repos.aircraftRepo.insert(Aircraft(TypeCodes.AIRBUS_330_200, registrationLVL, airlineId))
-      seq <- repos.aircraftRepo.findByAirlineName(aeaAirline._1)
+      countryId <- dal.countryRepo.insert(spainCountry)
+      airlineId <- dal.airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2, countryId))
+      _ <- dal.aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, registrationMIG, airlineId))
+      _ <- dal.aircraftRepo.insert(Aircraft(TypeCodes.AIRBUS_330_200, registrationLVL, airlineId))
+      seq <- dal.aircraftRepo.findByAirlineName(aeaAirline._1)
     } yield seq
 
     result map { seq => assert(seq.size == 2) }
   }
 
   override def beforeEach(): Unit = {
-    Await.result(repos.countryRepo.create, timeout)
-    Await.result(repos.airlineRepo.create, timeout)
-    Await.result(repos.aircraftRepo.create, timeout)
+    Await.result(dal.createSchema(), timeout)
   }
 
   override def afterEach(): Unit = {
-    Await.result(repos.aircraftRepo.drop, timeout)
-    Await.result(repos.airlineRepo.drop, timeout)
-    Await.result(repos.countryRepo.drop, timeout)
+    Await.result(dal.dropSchema(), timeout)
   }
+
 }

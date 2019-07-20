@@ -3,22 +3,33 @@ package com.cmartin.poc.repository2
 import com.cmartin.learn.test.Constants._
 import org.scalatest.OptionValues
 
-import scala.concurrent.Await
+import scala.concurrent.{Await, Future}
 
 
 class AirportRepositorySpec extends BaseRepositorySpec with OptionValues {
 
   val dal = new DatabaseAccessLayer2(config) {
+
+    import profile.api._
+
     val countryRepo = new CountryRepository(config.db)
     val airportRepo = new AirportRepository(config.db)
+
+    def createSchema(): Future[Unit] = {
+      config.db.run((countries.schema ++ airports.schema).create)
+    }
+
+    def dropSchema(): Future[Unit] = {
+      config.db.run(airports.schema.drop)
+      config.db.run(countries.schema.drop)
+    }
+
   }
 
-  behavior of "Airport Repository"
-
-  it should "create an airport into the database" in {
+  "Airport Repository" should "create an airport into the database" in {
 
     val result = for {
-      countryId <- dal.countryRepo.insert(spain)
+      countryId <- dal.countryRepo.insert(spainCountry)
       id <- dal.airportRepo.insert(Airport(madAirport._1, madAirport._2, madAirport._3, countryId))
     } yield id
 
@@ -28,23 +39,20 @@ class AirportRepositorySpec extends BaseRepositorySpec with OptionValues {
   it should "retrieve an airport list from a country code" in {
 
     val result = for {
-      countryId <- dal.countryRepo.insert(spain)
+      countryId <- dal.countryRepo.insert(spainCountry)
       _ <- dal.airportRepo.insert(Airport(madAirport._1, madAirport._2, madAirport._3, countryId))
       _ <- dal.airportRepo.insert(Airport(tfnAirport._1, tfnAirport._2, tfnAirport._3, countryId))
-      seq <- dal.airportRepo.findByCountryCode(spain.code)
+      seq <- dal.airportRepo.findByCountryCode(spainCountry.code)
     } yield seq
 
     result map { seq => assert(seq.size == 2) }
   }
 
-
   override def beforeEach(): Unit = {
-    Await.result(dal.countryRepo.create, timeout)
-    Await.result(dal.airportRepo.create, timeout)
+    Await.result(dal.createSchema(), timeout)
   }
 
   override def afterEach(): Unit = {
-    Await.result(dal.airportRepo.drop, timeout)
-    Await.result(dal.countryRepo.drop, timeout)
+    Await.result(dal.dropSchema(), timeout)
   }
 }

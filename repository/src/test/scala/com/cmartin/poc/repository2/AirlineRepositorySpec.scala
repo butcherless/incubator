@@ -5,21 +5,36 @@ import java.time.LocalDate
 import com.cmartin.learn.test.Constants._
 import org.scalatest.OptionValues
 
-import scala.concurrent.Await
+import scala.concurrent.{Await, Future}
 
 class AirlineRepositorySpec extends BaseRepositorySpec with OptionValues {
 
   val norway = Country(noCountry._1, noCountry._2)
   //val iberia = Airline(ibkAirline._1, ibkAirline._2, )
 
+  val dal = new DatabaseAccessLayer2(config) {
 
-  behavior of "Airline Repository"
+    import profile.api._
+
+    val countryRepo = new CountryRepository(config.db)
+    val airlineRepo = new AirlineRepository(config.db)
+
+    def createSchema(): Future[Unit] = {
+      config.db.run((countries.schema ++ airlines.schema).create)
+    }
+
+    def dropSchema(): Future[Unit] = {
+      config.db.run(airlines.schema.drop)
+      config.db.run(countries.schema.drop)
+    }
+
+  }
 
 
-  it should "insert an airline into the database" in {
+  "Airline Repository" should "insert an airline into the database" in {
     val result = for {
-      cid <- repos.countryRepo.insert(norway)
-      aid <- repos.airlineRepo.insert(Airline(ibkAirline._1, ibkAirline._2, cid))
+      cid <- dal.countryRepo.insert(norway)
+      aid <- dal.airlineRepo.insert(Airline(ibkAirline._1, ibkAirline._2, cid))
     } yield aid
 
     result map { id =>
@@ -31,10 +46,10 @@ class AirlineRepositorySpec extends BaseRepositorySpec with OptionValues {
     val updatedString = "UPDATED"
     val now = LocalDate.now()
     val result = for {
-      cid <- repos.countryRepo.insert(norway)
-      aid <- repos.airlineRepo.insert(Airline(ibkAirline._1, ibkAirline._2, cid))
-      uid <- repos.airlineRepo.update(Airline(updatedString, now, cid, Option(aid)))
-      updated <- repos.airlineRepo.findById(aid)
+      cid <- dal.countryRepo.insert(norway)
+      aid <- dal.airlineRepo.insert(Airline(ibkAirline._1, ibkAirline._2, cid))
+      uid <- dal.airlineRepo.update(Airline(updatedString, now, cid, Option(aid)))
+      updated <- dal.airlineRepo.findById(aid)
     } yield updated.value
 
     result map { airline =>
@@ -45,10 +60,10 @@ class AirlineRepositorySpec extends BaseRepositorySpec with OptionValues {
 
   it should "delete an airline from the database" in {
     val result = for {
-      cid <- repos.countryRepo.insert(norway)
-      aid <- repos.airlineRepo.insert(Airline(ibkAirline._1, ibkAirline._2, cid))
-      deleted <- repos.airlineRepo.delete(aid)
-      count <- repos.airlineRepo.count
+      cid <- dal.countryRepo.insert(norway)
+      aid <- dal.airlineRepo.insert(Airline(ibkAirline._1, ibkAirline._2, cid))
+      deleted <- dal.airlineRepo.delete(aid)
+      count <- dal.airlineRepo.count
     } yield (aid, deleted, count)
 
     result map { tuple =>
@@ -59,9 +74,9 @@ class AirlineRepositorySpec extends BaseRepositorySpec with OptionValues {
 
   it should "retrieve an airline from the database" in {
     val result = for {
-      cid <- repos.countryRepo.insert(norway)
-      aid <- repos.airlineRepo.insert(Airline(ibkAirline._1, ibkAirline._2, cid))
-      airline <- repos.airlineRepo.findById(aid)
+      cid <- dal.countryRepo.insert(norway)
+      aid <- dal.airlineRepo.insert(Airline(ibkAirline._1, ibkAirline._2, cid))
+      airline <- dal.airlineRepo.findById(aid)
     } yield airline.value
 
     result map { airline =>
@@ -75,10 +90,10 @@ class AirlineRepositorySpec extends BaseRepositorySpec with OptionValues {
   it should "retrieve an airline list from a country code" in {
     val expectedCount = 2
     val result = for {
-      cid <- repos.countryRepo.insert(spain)
-      _ <- repos.airlineRepo.insert(Airline(ibsAirline._1, ibsAirline._2, cid))
-      _ <- repos.airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2, cid))
-      count <- repos.airlineRepo.findByCountryCode(esCountry._2)
+      cid <- dal.countryRepo.insert(spainCountry)
+      _ <- dal.airlineRepo.insert(Airline(ibsAirline._1, ibsAirline._2, cid))
+      _ <- dal.airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2, cid))
+      count <- dal.airlineRepo.findByCountryCode(esCountry._2)
     } yield count
 
     result map { seq => assert(seq.size == expectedCount) }
@@ -86,13 +101,12 @@ class AirlineRepositorySpec extends BaseRepositorySpec with OptionValues {
 
 
   override def beforeEach(): Unit = {
-    Await.result(repos.countryRepo.create, timeout)
-    Await.result(repos.airlineRepo.create, timeout)
+    Await.result(dal.createSchema(), timeout)
   }
 
   override def afterEach(): Unit = {
-    Await.result(repos.airlineRepo.drop, timeout)
-    Await.result(repos.countryRepo.drop, timeout)
+    Await.result(dal.dropSchema(), timeout)
   }
+
 
 }
