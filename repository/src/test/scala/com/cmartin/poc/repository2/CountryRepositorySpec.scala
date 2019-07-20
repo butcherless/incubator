@@ -32,7 +32,7 @@ class CountryRepositorySpec extends BaseRepositorySpec with OptionValues {
   "Country Repository" should "insert a country into the database" in {
     val result = dal.countryRepo.insert(spainCountry)
 
-    result map { id => assert(id == 1) }
+    result map { id => assert(id > 0) }
   }
 
   it should "fail to insert a duplicate country intro the database" in {

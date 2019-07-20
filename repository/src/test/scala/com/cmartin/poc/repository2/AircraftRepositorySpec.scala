@@ -29,7 +29,6 @@ class AircraftRepositorySpec extends BaseRepositorySpec with OptionValues {
       config.db.run(airlines.schema.drop)
       config.db.run(countries.schema.drop)
     }
-
   }
 
   "Aircraft Repository" should "insert an aircraft into the database" in {
@@ -39,7 +38,7 @@ class AircraftRepositorySpec extends BaseRepositorySpec with OptionValues {
       aircraft <- dal.aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, registrationMIG, airlineId))
     } yield aircraft
 
-    result map { id => assert(id == 1) }
+    result map { id => assert(id > 0) }
   }
 
   it should "fail to insert an aircraft into the database with a missing airline" in {

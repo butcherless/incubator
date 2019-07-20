@@ -14,7 +14,7 @@ abstract class BaseRepositorySpec
 
   val config = DatabaseConfig.forConfig[JdbcProfile]("h2_dc")
 
-  val timeout = 2 seconds //TODO refactor test module
+  val timeout = 5 seconds //TODO refactor test module
 
   val spainCountry = Country(esCountry._1, esCountry._2)
 

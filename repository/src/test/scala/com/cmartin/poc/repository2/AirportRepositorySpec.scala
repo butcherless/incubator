@@ -1,5 +1,7 @@
 package com.cmartin.poc.repository2
 
+import java.sql.SQLIntegrityConstraintViolationException
+
 import com.cmartin.learn.test.Constants._
 import org.scalatest.OptionValues
 
@@ -33,7 +35,15 @@ class AirportRepositorySpec extends BaseRepositorySpec with OptionValues {
       id <- dal.airportRepo.insert(Airport(madAirport._1, madAirport._2, madAirport._3, countryId))
     } yield id
 
-    result map { id => assert(id == 1) }
+    result map { id => assert(id > 0) }
+  }
+
+  it should "fail to insert an airport into the database with a missing country" in {
+    recoverToSucceededIf[SQLIntegrityConstraintViolationException] {
+      for {
+        _ <- dal.airportRepo.insert(Airport(madAirport._1, madAirport._2, madAirport._3, 0))
+      } yield ()
+    }
   }
 
   it should "retrieve an airport list from a country code" in {

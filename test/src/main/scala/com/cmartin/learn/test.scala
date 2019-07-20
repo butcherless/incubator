@@ -13,7 +13,7 @@ package object test {
     val barajasIataCode = "MAD"
 
     val madDestinationCount = 4
-    val tableCount          = 7
+    val tableCount = 7
 
     val waitTimeout = 5.second
 
@@ -44,11 +44,12 @@ package object test {
 
     val journeyTime = (LocalTime.of(7, 19), LocalTime.of(8, 41))
 
+    val madTotfnDistance = 957.0
   }
 
   //TODO refactor to common
   object TypeCodes {
-    val AIRBUS_320     = "A320"
+    val AIRBUS_320 = "A320"
     val AIRBUS_330_200 = "A332"
     val AIRBUS_350_900 = "A359"
     val BOEING_737_800 = "B738"

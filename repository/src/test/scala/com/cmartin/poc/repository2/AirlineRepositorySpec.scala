@@ -38,7 +38,7 @@ class AirlineRepositorySpec extends BaseRepositorySpec with OptionValues {
     } yield aid
 
     result map { id =>
-      assert(id == 1)
+      assert(id > 0)
     }
   }
 

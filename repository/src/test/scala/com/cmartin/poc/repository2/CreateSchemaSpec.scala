@@ -17,7 +17,8 @@ class CreateSchemaSpec extends BaseRepositorySpec {
         countries.schema ++
           airlines.schema ++
           airports.schema ++
-          fleet.schema
+          fleet.schema ++
+          routes.schema
         )
         .createStatements.mkString("\n")
     }
