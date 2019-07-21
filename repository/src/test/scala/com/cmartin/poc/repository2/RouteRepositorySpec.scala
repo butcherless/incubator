@@ -23,9 +23,12 @@ class RouteRepositorySpec extends BaseRepositorySpec with OptionValues {
     }
 
     def dropSchema(): Future[Unit] = {
-      config.db.run(routes.schema.drop)
-      config.db.run(airports.schema.drop)
-      config.db.run(countries.schema.drop)
+      config.db.run(
+        (countries.schema ++ airports.schema ++ routes.schema)
+          .drop)
+//         config.db.run(routes.schema.drop)
+//         config.db.run(airports.schema.drop)
+//         config.db.run(countries.schema.drop)
     }
   }
 
