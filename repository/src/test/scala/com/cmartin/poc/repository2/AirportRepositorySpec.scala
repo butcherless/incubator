@@ -18,12 +18,13 @@ class AirportRepositorySpec extends BaseRepositorySpec with OptionValues {
     val airportRepo = new AirportRepository(config.db)
 
     def createSchema(): Future[Unit] = {
-      config.db.run((countries.schema ++ airports.schema).create)
+      config.db.run(
+        (countries.schema ++ airports.schema).create)
     }
 
     def dropSchema(): Future[Unit] = {
-      config.db.run(airports.schema.drop)
-      config.db.run(countries.schema.drop)
+      config.db.run(
+        (airports.schema ++ countries.schema).drop)
     }
 
   }

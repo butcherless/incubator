@@ -37,8 +37,10 @@ class CountryRepositorySpec extends BaseRepositorySpec with OptionValues {
 
   it should "fail to insert a duplicate country intro the database" in {
     recoverToSucceededIf[SQLIntegrityConstraintViolationException] {
-      dal.countryRepo.insert(spainCountry)
-      dal.countryRepo.insert(spainCountry)
+      for {
+        _ <- dal.countryRepo.insert(spainCountry)
+        _ <- dal.countryRepo.insert(spainCountry)
+      } yield ()
     }
   }
 
