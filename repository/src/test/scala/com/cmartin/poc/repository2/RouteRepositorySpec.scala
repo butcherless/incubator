@@ -3,11 +3,12 @@ package com.cmartin.poc.repository2
 import java.sql.SQLIntegrityConstraintViolationException
 
 import com.cmartin.learn.test.Constants._
-import org.scalatest.OptionValues
+import org.scalatest.{BeforeAndAfterAll, OptionValues}
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Await
 
-class RouteRepositorySpec extends BaseRepositorySpec with OptionValues {
+class RouteRepositorySpec extends BaseRepositorySpec with OptionValues
+  with BeforeAndAfterAll {
   val dal = new DatabaseAccessLayer2(config) {
 
     import profile.api._
@@ -16,19 +17,19 @@ class RouteRepositorySpec extends BaseRepositorySpec with OptionValues {
     val airportRepo = new AirportRepository(config.db)
     val routeRepo = new RouteRepository(config.db)
 
-    def createSchema(): Future[Unit] = {
+    def createSchema() = {
       config.db.run(
         (countries.schema ++ airports.schema ++ routes.schema)
           .create)
     }
 
-    def dropSchema(): Future[Unit] = {
+    def dropSchema() = {
       config.db.run(
         (countries.schema ++ airports.schema ++ routes.schema)
           .drop)
-//         config.db.run(routes.schema.drop)
-//         config.db.run(airports.schema.drop)
-//         config.db.run(countries.schema.drop)
+      //         config.db.run(routes.schema.drop)
+      //         config.db.run(airports.schema.drop)
+      //         config.db.run(countries.schema.drop)
     }
   }
 
@@ -123,6 +124,12 @@ class RouteRepositorySpec extends BaseRepositorySpec with OptionValues {
     dAirportId <- dal.airportRepo.insert(rodeosAirport.copy(countryId = countryId))
   } yield (oAirportId, dAirportId)
 
+
+  //  override def afterEach () :Unit = {
+  //    Await.result(dal.routeRepo.deleteAll(), timeout)
+  //    Await.result(dal.airportRepo.deleteAll(), timeout)
+  //    Await.result(dal.countryRepo.deleteAll(), timeout)
+  //  }
 
   override def beforeEach(): Unit = {
     Await.result(dal.createSchema(), timeout)
