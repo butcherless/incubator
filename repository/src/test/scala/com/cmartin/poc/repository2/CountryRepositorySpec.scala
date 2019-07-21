@@ -105,6 +105,20 @@ class CountryRepositorySpec extends BaseRepositorySpec with OptionValues {
     }
   }
 
+  it should "delete all countries from the database" in {
+    val result = for {
+      cs <- dal.countryRepo.insert(countrySequence)
+      fs <- dal.countryRepo.findAll()
+      ds <- dal.countryRepo.deleteAll()
+    } yield (cs, fs, ds)
+
+    result map { tuple =>
+      assert(tuple._1.size == tuple._2.size)
+      assert(tuple._1.size == tuple._3)
+    }
+  }
+
+
   override def beforeEach(): Unit = {
     Await.result(dal.createSchema(), timeout)
   }

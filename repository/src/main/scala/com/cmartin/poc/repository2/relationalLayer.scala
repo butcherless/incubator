@@ -178,6 +178,29 @@ trait Repositories extends RelationalInfrastructure {
   lazy val flights = TableQuery[Flights]
 
 
+  final class Journeys(tag: Tag) extends RelationalTable[Journey](tag, TableNames.journeys) {
+
+    // property columns:
+    def departureDate = column[LocalTime]("DEPARTURE_DATE")
+
+    def arrivalDate = column[LocalTime]("ARRIVAL_DATE")
+
+    // foreign columns:
+    def flightId = column[Long]("FLIGHT_ID")
+
+    def aircraftId = column[Long]("AIRCRAFT_ID")
+
+    def * =
+      (departureDate, arrivalDate, flightId, aircraftId, id.?) <> (Journey.tupled, Journey.unapply)
+
+    // foreign keys
+    def flight = foreignKey("FK_FLIGHT_JOURNEY", flightId, flights)(_.id)
+
+    def aircraft = foreignKey("FK_AIRCRAFT_JOURNEY", aircraftId, fleet)(_.id)
+  }
+
+  lazy val journeys = TableQuery[Journeys]
+
   /*
       R E P O S I T O R I E S
    */
@@ -269,7 +292,10 @@ trait Repositories extends RelationalInfrastructure {
 
       query.result
     }
+  }
 
+  final class JourneyRepository(val db: JdbcBackend#DatabaseDef) extends RelationalRepository[Journey, Journeys](db) {
+    override lazy val entities = journeys
   }
 
 }

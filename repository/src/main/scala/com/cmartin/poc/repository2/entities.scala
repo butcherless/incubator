@@ -72,6 +72,16 @@ final case class Flight(code: String,
                         id: Option[Long] = None
                        ) extends Entity[Flight, Long]
 
+/*
+     J O U R N E Y
+  */
+final case class Journey(departureDate: LocalTime,
+                         arrivalDate: LocalTime,
+                         flightId: Long,
+                         aircraftId: Long,
+                         id: Option[Long] = None
+                        ) extends Entity[Journey, Long]
+
 
 /*
     P O S I T I O N
