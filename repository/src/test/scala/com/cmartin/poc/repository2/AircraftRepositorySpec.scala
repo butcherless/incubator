@@ -27,14 +27,13 @@ class AircraftRepositorySpec extends BaseRepositorySpec with OptionValues {
     def dropSchema(): Future[Unit] = {
       config.db.run(
         (countries.schema ++ airlines.schema ++ fleet.schema)
-          .drop )
+          .drop)
     }
   }
 
   "Aircraft Repository" should "insert an aircraft into the database" in {
     val result = for {
-      countryId <- dal.countryRepo.insert(spainCountry)
-      airlineId <- dal.airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2, countryId))
+      airlineId <- insertCountryAirline()
       aircraft <- dal.aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, registrationMIG, airlineId))
     } yield aircraft
 
@@ -51,8 +50,7 @@ class AircraftRepositorySpec extends BaseRepositorySpec with OptionValues {
 
   it should "retrieve an aircraft from the database by its registration" in {
     val result = for {
-      countryId <- dal.countryRepo.insert(spainCountry)
-      airlineId <- dal.airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2, countryId))
+      airlineId <- insertCountryAirline()
       _ <- dal.aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, registrationMIG, airlineId))
       aircraft <- dal.aircraftRepo.findByRegistration(registrationMIG)
     } yield aircraft.value
@@ -65,8 +63,7 @@ class AircraftRepositorySpec extends BaseRepositorySpec with OptionValues {
 
   it should "retrieve aircraft list from an airline" in {
     val result = for {
-      countryId <- dal.countryRepo.insert(spainCountry)
-      airlineId <- dal.airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2, countryId))
+      airlineId <- insertCountryAirline()
       _ <- dal.aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, registrationMIG, airlineId))
       _ <- dal.aircraftRepo.insert(Aircraft(TypeCodes.AIRBUS_330_200, registrationLVL, airlineId))
       seq <- dal.aircraftRepo.findByAirlineName(aeaAirline._1)
@@ -74,6 +71,12 @@ class AircraftRepositorySpec extends BaseRepositorySpec with OptionValues {
 
     result map { seq => assert(seq.size == 2) }
   }
+
+
+  def insertCountryAirline() = for {
+    countryId <- dal.countryRepo.insert(spainCountry)
+    airlineId <- dal.airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2, countryId))
+  } yield airlineId
 
   override def beforeEach(): Unit = {
     Await.result(dal.createSchema(), timeout)

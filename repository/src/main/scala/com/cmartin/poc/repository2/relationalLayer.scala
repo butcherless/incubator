@@ -1,6 +1,6 @@
 package com.cmartin.poc.repository2
 
-import java.time.LocalDate
+import java.time.{LocalDate, LocalTime}
 
 import slick.basic.DatabaseConfig
 import slick.jdbc.{JdbcBackend, JdbcProfile}
@@ -66,7 +66,7 @@ trait Repositories extends RelationalInfrastructure {
     def * = (name, foundationDate, countryId, id.?) <> (Airline.tupled, Airline.unapply)
 
     // foreign keys
-    def country = foreignKey("FK_COUNTRY", countryId, countries)(_.id)
+    def country = foreignKey("FK_COUNTRY_AIRLINE", countryId, countries)(_.id)
   }
 
   lazy val airlines = TableQuery[Airlines]
@@ -84,7 +84,7 @@ trait Repositories extends RelationalInfrastructure {
     def * = (typeCode, registration, airlineId, id.?) <> (Aircraft.tupled, Aircraft.unapply)
 
     // foreign keys
-    def airline = foreignKey("FK_AIRLINE", airlineId, airlines)(_.id)
+    def airline = foreignKey("FK_AIRLINE_FLEET", airlineId, airlines)(_.id)
   }
 
   lazy val fleet = TableQuery[Fleet]
@@ -105,7 +105,7 @@ trait Repositories extends RelationalInfrastructure {
     def * = (name, iataCode, icaoCode, countryId, id.?) <> (Airport.tupled, Airport.unapply)
 
     // foreign keys
-    def country = foreignKey("FK_COUNTRY", countryId, countries)(_.id)
+    def country = foreignKey("FK_COUNTRY_AIRPORT", countryId, countries)(_.id)
 
     // indexes
     def iataIndex = index("iataCode_index", iataCode, unique = true)
@@ -146,6 +146,41 @@ trait Repositories extends RelationalInfrastructure {
 
   lazy val routes = TableQuery[Routes]
 
+
+  final class Flights(tag: Tag) extends RelationalTable[Flight](tag, TableNames.flights) {
+    // property columns:
+    def code = column[String]("CODE")
+
+    def alias = column[String]("ALIAS")
+
+    def schedDeparture = column[LocalTime]("SCHEDULED_DEPARTURE")
+
+    def schedArrival = column[LocalTime]("SCHEDULED_ARRIVAL")
+
+    // foreign columns:
+    def airlineId = column[Long]("AIRLINE_ID")
+
+    def routeId = column[Long]("ROUTE_ID")
+
+    def * =
+      (code, alias, schedDeparture, schedArrival, airlineId, routeId, id.?) <> (Flight.tupled, Flight.unapply)
+
+    // foreign keys
+    def route = foreignKey("FK_ROUTE", routeId, routes)(_.id)
+
+    def airline = foreignKey("FK_AIRLINE_FLIGHT", airlineId, airlines)(_.id)
+
+    // indexes
+    def codeIndex = index("code_index", code, unique = true)
+
+  }
+
+  lazy val flights = TableQuery[Flights]
+
+
+  /*
+      R E P O S I T O R I E S
+   */
 
   class AirlineRepository(val db: JdbcBackend#DatabaseDef) extends RelationalRepository[Airline, Airlines](db) {
     override lazy val entities = airlines
@@ -217,6 +252,24 @@ trait Repositories extends RelationalInfrastructure {
 
       query.result
     }
+  }
+
+  final class FlightRepository(val db: JdbcBackend#DatabaseDef) extends RelationalRepository[Flight, Flights](db) {
+    override lazy val entities = flights
+
+    def findByCode(code: String): Future[Option[Flight]] =
+      entities.filter(_.code === code).result.headOption
+
+    def findByOrigin(origin: String): Future[Seq[Flight]] = {
+      val query = for {
+        flight <- entities
+        route <- flight.route
+        airport <- route.origin if airport.iataCode === origin
+      } yield flight
+
+      query.result
+    }
+
   }
 
 }

@@ -24,8 +24,7 @@ class AirlineRepositorySpec extends BaseRepositorySpec with OptionValues {
     }
 
     def dropSchema(): Future[Unit] = {
-      config.db.run(airlines.schema.drop)
-      config.db.run(countries.schema.drop)
+      config.db.run((countries.schema ++ airlines.schema).drop)
     }
 
   }
@@ -48,7 +47,7 @@ class AirlineRepositorySpec extends BaseRepositorySpec with OptionValues {
     val result = for {
       cid <- dal.countryRepo.insert(norway)
       aid <- dal.airlineRepo.insert(Airline(ibkAirline._1, ibkAirline._2, cid))
-      uid <- dal.airlineRepo.update(Airline(updatedString, now, cid, Option(aid)))
+      _ <- dal.airlineRepo.update(Airline(updatedString, now, cid, Option(aid)))
       updated <- dal.airlineRepo.findById(aid)
     } yield updated.value
 
