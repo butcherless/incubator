@@ -1,4 +1,4 @@
-package com.cmartin.poc.repository2
+package com.cmartin.learn.repository
 
 import java.time.{LocalDate, LocalDateTime, LocalTime}
 
@@ -92,3 +92,11 @@ final case class Point(longitude: Float, latitude: Float)
 final case class Coordinates(point: Point, altitude: Float)
 
 final case class Position(coordinates: Coordinates, dateTime: LocalDateTime)
+
+object TypeCodes {
+  val AIRBUS_320 = "A320"
+  val AIRBUS_330_200 = "A332"
+  val AIRBUS_350_900 = "A359"
+  val BOEING_737_800 = "B738"
+  val BOEING_787_800 = "B788"
+}

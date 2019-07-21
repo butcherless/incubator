@@ -1,8 +1,7 @@
-package com.cmartin.poc.repository2
+package com.cmartin.learn.repository
 
 import java.sql.SQLIntegrityConstraintViolationException
 
-import com.cmartin.learn.repository.tables.TypeCodes
 import com.cmartin.learn.test.Constants._
 import org.scalatest.OptionValues
 

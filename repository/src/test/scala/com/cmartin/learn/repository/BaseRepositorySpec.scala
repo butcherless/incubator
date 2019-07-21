@@ -1,4 +1,4 @@
-package com.cmartin.poc.repository2
+package com.cmartin.learn.repository
 
 import com.cmartin.learn.test.Constants._
 import org.scalatest.{AsyncFlatSpec, BeforeAndAfterEach, Matchers}

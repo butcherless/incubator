@@ -1,4 +1,4 @@
-package com.cmartin.poc.repository2
+package com.cmartin.learn.repository
 
 import slick.jdbc.{JdbcBackend, JdbcProfile}
 
