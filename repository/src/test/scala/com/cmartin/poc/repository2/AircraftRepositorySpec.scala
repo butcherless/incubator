@@ -25,9 +25,9 @@ class AircraftRepositorySpec extends BaseRepositorySpec with OptionValues {
     }
 
     def dropSchema(): Future[Unit] = {
-      config.db.run(fleet.schema.drop)
-      config.db.run(airlines.schema.drop)
-      config.db.run(countries.schema.drop)
+      config.db.run(
+        (countries.schema ++ airlines.schema ++ fleet.schema)
+          .drop )
     }
   }
 
@@ -44,7 +44,7 @@ class AircraftRepositorySpec extends BaseRepositorySpec with OptionValues {
   it should "fail to insert an aircraft into the database with a missing airline" in {
     recoverToSucceededIf[SQLIntegrityConstraintViolationException] {
       for {
-        aircraft <- dal.aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, registrationMIG, 0))
+        _ <- dal.aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, registrationMIG, 0))
       } yield ()
     }
   }

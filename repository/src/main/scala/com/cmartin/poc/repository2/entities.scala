@@ -1,6 +1,6 @@
 package com.cmartin.poc.repository2
 
-import java.time.{LocalDate, LocalDateTime}
+import java.time.{LocalDate, LocalDateTime, LocalTime}
 
 /**
   * Database entity based on a type and an identifier
@@ -58,6 +58,19 @@ final case class Route(distance: Double,
                        destinationId: Long,
                        id: Option[Long] = None
                       ) extends Entity[Route, Long]
+
+
+/*
+    F L I G H T
+ */
+final case class Flight(code: String,
+                        alias: String,
+                        schedDeparture: LocalTime,
+                        schedArrival: LocalTime,
+                        airlineId: Long,
+                        routeId: Long,
+                        id: Option[Long] = None
+                       ) extends Entity[Flight, Long]
 
 
 /*
