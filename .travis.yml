@@ -1,7 +1,11 @@
+jdk:
+  - openjdk11
+
 language: scala
-group: travis_lts
+#group: travis_lts
 scala:
   - 2.12.8
+
 
 addons:
   apt:
