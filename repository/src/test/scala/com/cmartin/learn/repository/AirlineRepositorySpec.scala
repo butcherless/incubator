@@ -31,13 +31,10 @@ class AirlineRepositorySpec extends BaseRepositorySpec with OptionValues {
 
 
   "Airline Repository" should "insert an airline into the database" in {
-    val result = for {
-      cid <- dal.countryRepo.insert(norway)
-      aid <- dal.airlineRepo.insert(Airline(ibkAirline._1, ibkAirline._2, cid))
-    } yield aid
+    val result = insertCountryAirline()
 
-    result map { id =>
-      assert(id > 0)
+    result map { tuple =>
+      assert(tuple._1 > 0)
     }
   }
 
@@ -45,8 +42,7 @@ class AirlineRepositorySpec extends BaseRepositorySpec with OptionValues {
     val updatedString = "UPDATED"
     val now = LocalDate.now()
     val result = for {
-      cid <- dal.countryRepo.insert(norway)
-      aid <- dal.airlineRepo.insert(Airline(ibkAirline._1, ibkAirline._2, cid))
+      (cid, aid) <- insertCountryAirline()
       _ <- dal.airlineRepo.update(Airline(updatedString, now, cid, Option(aid)))
       updated <- dal.airlineRepo.findById(aid)
     } yield updated.value
@@ -59,8 +55,7 @@ class AirlineRepositorySpec extends BaseRepositorySpec with OptionValues {
 
   it should "delete an airline from the database" in {
     val result = for {
-      cid <- dal.countryRepo.insert(norway)
-      aid <- dal.airlineRepo.insert(Airline(ibkAirline._1, ibkAirline._2, cid))
+      (_, aid) <- insertCountryAirline()
       deleted <- dal.airlineRepo.delete(aid)
       count <- dal.airlineRepo.count
     } yield (aid, deleted, count)
@@ -73,8 +68,7 @@ class AirlineRepositorySpec extends BaseRepositorySpec with OptionValues {
 
   it should "retrieve an airline from the database" in {
     val result = for {
-      cid <- dal.countryRepo.insert(norway)
-      aid <- dal.airlineRepo.insert(Airline(ibkAirline._1, ibkAirline._2, cid))
+      (_, aid) <- insertCountryAirline()
       airline <- dal.airlineRepo.findById(aid)
     } yield airline.value
 
@@ -98,6 +92,11 @@ class AirlineRepositorySpec extends BaseRepositorySpec with OptionValues {
     result map { seq => assert(seq.size == expectedCount) }
   }
 
+
+  def insertCountryAirline() = for {
+    cid <- dal.countryRepo.insert(norway)
+    aid <- dal.airlineRepo.insert(Airline(ibkAirline._1, ibkAirline._2, cid))
+  } yield (cid, aid)
 
   override def beforeEach(): Unit = {
     Await.result(dal.createSchema(), timeout)
