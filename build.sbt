@@ -1,5 +1,4 @@
 import Dependencies._
-import sbt.Keys.libraryDependencies
 
 lazy val projectVersion = "1.0.0-SNAPSHOT"
 
@@ -9,6 +8,7 @@ lazy val commonSettings = Seq(
   organization := "com.cmartin.learn",
   version := projectVersion,
   scalaVersion := "2.13.0",
+  libraryDependencies ++= Seq(scalaTest),
   scalacOptions ++= Seq( // some of the Rob Norris tpolecat options
     "-deprecation",                      // Emit warning and location for usages of deprecated APIs.
     "-encoding", "utf-8",                // Specify character encoding used by source files.
@@ -21,6 +21,8 @@ lazy val commonSettings = Seq(
     "-language:postfixOps",
     "-language:reflectiveCalls"
   ),
+  test in assembly := {}
+
 )
 
 lazy val common = (project in file("common"))
@@ -34,16 +36,16 @@ lazy val repository = (project in file("repository"))
   .settings(
     commonSettings,
     name := "repository",
-    libraryDependencies ++= Seq(slick, slickPool, logback, h2Database, scalaTest),
+    libraryDependencies ++= Seq(slick, slickPool, logback, h2Database),
     parallelExecution in Test := false
-  ).dependsOn(common, test)
+  ).dependsOn(common, testUtils)
 
 
 lazy val service = (project in file("service"))
   .settings(
     commonSettings,
     name := "service",
-    libraryDependencies ++= Seq(akkaActor, akkaHttp, akkaStream, typesafeConfig, json4sNative, playJson, scalaLogging, logback, sttp, scalaTest)
+    libraryDependencies ++= Seq(akkaActor, akkaHttp, akkaStream, typesafeConfig, json4sNative, playJson, scalaLogging, logback, sttp)
   ).dependsOn(common, repository)
 
 
@@ -51,7 +53,6 @@ lazy val controller = (project in file("controller"))
   .settings(
     commonSettings,
     name := "controller",
-    libraryDependencies ++= Seq(scalaTest)
   ).dependsOn(common, service)
 
 
@@ -59,14 +60,14 @@ lazy val web = (project in file("web"))
   .settings(
     commonSettings,
     name := "web",
-    libraryDependencies ++= Seq(scalaLogging, logback, scalaTest)
+    libraryDependencies ++= Seq(scalaLogging, logback)
   ).dependsOn(common, controller, service)
 
 
-lazy val test = (project in file("test"))
+lazy val testUtils = (project in file("test"))
   .settings(
     commonSettings,
-    name := "test"
+    name := "test-utils"
   )
 
 
@@ -74,10 +75,10 @@ lazy val poc = (project in file("poc"))
   .settings(
     commonSettings,
     name := "poc",
-    libraryDependencies ++= Seq(akkaHttp, akkaStream, scalaLogging, slick, slickPool, logback, h2Database, scalaTest),
+    libraryDependencies ++= Seq(akkaHttp, akkaStream, scalaLogging, slick, slickPool, logback, h2Database),
     parallelExecution in Test := false
-  ).dependsOn(test)
+  ).dependsOn(testUtils)
 
 
 // quick research deps
-lazy val sttp = "com.softwaremill.sttp" %% "core" % "1.6.3"
+lazy val sttp = "com.softwaremill.sttp" %% "core" % "1.6.4"
