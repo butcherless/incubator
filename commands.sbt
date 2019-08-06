@@ -1,6 +1,6 @@
 val ReleaseCommand = Command.command("release") {
   state =>
-    "clean" :: "coverage" :: "assembly" :: "coverageReport" :: "coverageAggregate" :: "doc" :: state
+    "assembly" :: "doc" :: state
 }
 
 val CoverageShortcut = Command.command("mycoverage") {
