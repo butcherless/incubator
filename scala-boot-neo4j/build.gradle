@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.1.4.RELEASE'
+        springBootVersion = '2.1.7.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -25,13 +25,13 @@ repositories {
     }
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 11
+targetCompatibility = 11
 
 ext {
-    scalaVersion = "2.12.8"
-    jacksonVersion = "2.9.8"
-    neo4jDriver = '1.7.3'
+    scalaVersion = "2.13.0"
+    jacksonVersion = "2.9.9"
+    neo4jDriver = '1.7.5'
 }
 
 //mainClassName = "com.cmartin.research.ScalaApplication"
@@ -45,7 +45,7 @@ dependencies {
     compile "org.neo4j.driver:neo4j-java-driver:${neo4jDriver}",
             "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}",
             "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}",
-            'org.apache.commons:commons-lang3:3.8.1'
+            'org.apache.commons:commons-lang3:3.9'
 
     compile "org.scala-lang:scala-library:${scalaVersion}"
 
