@@ -36,7 +36,7 @@ lazy val repository = (project in file("repository"))
   .settings(
     commonSettings,
     name := "repository",
-    libraryDependencies ++= Seq(slick, slickPool, logback, h2Database),
+    libraryDependencies ++= Seq(slick, slickPool, typesafeConfig, logback, slf4j, h2Database),
     parallelExecution in Test := false
   ).dependsOn(common, testUtils)
 
@@ -75,7 +75,7 @@ lazy val poc = (project in file("poc"))
   .settings(
     commonSettings,
     name := "poc",
-    libraryDependencies ++= Seq(akkaHttp, akkaStream, scalaLogging, slick, slickPool, logback, h2Database),
+    libraryDependencies ++= Seq(akkaHttp, akkaStream, scalaLogging, slick, slickPool, logback, slf4j, h2Database),
     parallelExecution in Test := false
   ).dependsOn(testUtils)
 
