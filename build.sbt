@@ -1,4 +1,3 @@
-forced fail
 import Dependencies._
 
 lazy val projectVersion = "1.0.0-SNAPSHOT"
