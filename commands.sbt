@@ -18,7 +18,6 @@ val ReloadTestCommand = Command.command("reload-test") {
     "reload" :: "clean" :: "test" :: state
 }
 
-
 commands ++= Seq(
   ReleaseCommand,
   ReloadCompileCommand,
