@@ -4,30 +4,7 @@
 #
 version: 2
 jobs:
-  build_gradle:
-    docker:
-      # specify the version you desire here
-      - image: circleci/openjdk:11-jdk
-
-    working_directory: ~/repo
-
-    environment:
-      # Customize the JVM maximum heap limit
-      JVM_OPTS: -Xmx1024m
-      TERM: dumb
-
-    steps:
-      - checkout
-
-      # build project
-      - run:
-          name: build app
-          command: |
-                   cd scala-boot-neo4j
-                   ./gradlew -v
-                   ./gradlew clean build
-
-  build_sbt:
+  build:
     docker:
       - image: circleci/openjdk:11-jdk
 
@@ -42,14 +19,10 @@ jobs:
 
       # compiler, test & run
       - run:
-          name: compile, test and assembly
+          name: clean, update
           command: |
-                   sbt -mem 2048 mycoverage
+                   sbt ";clean ;update"
+                   sbt compile
+                   sbt -mem 2048 ";clean ;coverageReport ;test ;coverageAggregate"
+                   sbt assembly
                    bash <(curl -s https://codecov.io/bash) -t db92a4a7-4ab4-49ab-9ba9-164a43a25009
-
-workflows:
-  version: 2
-  build:
-    jobs:
-      - build_sbt
-      - build_gradle
