@@ -5,7 +5,8 @@ scala:
 
 build:
   ci:
-    - SBT_OPTS='-Xmx1536m'; sbt release
+    - SBT_OPTS='-Xmx1536m'; sbt ";clean ;coverage ;test ;coverageReport ;coverageAggregate"
+    - cp target/scala-2.13/coverage-report/cobertura.xml shippable/codecoverage
 
 jdk:
   - oraclejdk8
