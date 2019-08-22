@@ -4,6 +4,7 @@ import java.sql.SQLIntegrityConstraintViolationException
 
 import com.cmartin.learn.test.Constants._
 import org.scalatest.OptionValues
+import slick.dbio.DBIO
 
 import scala.concurrent.{Await, Future}
 
@@ -13,11 +14,12 @@ class CountryRepositorySpec extends BaseRepositorySpec with OptionValues {
   val unitedKingdom = Country(ukCountry._1, ukCountry._2)
   val countrySequence: Seq[Country] = Seq(spainCountry, unitedKingdom)
 
+
   val dal = new DatabaseAccessLayer2(config) {
 
     import profile.api._
 
-    val countryRepo = new CountryRepository(config.db)
+    val countryRepo = new CountryRepository
 
     def createSchema(): Future[Unit] = {
       config.db.run(countries.schema.create)

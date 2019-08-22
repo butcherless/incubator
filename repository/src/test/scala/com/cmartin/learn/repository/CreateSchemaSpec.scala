@@ -9,8 +9,8 @@ class CreateSchemaSpec extends BaseRepositorySpec {
 
     import profile.api._
 
-    val countryRepo = new CountryRepository(config.db)
-    val airlineRepo = new AirlineRepository(config.db)
+    val countryRepo = new CountryRepository
+    val airlineRepo = new AirlineRepository
 
     def printSchema(): String = {
       (

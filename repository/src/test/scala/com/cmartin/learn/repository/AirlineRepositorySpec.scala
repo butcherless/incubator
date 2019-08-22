@@ -16,8 +16,8 @@ class AirlineRepositorySpec extends BaseRepositorySpec with OptionValues {
 
     import profile.api._
 
-    val countryRepo = new CountryRepository(config.db)
-    val airlineRepo = new AirlineRepository(config.db)
+    val countryRepo = new CountryRepository
+    val airlineRepo = new AirlineRepository
 
     def createSchema(): Future[Unit] = {
       config.db.run((countries.schema ++ airlines.schema).create)

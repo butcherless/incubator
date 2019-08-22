@@ -3,9 +3,7 @@ package com.cmartin.learn.repository
 import java.time.{LocalDate, LocalTime}
 
 import slick.basic.DatabaseConfig
-import slick.jdbc.{JdbcBackend, JdbcProfile}
-
-import scala.concurrent.Future
+import slick.jdbc.JdbcProfile
 
 trait Repositories extends RelationalInfrastructure {
   self: Profile =>
@@ -13,17 +11,17 @@ trait Repositories extends RelationalInfrastructure {
   import profile.api._
 
   object TableNames {
-    val airlines = "AIRLINES"
-    val airports = "AIRPORTS"
+    val airlines  = "AIRLINES"
+    val airports  = "AIRPORTS"
     val countries = "COUNTRIES"
-    val fleet = "FLEET"
-    val flights = "FLIGHTS"
-    val journeys = "JOURNEYS"
-    val routes = "ROUTES"
+    val fleet     = "FLEET"
+    val flights   = "FLIGHTS"
+    val journeys  = "JOURNEYS"
+    val routes    = "ROUTES"
   }
 
   object TypeCodes {
-    val AIRBUS_320 = "A320"
+    val AIRBUS_320     = "A320"
     val AIRBUS_330_200 = "A332"
     val AIRBUS_350_900 = "A359"
     val BOEING_737_800 = "B738"
@@ -32,7 +30,7 @@ trait Repositories extends RelationalInfrastructure {
 
   /*
     C O U N T R Y
- */
+   */
 
   final class Countries(tag: Tag) extends RelationalTable[Country](tag, TableNames.countries) {
 
@@ -51,7 +49,7 @@ trait Repositories extends RelationalInfrastructure {
 
   /*
     A I R L I N E
- */
+   */
 
   final class Airlines(tag: Tag) extends RelationalTable[Airline](tag, TableNames.airlines) {
 
@@ -71,7 +69,6 @@ trait Repositories extends RelationalInfrastructure {
 
   lazy val airlines = TableQuery[Airlines]
 
-
   final class Fleet(tag: Tag) extends RelationalTable[Aircraft](tag, TableNames.fleet) {
 
     // property columns:
@@ -88,7 +85,6 @@ trait Repositories extends RelationalInfrastructure {
   }
 
   lazy val fleet = TableQuery[Fleet]
-
 
   final class Airports(tag: Tag) extends RelationalTable[Airport](tag, TableNames.airports) {
 
@@ -112,7 +108,6 @@ trait Repositories extends RelationalInfrastructure {
   }
 
   lazy val airports = TableQuery[Airports]
-
 
   final class Routes(tag: Tag) extends RelationalTable[Route](tag, TableNames.routes) {
 
@@ -146,7 +141,6 @@ trait Repositories extends RelationalInfrastructure {
 
   lazy val routes = TableQuery[Routes]
 
-
   final class Flights(tag: Tag) extends RelationalTable[Flight](tag, TableNames.flights) {
     // property columns:
     def code = column[String]("CODE")
@@ -177,7 +171,6 @@ trait Repositories extends RelationalInfrastructure {
 
   lazy val flights = TableQuery[Flights]
 
-
   final class Journeys(tag: Tag) extends RelationalTable[Journey](tag, TableNames.journeys) {
 
     // property columns:
@@ -205,10 +198,10 @@ trait Repositories extends RelationalInfrastructure {
       R E P O S I T O R I E S
    */
 
-  class AirlineRepository(val db: JdbcBackend#DatabaseDef) extends RelationalRepository[Airline, Airlines](db) {
+  class AirlineRepository extends RelationalRepository[Airline, Airlines] {
     override lazy val entities = airlines
 
-    def findByCountryCode(code: String): Future[Seq[Airline]] = {
+    def findByCountryCode(code: String): DBIO[Seq[Airline]] = {
       val query = for {
         airline <- entities
         country <- airline.country if country.code === code
@@ -218,34 +211,34 @@ trait Repositories extends RelationalInfrastructure {
     }
   }
 
-  class CountryRepository(val db: JdbcBackend#DatabaseDef) extends RelationalRepository[Country, Countries](db) {
+  class CountryRepository extends RelationalRepository[Country, Countries] {
     override lazy val entities = countries
 
-    def findByCode(code: String): Future[Option[Country]] =
+    def findByCode(code: String): DBIO[Option[Country]] =
       entities.filter(_.code === code).result.headOption
   }
 
-  class AircraftRepository(val db: JdbcBackend#DatabaseDef) extends RelationalRepository[Aircraft, Fleet](db) {
+  class AircraftRepository extends RelationalRepository[Aircraft, Fleet] {
     override lazy val entities = fleet
 
-    def findByRegistration(registration: String): Future[Option[Aircraft]] =
+    def findByRegistration(registration: String): DBIO[Option[Aircraft]] =
       entities.filter(_.registration === registration).result.headOption
 
-    def findByAirlineName(name: String): Future[Seq[Aircraft]] = {
+    def findByAirlineName(name: String): DBIO[Seq[Aircraft]] = {
 
       val query = for {
         aircraft <- entities
-        airline <- aircraft.airline if airline.name === name
+        airline  <- aircraft.airline if airline.name === name
       } yield aircraft
 
       query.result
     }
   }
 
-  class AirportRepository(val db: JdbcBackend#DatabaseDef) extends RelationalRepository[Airport, Airports](db) {
+  class AirportRepository extends RelationalRepository[Airport, Airports] {
     lazy val entities = airports
 
-    def findByCountryCode(code: String): Future[Seq[Airport]] = {
+    def findByCountryCode(code: String): DBIO[Seq[Airport]] = {
       val query = for {
         airport <- entities
         country <- airport.country if country.code === code
@@ -255,21 +248,21 @@ trait Repositories extends RelationalInfrastructure {
     }
   }
 
-  final class RouteRepository(val db: JdbcBackend#DatabaseDef) extends RelationalRepository[Route, Routes](db) {
+  final class RouteRepository extends RelationalRepository[Route, Routes] {
     override lazy val entities = routes
 
-    def findByIataDestination(iataCode: String): Future[Seq[Route]] = {
+    def findByIataDestination(iataCode: String): DBIO[Seq[Route]] = {
       val query = for {
-        route <- entities
+        route   <- entities
         airport <- route.destination if airport.iataCode === iataCode
       } yield route
 
       query.result
     }
 
-    def findByIataOrigin(iataCode: String): Future[Seq[Route]] = {
+    def findByIataOrigin(iataCode: String): DBIO[Seq[Route]] = {
       val query = for {
-        route <- entities
+        route   <- entities
         airport <- route.origin if airport.iataCode === iataCode
       } yield route
 
@@ -277,16 +270,16 @@ trait Repositories extends RelationalInfrastructure {
     }
   }
 
-  final class FlightRepository(val db: JdbcBackend#DatabaseDef) extends RelationalRepository[Flight, Flights](db) {
+  final class FlightRepository extends RelationalRepository[Flight, Flights] {
     override lazy val entities = flights
 
-    def findByCode(code: String): Future[Option[Flight]] =
+    def findByCode(code: String): DBIO[Option[Flight]] =
       entities.filter(_.code === code).result.headOption
 
-    def findByOrigin(origin: String): Future[Seq[Flight]] = {
+    def findByOrigin(origin: String): DBIO[Seq[Flight]] = {
       val query = for {
-        flight <- entities
-        route <- flight.route
+        flight  <- entities
+        route   <- flight.route
         airport <- route.origin if airport.iataCode === origin
       } yield flight
 
@@ -294,7 +287,7 @@ trait Repositories extends RelationalInfrastructure {
     }
   }
 
-  final class JourneyRepository(val db: JdbcBackend#DatabaseDef) extends RelationalRepository[Journey, Journeys](db) {
+  final class JourneyRepository extends RelationalRepository[Journey, Journeys] {
     override lazy val entities = journeys
   }
 
@@ -302,6 +295,8 @@ trait Repositories extends RelationalInfrastructure {
 
 class DatabaseAccessLayer(val profile: JdbcProfile) extends Profile with Repositories
 
-class DatabaseAccessLayer2(val config: DatabaseConfig[JdbcProfile]) extends Profile with Repositories {
+class DatabaseAccessLayer2(val config: DatabaseConfig[JdbcProfile])
+    extends Profile
+    with Repositories {
   override val profile = config.profile
 }

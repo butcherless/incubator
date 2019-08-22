@@ -13,9 +13,9 @@ class AircraftRepositorySpec extends BaseRepositorySpec with OptionValues {
 
     import profile.api._
 
-    val countryRepo = new CountryRepository(config.db)
-    val airlineRepo = new AirlineRepository(config.db)
-    val aircraftRepo = new AircraftRepository(config.db)
+    val countryRepo = new CountryRepository
+    val airlineRepo = new AirlineRepository
+    val aircraftRepo = new AircraftRepository
 
     def createSchema(): Future[Unit] = {
       config.db.run(
@@ -70,7 +70,6 @@ class AircraftRepositorySpec extends BaseRepositorySpec with OptionValues {
 
     result map { seq => assert(seq.size == 2) }
   }
-
 
   def insertCountryAirline() = for {
     countryId <- dal.countryRepo.insert(spainCountry)
