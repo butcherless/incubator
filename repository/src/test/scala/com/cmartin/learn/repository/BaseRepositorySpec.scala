@@ -15,6 +15,7 @@ abstract class BaseRepositorySpec
     with BeforeAndAfterEach {
 
   val config = DatabaseConfig.forConfig[JdbcProfile]("h2_dc")
+
   implicit def executeFromDb[A](action: DBIO[A]): Future[A] = config.db.run(action)
 
 

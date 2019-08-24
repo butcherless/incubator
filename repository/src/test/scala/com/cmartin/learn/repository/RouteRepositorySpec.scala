@@ -7,8 +7,11 @@ import org.scalatest.{BeforeAndAfterAll, OptionValues}
 
 import scala.concurrent.Await
 
-class RouteRepositorySpec extends BaseRepositorySpec with OptionValues
-  with BeforeAndAfterAll {
+class RouteRepositorySpec
+  extends BaseRepositorySpec
+    with OptionValues
+    with BeforeAndAfterAll {
+
   val dal = new DatabaseAccessLayer2(config) {
 
     import profile.api._

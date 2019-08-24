@@ -7,7 +7,9 @@ import org.scalatest.OptionValues
 
 import scala.concurrent.{Await, Future}
 
-class AircraftRepositorySpec extends BaseRepositorySpec with OptionValues {
+class AircraftRepositorySpec
+  extends BaseRepositorySpec
+    with OptionValues {
 
   val dal = new DatabaseAccessLayer2(config) {
 

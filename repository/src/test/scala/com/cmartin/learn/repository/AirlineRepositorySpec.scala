@@ -7,7 +7,9 @@ import org.scalatest.OptionValues
 
 import scala.concurrent.{Await, Future}
 
-class AirlineRepositorySpec extends BaseRepositorySpec with OptionValues {
+class AirlineRepositorySpec
+  extends BaseRepositorySpec
+    with OptionValues {
 
   val norway = Country(noCountry._1, noCountry._2)
   //val iberia = Airline(ibkAirline._1, ibkAirline._2, )

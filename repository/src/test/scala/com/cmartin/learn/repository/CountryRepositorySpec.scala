@@ -4,11 +4,12 @@ import java.sql.SQLIntegrityConstraintViolationException
 
 import com.cmartin.learn.test.Constants._
 import org.scalatest.OptionValues
-import slick.dbio.DBIO
 
 import scala.concurrent.{Await, Future}
 
-class CountryRepositorySpec extends BaseRepositorySpec with OptionValues {
+class CountryRepositorySpec
+  extends BaseRepositorySpec
+    with OptionValues {
 
   val spainUpperCase = Country(esCountry._1.toUpperCase, esCountry._2.toUpperCase)
   val unitedKingdom = Country(ukCountry._1, ukCountry._2)
@@ -82,7 +83,7 @@ class CountryRepositorySpec extends BaseRepositorySpec with OptionValues {
     } yield (cid, did, count)
 
     result map { tuple =>
-      assert(tuple._1 == tuple._2)
+      assert(tuple._1 > 0L)
       assert(tuple._3 == 0)
     }
   }
