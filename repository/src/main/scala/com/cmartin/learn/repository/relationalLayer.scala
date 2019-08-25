@@ -11,17 +11,17 @@ trait Repositories extends RelationalInfrastructure {
   import profile.api._
 
   object TableNames {
-    val airlines  = "AIRLINES"
-    val airports  = "AIRPORTS"
+    val airlines = "AIRLINES"
+    val airports = "AIRPORTS"
     val countries = "COUNTRIES"
-    val fleet     = "FLEET"
-    val flights   = "FLIGHTS"
-    val journeys  = "JOURNEYS"
-    val routes    = "ROUTES"
+    val fleet = "FLEET"
+    val flights = "FLIGHTS"
+    val journeys = "JOURNEYS"
+    val routes = "ROUTES"
   }
 
   object TypeCodes {
-    val AIRBUS_320     = "A320"
+    val AIRBUS_320 = "A320"
     val AIRBUS_330_200 = "A332"
     val AIRBUS_350_900 = "A359"
     val BOEING_737_800 = "B738"
@@ -69,6 +69,10 @@ trait Repositories extends RelationalInfrastructure {
 
   lazy val airlines = TableQuery[Airlines]
 
+  /*
+    F L E E T
+  */
+
   final class Fleet(tag: Tag) extends RelationalTable[Aircraft](tag, TableNames.fleet) {
 
     // property columns:
@@ -85,6 +89,10 @@ trait Repositories extends RelationalInfrastructure {
   }
 
   lazy val fleet = TableQuery[Fleet]
+
+  /*
+    A I R P O R T S
+  */
 
   final class Airports(tag: Tag) extends RelationalTable[Airport](tag, TableNames.airports) {
 
@@ -108,6 +116,11 @@ trait Repositories extends RelationalInfrastructure {
   }
 
   lazy val airports = TableQuery[Airports]
+
+
+  /*
+    R O U T E S
+  */
 
   final class Routes(tag: Tag) extends RelationalTable[Route](tag, TableNames.routes) {
 
@@ -141,6 +154,10 @@ trait Repositories extends RelationalInfrastructure {
 
   lazy val routes = TableQuery[Routes]
 
+  /*
+    F L I G T S
+  */
+
   final class Flights(tag: Tag) extends RelationalTable[Flight](tag, TableNames.flights) {
     // property columns:
     def code = column[String]("CODE")
@@ -171,6 +188,11 @@ trait Repositories extends RelationalInfrastructure {
 
   lazy val flights = TableQuery[Flights]
 
+
+  /*
+    J O U R N E Y S
+  */
+
   final class Journeys(tag: Tag) extends RelationalTable[Journey](tag, TableNames.journeys) {
 
     // property columns:
@@ -198,10 +220,12 @@ trait Repositories extends RelationalInfrastructure {
       R E P O S I T O R I E S
    */
 
-  class AirlineRepository extends RelationalRepository[Airline, Airlines] {
+  class AirlineRepository
+    extends AbstractRelationalRepository[Airline, Airlines]
+      with AirlineRelationalRepository[DBIO, Airline] {
     override lazy val entities = airlines
 
-    def findByCountryCode(code: String): DBIO[Seq[Airline]] = {
+    override def findByCountryCode(code: String): DBIO[Seq[Airline]] = {
       val query = for {
         airline <- entities
         country <- airline.country if country.code === code
@@ -211,34 +235,40 @@ trait Repositories extends RelationalInfrastructure {
     }
   }
 
-  class CountryRepository extends RelationalRepository[Country, Countries] {
+  class CountryRepository
+    extends AbstractRelationalRepository[Country, Countries]
+      with CountryRelationalRepository[DBIO, Country] {
     override lazy val entities = countries
 
-    def findByCode(code: String): DBIO[Option[Country]] =
+    override def findByCode(code: String): DBIO[Option[Country]] =
       entities.filter(_.code === code).result.headOption
   }
 
-  class AircraftRepository extends RelationalRepository[Aircraft, Fleet] {
+  class AircraftRepository
+    extends AbstractRelationalRepository[Aircraft, Fleet]
+      with AircraftRelationalRepository[DBIO, Aircraft] {
     override lazy val entities = fleet
 
-    def findByRegistration(registration: String): DBIO[Option[Aircraft]] =
+    override def findByRegistration(registration: String): DBIO[Option[Aircraft]] =
       entities.filter(_.registration === registration).result.headOption
 
-    def findByAirlineName(name: String): DBIO[Seq[Aircraft]] = {
+    override def findByAirlineName(name: String): DBIO[Seq[Aircraft]] = {
 
       val query = for {
         aircraft <- entities
-        airline  <- aircraft.airline if airline.name === name
+        airline <- aircraft.airline if airline.name === name
       } yield aircraft
 
       query.result
     }
   }
 
-  class AirportRepository extends RelationalRepository[Airport, Airports] {
+  class AirportRepository
+    extends AbstractRelationalRepository[Airport, Airports]
+      with AirportRelationalRepository[DBIO, Airport] {
     lazy val entities = airports
 
-    def findByCountryCode(code: String): DBIO[Seq[Airport]] = {
+    override def findByCountryCode(code: String): DBIO[Seq[Airport]] = {
       val query = for {
         airport <- entities
         country <- airport.country if country.code === code
@@ -248,21 +278,23 @@ trait Repositories extends RelationalInfrastructure {
     }
   }
 
-  final class RouteRepository extends RelationalRepository[Route, Routes] {
+  final class RouteRepository
+    extends AbstractRelationalRepository[Route, Routes]
+      with RouteRelationalRepository[DBIO, Route] {
     override lazy val entities = routes
 
-    def findByIataDestination(iataCode: String): DBIO[Seq[Route]] = {
+    override def findByIataDestination(iataCode: String): DBIO[Seq[Route]] = {
       val query = for {
-        route   <- entities
+        route <- entities
         airport <- route.destination if airport.iataCode === iataCode
       } yield route
 
       query.result
     }
 
-    def findByIataOrigin(iataCode: String): DBIO[Seq[Route]] = {
+    override def findByIataOrigin(iataCode: String): DBIO[Seq[Route]] = {
       val query = for {
-        route   <- entities
+        route <- entities
         airport <- route.origin if airport.iataCode === iataCode
       } yield route
 
@@ -270,16 +302,18 @@ trait Repositories extends RelationalInfrastructure {
     }
   }
 
-  final class FlightRepository extends RelationalRepository[Flight, Flights] {
+  final class FlightRepository
+    extends AbstractRelationalRepository[Flight, Flights]
+      with FlightRelationalRepository[DBIO, Flight] {
     override lazy val entities = flights
 
-    def findByCode(code: String): DBIO[Option[Flight]] =
+    override def findByCode(code: String): DBIO[Option[Flight]] =
       entities.filter(_.code === code).result.headOption
 
-    def findByOrigin(origin: String): DBIO[Seq[Flight]] = {
+    override def findByOrigin(origin: String): DBIO[Seq[Flight]] = {
       val query = for {
-        flight  <- entities
-        route   <- flight.route
+        flight <- entities
+        route <- flight.route
         airport <- route.origin if airport.iataCode === origin
       } yield flight
 
@@ -287,7 +321,9 @@ trait Repositories extends RelationalInfrastructure {
     }
   }
 
-  final class JourneyRepository extends RelationalRepository[Journey, Journeys] {
+  final class JourneyRepository
+    extends AbstractRelationalRepository[Journey, Journeys]
+      with JourneyRelationalRepository[DBIO, Journey] {
     override lazy val entities = journeys
   }
 
@@ -296,7 +332,7 @@ trait Repositories extends RelationalInfrastructure {
 class DatabaseAccessLayer(val profile: JdbcProfile) extends Profile with Repositories
 
 class DatabaseAccessLayer2(val config: DatabaseConfig[JdbcProfile])
-    extends Profile
+  extends Profile
     with Repositories {
   override val profile = config.profile
 }
