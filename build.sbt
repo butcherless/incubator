@@ -81,4 +81,4 @@ lazy val poc = (project in file("poc"))
 
 
 // quick research deps
-lazy val sttp = "com.softwaremill.sttp" %% "core" % "1.6.4"
+lazy val sttp = "com.softwaremill.sttp" %% "core" % "1.6.6"
