@@ -2,12 +2,12 @@ import Dependencies._
 
 lazy val projectVersion = "1.0.0-SNAPSHOT"
 
-scalaVersion := "2.13.0"
+scalaVersion := "2.13.1"
 
 lazy val commonSettings = Seq(
   organization := "com.cmartin.learn",
   version := projectVersion,
-  scalaVersion := "2.13.0",
+  scalaVersion := "2.13.1",
   libraryDependencies ++= Seq(scalaTest),
   scalacOptions ++= Seq( // some of the Rob Norris tpolecat options
     "-deprecation",                      // Emit warning and location for usages of deprecated APIs.
@@ -81,4 +81,4 @@ lazy val poc = (project in file("poc"))
 
 
 // quick research deps
-lazy val sttp = "com.softwaremill.sttp" %% "core" % "1.6.6"
+lazy val sttp = "com.softwaremill.sttp" %% "core" % "1.6.7"
