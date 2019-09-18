@@ -14,7 +14,6 @@ object Dependencies {
   lazy val scalatestVersion    = "3.0.8"
   lazy val slf4jVersion        = "1.7.28"
   lazy val slickVersion        = "3.3.2"
-  lazy val specs2Version       = "4.5.1"
   lazy val utestVersion        = "0.6.6"
 
   
@@ -40,7 +39,5 @@ object Dependencies {
   // testing code
   lazy val akkaHttpTest = "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion % "test"
   lazy val scalaTest    = "org.scalatest" %% "scalatest" % scalatestVersion % "test"
-  lazy val specs2       = "org.specs2" %% "specs2-core" % specs2Version % "test"
   lazy val uTest        = "com.lihaoyi" %% "utest" % utestVersion % "test"
-
 }
