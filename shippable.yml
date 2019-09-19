@@ -1,12 +1,12 @@
 language: scala
 
 scala:
-  - 2.13
+  - 2.13.1
 
 build:
   ci:
-    - SBT_OPTS='-Xmx1536m'; sbt ";clean ;coverage ;test ;coverageReport ;coverageAggregate"
+    - sbt clean test dependencyUpdates
     - cp target/scala-2.13/coverage-report/cobertura.xml shippable/codecoverage
 
 jdk:
-  - oraclejdk8
+  - openjdk11
