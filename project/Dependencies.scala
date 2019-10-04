@@ -14,6 +14,7 @@ object Dependencies {
   lazy val scalatestVersion    = "3.0.8"
   lazy val slf4jVersion        = "1.7.28"
   lazy val slickVersion        = "3.3.2"
+  lazy val sttpVersion         = "1.7.0"
   lazy val utestVersion        = "0.6.6"
 
   
@@ -34,7 +35,7 @@ object Dependencies {
   lazy val slf4j          = "org.slf4j" % "slf4j-api" % slf4jVersion
   lazy val slick          = "com.typesafe.slick" %% "slick" % slickVersion exclude("org.slf4j", "slf4j-api") exclude("com.typesafe","config")
   lazy val slickPool      = "com.typesafe.slick" %% "slick-hikaricp" % slickVersion exclude("org.slf4j", "slf4j-api")
-
+  lazy val sttp           = "com.softwaremill.sttp" %% "core" % sttpVersion
   
   // testing code
   lazy val akkaHttpTest = "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion % "test"

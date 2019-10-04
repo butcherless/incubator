@@ -78,7 +78,3 @@ lazy val poc = (project in file("poc"))
     libraryDependencies ++= Seq(akkaHttp, akkaStream, scalaLogging, slick, slickPool, logback, slf4j, h2Database),
     parallelExecution in Test := false
   ).dependsOn(testUtils)
-
-
-// quick research deps
-lazy val sttp = "com.softwaremill.sttp" %% "core" % "1.6.8"
