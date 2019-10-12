@@ -4,7 +4,7 @@ object Dependencies {
   lazy val akkaHttpVersion     = "10.1.10"
   lazy val akkaVersion         = "2.5.25"
   lazy val catsVersion         = "2.0.0"
-  lazy val configVersion       = "1.3.4"
+  lazy val configVersion       = "1.4.0"
   lazy val h2Version           = "1.4.199"
   lazy val json4sVersion       = "3.6.7"
   lazy val logbackVersion      = "1.2.3"
