@@ -5,7 +5,7 @@ object Dependencies {
   lazy val akkaVersion         = "2.5.25"
   lazy val catsVersion         = "2.0.0"
   lazy val configVersion       = "1.4.0"
-  lazy val h2Version           = "1.4.199"
+  lazy val h2Version           = "1.4.200"
   lazy val json4sVersion       = "3.6.7"
   lazy val logbackVersion      = "1.2.3"
   lazy val playJsonVersion     = "2.7.4"
@@ -14,7 +14,7 @@ object Dependencies {
   lazy val scalatestVersion    = "3.0.8"
   lazy val slf4jVersion        = "1.7.28"
   lazy val slickVersion        = "3.3.2"
-  lazy val sttpVersion         = "1.7.1"
+  lazy val sttpVersion         = "1.7.2"
   lazy val utestVersion        = "0.6.6"
 
   
