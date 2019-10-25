@@ -2,6 +2,7 @@
 .gradle
 .idea
 .metals/
+.sbtopts
 .vscode/
 bin/
 build/
