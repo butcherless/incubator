@@ -45,7 +45,7 @@ lazy val service = (project in file("service"))
   .settings(
     commonSettings,
     name := "service",
-    libraryDependencies ++= Seq(akkaActor, akkaHttp, akkaStream, typesafeConfig, json4sNative, playJson, scalaLogging, logback, sttp)
+    libraryDependencies ++= Seq(typesafeConfig, json4sNative, playJson, scalaLogging, logback, sttp)
   ).dependsOn(common, repository)
 
 
