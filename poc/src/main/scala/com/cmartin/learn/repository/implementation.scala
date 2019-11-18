@@ -7,12 +7,10 @@ import com.cmartin.learn.repository.definition.SimpleRepository
 import scala.collection.mutable.TreeSet
 
 package object implementation {
-
   case class Aircraft(k: String = "", typeCode: String, registration: String)
 
   object Aircraft {
     implicit val ord = new Ordering[Aircraft] {
-
       /**
         * Comparator for dependencies classes
         *
@@ -64,5 +62,4 @@ package object implementation {
   object MemoryRepository extends MemoryRepository {
     def apply(): MemoryRepository = new MemoryRepository()
   }
-
 }

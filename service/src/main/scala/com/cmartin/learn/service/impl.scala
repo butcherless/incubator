@@ -11,7 +11,6 @@ import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
 package object impl {
-
   case class NexusSettings(host: String, port: Int, repo: String) {
     def getSearchUri() = s"http://${host}:${port}/nexus/service/local/lucene/search"
 
@@ -171,7 +170,6 @@ package object impl {
         )
       )
     }
-
   }
 
   object JsonNexusRepository {
@@ -204,5 +202,4 @@ package object impl {
   //  implicit val executionContext = system.dispatcher
 
   //val uri = Uri("https://search.maven.org/solrsearch/select?q=g:com.typesafe.play%20AND%20a:play-json_2.12&core=gav")
-
 }

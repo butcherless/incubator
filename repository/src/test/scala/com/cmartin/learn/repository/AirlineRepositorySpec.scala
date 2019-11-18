@@ -7,15 +7,11 @@ import org.scalatest.OptionValues
 
 import scala.concurrent.{Await, Future}
 
-class AirlineRepositorySpec
-  extends BaseRepositorySpec
-    with OptionValues {
-
+class AirlineRepositorySpec extends BaseRepositorySpec with OptionValues {
   val norway = Country(noCountry._1, noCountry._2)
   //val iberia = Airline(ibkAirline._1, ibkAirline._2, )
 
   val dal = new DatabaseAccessLayer2(config) {
-
     import profile.api._
 
     val countryRepo = new CountryRepository
@@ -28,9 +24,7 @@ class AirlineRepositorySpec
     def dropSchema(): Future[Unit] = {
       config.db.run((countries.schema ++ airlines.schema).drop)
     }
-
   }
-
 
   "Airline Repository" should "insert an airline into the database" in {
     val result = insertCountryAirline()
@@ -42,11 +36,11 @@ class AirlineRepositorySpec
 
   it should "update an airline from the database" in {
     val updatedString = "UPDATED"
-    val now = LocalDate.now()
+    val now           = LocalDate.now()
     val result = for {
       (cid, aid) <- insertCountryAirline()
-      _ <- dal.airlineRepo.update(Airline(updatedString, now, cid, Option(aid)))
-      updated <- dal.airlineRepo.findById(aid)
+      _          <- dal.airlineRepo.update(Airline(updatedString, now, cid, Option(aid)))
+      updated    <- dal.airlineRepo.findById(aid)
     } yield updated.value
 
     result map { airline =>
@@ -58,8 +52,8 @@ class AirlineRepositorySpec
   it should "delete an airline from the database" in {
     val result = for {
       (_, aid) <- insertCountryAirline()
-      deleted <- dal.airlineRepo.delete(aid)
-      count <- dal.airlineRepo.count
+      deleted  <- dal.airlineRepo.delete(aid)
+      count    <- dal.airlineRepo.count
     } yield (aid, deleted, count)
 
     result map { tuple =>
@@ -71,7 +65,7 @@ class AirlineRepositorySpec
   it should "retrieve an airline from the database" in {
     val result = for {
       (_, aid) <- insertCountryAirline()
-      airline <- dal.airlineRepo.findById(aid)
+      airline  <- dal.airlineRepo.findById(aid)
     } yield airline.value
 
     result map { airline =>
@@ -85,20 +79,22 @@ class AirlineRepositorySpec
   it should "retrieve an airline list from a country code" in {
     val expectedCount = 2
     val result = for {
-      cid <- dal.countryRepo.insert(spainCountry)
-      _ <- dal.airlineRepo.insert(Airline(ibsAirline._1, ibsAirline._2, cid))
-      _ <- dal.airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2, cid))
+      cid   <- dal.countryRepo.insert(spainCountry)
+      _     <- dal.airlineRepo.insert(Airline(ibsAirline._1, ibsAirline._2, cid))
+      _     <- dal.airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2, cid))
       count <- dal.airlineRepo.findByCountryCode(esCountry._2)
     } yield count
 
-    result map { seq => assert(seq.size == expectedCount) }
+    result map { seq =>
+      assert(seq.size == expectedCount)
+    }
   }
 
-
-  def insertCountryAirline() = for {
-    cid <- dal.countryRepo.insert(norway)
-    aid <- dal.airlineRepo.insert(Airline(ibkAirline._1, ibkAirline._2, cid))
-  } yield (cid, aid)
+  def insertCountryAirline() =
+    for {
+      cid <- dal.countryRepo.insert(norway)
+      aid <- dal.airlineRepo.insert(Airline(ibkAirline._1, ibkAirline._2, cid))
+    } yield (cid, aid)
 
   override def beforeEach(): Unit = {
     Await.result(dal.createSchema(), timeout)
@@ -107,6 +103,4 @@ class AirlineRepositorySpec
   override def afterEach(): Unit = {
     Await.result(dal.dropSchema(), timeout)
   }
-
-
 }

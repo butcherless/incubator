@@ -2,14 +2,14 @@ package com.cmartin.learn
 
 import com.cmartin.learn.service.spec.GAV
 import org.scalatest.OptionValues._
-import org.scalatest.{AsyncFlatSpec, Matchers}
+import org.scalatest.flatspec.AsyncFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.concurrent.Future
 import scala.language.postfixOps
 import scala.util.Random
 
 class FutureSpec extends AsyncFlatSpec with Matchers {
-
   val gav1 = GAV("com.typesafe", "config", "1.3.3")
 
   "Get artifact future patch >= 0" should "return Some" in {

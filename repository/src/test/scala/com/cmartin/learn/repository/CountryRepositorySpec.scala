@@ -7,17 +7,12 @@ import org.scalatest.OptionValues
 
 import scala.concurrent.{Await, Future}
 
-class CountryRepositorySpec
-  extends BaseRepositorySpec
-    with OptionValues {
-
-  val spainUpperCase = Country(esCountry._1.toUpperCase, esCountry._2.toUpperCase)
-  val unitedKingdom = Country(ukCountry._1, ukCountry._2)
+class CountryRepositorySpec extends BaseRepositorySpec with OptionValues {
+  val spainUpperCase                = Country(esCountry._1.toUpperCase, esCountry._2.toUpperCase)
+  val unitedKingdom                 = Country(ukCountry._1, ukCountry._2)
   val countrySequence: Seq[Country] = Seq(spainCountry, unitedKingdom)
 
-
   val dal = new DatabaseAccessLayer2(config) {
-
     import profile.api._
 
     val countryRepo = new CountryRepository
@@ -29,13 +24,14 @@ class CountryRepositorySpec
     def dropSchema(): Future[Unit] = {
       config.db.run(countries.schema.drop)
     }
-
   }
 
   "Country Repository" should "insert a country into the database" in {
     val result = dal.countryRepo.insert(spainCountry)
 
-    result map { id => assert(id > 0) }
+    result map { id =>
+      assert(id > 0)
+    }
   }
 
   it should "fail to insert a duplicate country intro the database" in {
@@ -47,9 +43,7 @@ class CountryRepositorySpec
     }
   }
 
-
   it should "insert a sequence of countries into the database" in {
-
     val actual: Future[Seq[Long]] = for {
       cs <- dal.countryRepo.insert(countrySequence)
     } yield cs
@@ -63,8 +57,8 @@ class CountryRepositorySpec
 
   it should "update a country from the database" in {
     val result = for {
-      cid <- dal.countryRepo.insert(spainCountry)
-      uid <- dal.countryRepo.update(spainUpperCase.copy(id = Option(cid)))
+      cid     <- dal.countryRepo.insert(spainCountry)
+      uid     <- dal.countryRepo.update(spainUpperCase.copy(id = Option(cid)))
       updated <- dal.countryRepo.findById(cid)
     } yield (cid, uid, updated)
 
@@ -77,8 +71,8 @@ class CountryRepositorySpec
 
   it should "delete a country from the database" in {
     val result = for {
-      cid <- dal.countryRepo.insert(spainCountry)
-      did <- dal.countryRepo.delete(cid)
+      cid   <- dal.countryRepo.insert(spainCountry)
+      did   <- dal.countryRepo.delete(cid)
       count <- dal.countryRepo.count()
     } yield (cid, did, count)
 
@@ -90,16 +84,18 @@ class CountryRepositorySpec
 
   it should "find a country by its code" in {
     val result = for {
-      _ <- dal.countryRepo.insert(spainCountry)
+      _       <- dal.countryRepo.insert(spainCountry)
       country <- dal.countryRepo.findByCode(spainCountry.code)
     } yield country.value
 
-    result map { country => assert(country.code == spainCountry.code) }
+    result map { country =>
+      assert(country.code == spainCountry.code)
+    }
   }
 
   it should "retrieve all countries from the database" in {
     val result: Future[Seq[Country]] = for {
-      _ <- dal.countryRepo.insert(countrySequence)
+      _  <- dal.countryRepo.insert(countrySequence)
       cs <- dal.countryRepo.findAll()
     } yield cs
 
@@ -120,7 +116,6 @@ class CountryRepositorySpec
       assert(tuple._1.size == tuple._3)
     }
   }
-
 
   override def beforeEach(): Unit = {
     Await.result(dal.createSchema(), timeout)

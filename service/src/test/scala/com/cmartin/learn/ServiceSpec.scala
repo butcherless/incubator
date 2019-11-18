@@ -1,10 +1,10 @@
 package com.cmartin.learn
 
 import com.cmartin.learn.common.sayHello
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class ServiceSpec extends FlatSpec with Matchers {
-
+class ServiceSpec extends AnyFlatSpec with Matchers {
   // TODO add Mock
   //val service = new DummyServiceImpl(repository)
 

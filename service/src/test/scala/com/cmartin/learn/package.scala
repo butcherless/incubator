@@ -3,7 +3,6 @@ package com.cmartin
 import com.cmartin.learn.service.spec.GAV
 
 package object learn {
-
   object TestConstants {
     val ArtifactName: String            = "mma-arch-base"
     val GroupName: String               = "es.mma.architecture"
@@ -16,5 +15,4 @@ package object learn {
     //TODO properties
     val NexusSearchPath = "/nexus/service/local/lucene/search"
   }
-
 }

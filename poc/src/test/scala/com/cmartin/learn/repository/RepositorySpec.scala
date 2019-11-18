@@ -2,12 +2,12 @@ package com.cmartin.learn.repository
 
 import com.cmartin.learn.repository.implementation.{Aircraft, MemoryRepository}
 import org.scalatest.OptionValues._
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.language.reflectiveCalls
 
-class RepositorySpec extends FlatSpec with Matchers {
-
+class RepositorySpec extends AnyFlatSpec with Matchers {
   val typeCodeBoeing  = "B788"
   val typeCodeAirbus  = "A359"
   val registrationMXV = "ec-mxv"

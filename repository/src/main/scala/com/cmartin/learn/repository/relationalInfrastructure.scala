@@ -12,13 +12,12 @@ trait RelationalInfrastructure {
   import profile.api._
 
   abstract class RelationalTable[T <: Entity[T, Long]](tag: Tag, tableName: String)
-    extends Table[T](tag, tableName) {
+      extends Table[T](tag, tableName) {
     // primary key column:
     def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
   }
 
   trait RelationalRepository[F[_], E] {
-
     /**
       * Retrieve all the entities in the repository
       *
@@ -81,10 +80,7 @@ trait RelationalInfrastructure {
     def deleteAll(): F[Int]
   }
 
-
-  trait AirlineRelationalRepository[F[_], E]
-    extends RelationalRepository[F, E] {
-
+  trait AirlineRelationalRepository[F[_], E] extends RelationalRepository[F, E] {
     /**
       * Retrieve the airline sequence that belong to a country
       *
@@ -94,9 +90,7 @@ trait RelationalInfrastructure {
     def findByCountryCode(code: String): F[Seq[E]]
   }
 
-  trait CountryRelationalRepository[F[_], E]
-    extends RelationalRepository[F, E] {
-
+  trait CountryRelationalRepository[F[_], E] extends RelationalRepository[F, E] {
     /**
       * Retrieve a country option by its code
       *
@@ -106,53 +100,45 @@ trait RelationalInfrastructure {
     def findByCode(code: String): F[Option[E]]
   }
 
-  trait AircraftRelationalRepository[F[_], E]
-    extends RelationalRepository[F, E] {
-
+  trait AircraftRelationalRepository[F[_], E] extends RelationalRepository[F, E] {
     def findByRegistration(registration: String): F[Option[Aircraft]]
 
     def findByAirlineName(name: String): F[Seq[Aircraft]]
   }
 
-  trait AirportRelationalRepository[F[_], E]
-    extends RelationalRepository[F, E] {
-
+  trait AirportRelationalRepository[F[_], E] extends RelationalRepository[F, E] {
     def findByCountryCode(code: String): F[Seq[Airport]]
   }
 
-  trait RouteRelationalRepository[F[_], E]
-    extends RelationalRepository[F, E] {
-
+  trait RouteRelationalRepository[F[_], E] extends RelationalRepository[F, E] {
     def findByIataDestination(iataCode: String): F[Seq[Route]]
 
     def findByIataOrigin(iataCode: String): F[Seq[Route]]
   }
 
-  trait FlightRelationalRepository[F[_], E]
-    extends RelationalRepository[F, E] {
-
+  trait FlightRelationalRepository[F[_], E] extends RelationalRepository[F, E] {
     def findByCode(code: String): F[Option[Flight]]
 
     def findByOrigin(origin: String): F[Seq[Flight]]
   }
 
-  trait JourneyRelationalRepository[F[_], E]
-    extends RelationalRepository[F, E] {
-  }
+  trait JourneyRelationalRepository[F[_], E] extends RelationalRepository[F, E] {}
 
   abstract class AbstractRelationalRepository[E <: Entity[E, Long], T <: RelationalTable[E]]
-    extends RelationalRepository[DBIO, E] {
+      extends RelationalRepository[DBIO, E] {
     val entities: TableQuery[T]
 
     override def findAll(): DBIO[Seq[E]] = entities.result
 
-    override def findById(id: Long): DBIO[Option[E]] = entities.filter(_.id === id).result.headOption
+    override def findById(id: Long): DBIO[Option[E]] =
+      entities.filter(_.id === id).result.headOption
 
     override def count(): DBIO[Int] = entities.length.result
 
     override def insert(e: E): DBIO[Long] = entityReturningId += e
 
-    override def insert(seq: Seq[E]): DBIO[Seq[Long]] = entities returning entities.map(_.id) ++= seq
+    override def insert(seq: Seq[E]): DBIO[Seq[Long]] =
+      entities returning entities.map(_.id) ++= seq
 
     override def update(e: E): DBIO[Int] = entities.filter(_.id === e.id).update(e)
 
@@ -160,7 +146,7 @@ trait RelationalInfrastructure {
 
     override def deleteAll(): DBIO[Int] = entities.delete
 
-    private def entityReturningId(): profile.ReturningInsertActionComposer[E, Long] = entities returning entities.map(_.id)
+    private def entityReturningId(): profile.ReturningInsertActionComposer[E, Long] =
+      entities returning entities.map(_.id)
   }
-
 }

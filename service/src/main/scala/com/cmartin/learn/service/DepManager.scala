@@ -7,7 +7,6 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Failure
 
 object Test {
-
   def testFuture() = {
     import ExecutionContext.Implicits.global
     val f = Future("hello")

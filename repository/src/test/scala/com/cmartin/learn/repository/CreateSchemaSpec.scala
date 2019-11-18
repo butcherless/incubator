@@ -3,11 +3,8 @@ package com.cmartin.learn.repository
 /**
   * Spec helper for development
   */
-class CreateSchemaSpec
-  extends BaseRepositorySpec {
-
+class CreateSchemaSpec extends BaseRepositorySpec {
   val dal = new DatabaseAccessLayer2(config) {
-
     import profile.api._
 
     val countryRepo = new CountryRepository
@@ -20,17 +17,14 @@ class CreateSchemaSpec
           airports.schema ++
           fleet.schema ++
           routes.schema
-        )
-        .createStatements.mkString("\n")
+      ).createStatements.mkString("\n")
     }
-
   }
 
   "Schema" should "print the database schema for copy & paste" in {
     val keywords = Seq("create", "index", "table", "constraint", "foreign", "alter")
-    val result = dal.printSchema()
+    val result   = dal.printSchema()
     info(result) // for copy & paste
     assert(keywords.forall(kw => result.contains(kw)))
   }
-
 }

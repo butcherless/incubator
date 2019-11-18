@@ -5,7 +5,6 @@ import java.time.{LocalDate, LocalTime}
 import scala.concurrent.duration._
 
 package object test {
-
   object Constants {
     val registrationLVL = "ec-lvl"
     val registrationMIG = "ec-mig"
@@ -13,7 +12,7 @@ package object test {
     val barajasIataCode = "MAD"
 
     val madDestinationCount = 4
-    val tableCount = 7
+    val tableCount          = 7
 
     val waitTimeout = 5.second
 
@@ -49,13 +48,12 @@ package object test {
 
   //TODO refactor to common
   object TypeCodes {
-    val AIRBUS_320 = "A320"
+    val AIRBUS_320     = "A320"
     val AIRBUS_330_200 = "A332"
     val AIRBUS_350_900 = "A359"
     val BOEING_737_800 = "B738"
     val BOEING_787_800 = "B788"
   }
-
 }
 
 /*

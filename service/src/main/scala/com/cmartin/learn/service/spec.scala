@@ -3,7 +3,6 @@ package com.cmartin.learn.service
 import scala.util.Try
 
 package object spec {
-
   type OptionLibrary = Option[Library]
 
   case class Artifact(g: String, a: String, v: String)
@@ -28,11 +27,8 @@ package object spec {
     * P.O.C.
     */
   trait AbstractNexusRepository[M[_]] {
-
     def operationOne(s: String): M[Int]
 
     def operationTwo(n: Int): M[Boolean]
-
   }
-
 }

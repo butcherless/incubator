@@ -1,7 +1,6 @@
 package com.cmartin.learn.repository
 
 package object definition {
-
   def echo(x: Int) = x
 
   /*
@@ -9,7 +8,6 @@ package object definition {
    */
 
   trait SimpleRepository[M[_], T, K] {
-
     def findAll(filter: (T) => Boolean): M[List[T]]
 
     def findById(k: K): M[T]
@@ -22,5 +20,4 @@ package object definition {
 
     def count(): M[Long]
   }
-
 }

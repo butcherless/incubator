@@ -13,5 +13,4 @@ package object route {
       service.operationOne()
     }
   }
-
 }

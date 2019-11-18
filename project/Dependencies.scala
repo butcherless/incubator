@@ -11,7 +11,7 @@ object Dependencies {
   lazy val playJsonVersion     = "2.7.4"
   lazy val scalaLoggingVersion = "3.9.2"
   lazy val scalazVersion       = "7.2.27"
-  lazy val scalatestVersion    = "3.0.8"
+  lazy val scalatestVersion    = "3.1.0-RC3"
   lazy val slf4jVersion        = "1.7.29"
   lazy val slickVersion        = "3.3.2"
   lazy val sttpVersion         = "1.7.2"

@@ -4,15 +4,15 @@ import com.cmartin.learn.service.impl.{JsonNexusRepository, NexusSettings, getNe
 import com.cmartin.learn.service.spec
 import com.cmartin.learn.service.spec.Library
 import org.scalatest.TryValues._
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.language.reflectiveCalls
 import scala.util.Try
 
-class JsonSpec extends FlatSpec with Matchers {
-
+class JsonSpec extends AnyFlatSpec with Matchers {
   def fixture = new {
     lazy val settings: NexusSettings = getNexusSettings()
     lazy val nexusRepo               = JsonNexusRepository(settings)

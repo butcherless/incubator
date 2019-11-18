@@ -7,38 +7,31 @@ import org.scalatest.OptionValues
 
 import scala.concurrent.{Await, Future}
 
-
-class AirportRepositorySpec
-  extends BaseRepositorySpec
-    with OptionValues {
-
+class AirportRepositorySpec extends BaseRepositorySpec with OptionValues {
   val dal = new DatabaseAccessLayer2(config) {
-
     import profile.api._
 
     val countryRepo = new CountryRepository
     val airportRepo = new AirportRepository
 
     def createSchema(): Future[Unit] = {
-      config.db.run(
-        (countries.schema ++ airports.schema).create)
+      config.db.run((countries.schema ++ airports.schema).create)
     }
 
     def dropSchema(): Future[Unit] = {
-      config.db.run(
-        (airports.schema ++ countries.schema).drop)
+      config.db.run((airports.schema ++ countries.schema).drop)
     }
-
   }
 
   "Airport Repository" should "create an airport into the database" in {
-
     val result = for {
       countryId <- dal.countryRepo.insert(spainCountry)
-      id <- dal.airportRepo.insert(Airport(madAirport._1, madAirport._2, madAirport._3, countryId))
+      id        <- dal.airportRepo.insert(Airport(madAirport._1, madAirport._2, madAirport._3, countryId))
     } yield id
 
-    result map { id => assert(id > 0) }
+    result map { id =>
+      assert(id > 0)
+    }
   }
 
   it should "fail to insert an airport into the database with a missing country" in {
@@ -50,15 +43,16 @@ class AirportRepositorySpec
   }
 
   it should "retrieve an airport list from a country code" in {
-
     val result = for {
       countryId <- dal.countryRepo.insert(spainCountry)
-      _ <- dal.airportRepo.insert(Airport(madAirport._1, madAirport._2, madAirport._3, countryId))
-      _ <- dal.airportRepo.insert(Airport(tfnAirport._1, tfnAirport._2, tfnAirport._3, countryId))
-      seq <- dal.airportRepo.findByCountryCode(spainCountry.code)
+      _         <- dal.airportRepo.insert(Airport(madAirport._1, madAirport._2, madAirport._3, countryId))
+      _         <- dal.airportRepo.insert(Airport(tfnAirport._1, tfnAirport._2, tfnAirport._3, countryId))
+      seq       <- dal.airportRepo.findByCountryCode(spainCountry.code)
     } yield seq
 
-    result map { seq => assert(seq.size == 2) }
+    result map { seq =>
+      assert(seq.size == 2)
+    }
   }
 
   override def beforeEach(): Unit = {

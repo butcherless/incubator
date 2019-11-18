@@ -35,5 +35,4 @@ package object logic {
   def processResults(list: List[Library]) = {
     list.map(l => logger.trace(l.toString))
   }
-
 }
