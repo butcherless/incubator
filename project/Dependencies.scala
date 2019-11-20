@@ -8,7 +8,7 @@ object Dependencies {
   lazy val h2Version           = "1.4.200"
   lazy val json4sVersion       = "3.6.7"
   lazy val logbackVersion      = "1.2.3"
-  lazy val playJsonVersion     = "2.7.4"
+  lazy val playJsonVersion     = "2.8.0"
   lazy val scalaLoggingVersion = "3.9.2"
   lazy val scalazVersion       = "7.2.27"
   lazy val scalatestVersion    = "3.1.0-RC3"
