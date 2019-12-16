@@ -207,6 +207,61 @@ trait Repositories extends RelationalInfrastructure {
 
   lazy val journeys = TableQuery[Journeys]
 
+/*
+case class UserRole(var role: String, var extra: String)
+case class UserInfo(var login: String, var password: String, var firstName: String, var lastName: String)
+
+case class User(id: Option[String], var info: UserInfo, var role: UserRole)
+
+class UserTable(tag: Tag) extends Table[User](tag, "USER") {
+
+  def id = column[String]("id", O.PrimaryKey)
+  def role = column[String]("role", O.NotNull)
+  def extra = column[String]("extra", O.NotNull)
+  def login = column[String]("login", O.NotNull)
+  def password = column[String]("password", O.NotNull)
+  def firstName = column[String]("first_name", O.NotNull)
+  def lastName = column[String]("last_name", O.NotNull)
+
+  /** Projection */
+  def * = (
+    id,
+    (login, password, firstName, lastName),
+    (role, extra)
+  ).shaped <> (
+
+  { case (id, userInfo, userRole) =>
+    User(Option[id], UserInfo.tupled.apply(userInfo), UserRole.tupled.apply(userRole))
+  },
+  { u: User =>
+      def f1(p: UserInfo) = UserInfo.unapply(p).get
+      def f2(p: UserRole) = UserRole.unapply(p).get
+      Some((u.id.get, f1(u.info), f2(u.role)))
+  })
+}
+ */
+
+  final class Assets(tag: Tag) extends RelationalTable[Asset](tag, "ASSETS") {
+    def tenantId = column[Long]("TENANT_ID")
+
+    def assetId = column[Long]("ASSET_ID")
+
+    def predicates = column[String]("PREDICATES")
+
+    def * = (
+      (tenantId, assetId),
+      predicates,
+      id
+      ).shaped <> ( {
+      case (businessId, pred_, id_) =>
+        Asset(AssetSeedId.tupled.apply(businessId), pred_, Option(id_))
+    }, { a: Asset =>
+      def f1(p: AssetSeedId) = AssetSeedId.unapply(p).get
+      Some((f1(a.businessId), a.predicates, a.id.get))
+    }
+    )
+  }
+
   /*
       R E P O S I T O R I E S
    */
