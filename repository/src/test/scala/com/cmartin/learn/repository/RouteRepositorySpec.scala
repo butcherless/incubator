@@ -8,6 +8,7 @@ import org.scalatest.{BeforeAndAfterAll, OptionValues}
 import scala.concurrent.Await
 
 class RouteRepositorySpec extends BaseRepositorySpec with OptionValues with BeforeAndAfterAll {
+
   val dal = new DatabaseAccessLayer2(config) {
     import profile.api._
 
@@ -21,9 +22,6 @@ class RouteRepositorySpec extends BaseRepositorySpec with OptionValues with Befo
 
     def dropSchema() = {
       config.db.run((countries.schema ++ airports.schema ++ routes.schema).drop)
-      //         config.db.run(routes.schema.drop)
-      //         config.db.run(airports.schema.drop)
-      //         config.db.run(countries.schema.drop)
     }
   }
 
