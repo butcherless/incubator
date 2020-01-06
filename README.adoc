@@ -220,6 +220,18 @@ A _Route_ has a starting _Airport_ and a destination _Airport_.
 |number of nautical miles between the two _Airports_, 957 nm.
 |===
 
+
+=== Web
+
+Check web server and API:
+
+- change to project `web`
+- start web server using the `reStart` command of the Revolver plugin
+- open a console and run the command: `curl -vX GET "http://localhost:8080/api/v1.0/health" -H "accept: application/json"`
+- open a browser and access to the URL: http://localhost:8080/api/v1.0/docs
+- check log file: `web/target/appFile.log`
+
+
 == TODO
 
 Finders:

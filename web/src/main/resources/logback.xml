@@ -1,21 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <encoder>
+            <pattern>%d{ISO8601} %-5level [%10thread] %-40logger:%line{15} - %msg%n</pattern>
+        </encoder>
         <file>target/appFile.log</file>
-        <append>false</append>
+        <append>true</append>
         <!-- set immediateFlush to false for much higher logging throughput -->
         <immediateFlush>true</immediateFlush>
-        <!-- encoders are assigned the type
-             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
+    </appender>
+    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="FILE"/>
     </appender>
 
-    <logger name="com.cmartin.learn" level="trace" additivity="false">
+    <logger name="com.cmartin.learn" level="DEBUG" additivity="false">
         <appender-ref ref="FILE"/>
     </logger>
 
-    <root level="info">
-        <appender-ref ref="FILE"/>
+    <root level="DEBUG">
+        <appender-ref ref="ASYNC"/>
     </root>
 </configuration>

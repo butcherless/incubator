@@ -9,7 +9,9 @@ import scala.util.{Success, Try}
 
 class MainApp
 
-object MainApp extends App {
+object MainApp
+//  extends App
+{
   lazy val logger      = Logger[MainApp]
   lazy val initInstant = getTimestamp()
   lazy val repository  = JsonNexusRepository(getNexusSettings())
