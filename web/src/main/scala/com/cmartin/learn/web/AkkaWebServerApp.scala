@@ -20,18 +20,14 @@ object AkkaWebServerApp extends App { //TODO configuration trait
 
   val routes: Route =
     ActuatorApi.route ~
-      PocApi.route ~
+      PocApi.resultRoute ~
+      PocApi.bookRoute ~
       SwaggerApi.route
 
   // A K K A  S Y S T E M
   implicit lazy val system: ActorSystem           = ActorSystem("WebActorSystem")
   implicit val executionContext: ExecutionContext = system.dispatcher
   system.log.info(s"Starting WebServer")
-
-  //implicit lazy val system = ActorSystem(Behaviors.empty, "HelloAkkaHttpServer")
-  //implicit lazy val materializer: Materializer = Materializer(system)
-  //implicit lazy val classicSystem: akka.actor.ActorSystem = system.toClassic
-  //implicit val executionContext: ExecutionContext = classicSystem.dispatcher
 
   val futureBinding: Future[Http.ServerBinding] =
     Http()

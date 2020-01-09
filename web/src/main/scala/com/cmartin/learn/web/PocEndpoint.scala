@@ -1,19 +1,28 @@
 package com.cmartin.learn.web
 
-import com.cmartin.learn.web.ApiModel.{Result, Success}
+import com.cmartin.learn.web.ApiModel.{Book, Result, Success}
 import sttp.model.StatusCode
 import sttp.tapir.json.upickle._
 import sttp.tapir.{Endpoint, _}
 
 trait PocEndpoint {
 
-  lazy val pocEndpoint: Endpoint[Unit, StatusCode, Result, Nothing] =
+  lazy val resultEndpoint: Endpoint[Unit, StatusCode, Result, Nothing] =
     endpoint.get
-      .in(ActuatorEndpoint.baseEndpointInput / "result")
-      .name("poc-resources")
-      .description("Poc Endpoint for learning and testing")
+      .in(CommonEndpoint.baseEndpointInput / "results")
+      .name("result-resource")
+      .description("Poc Endpoint for learning and testing - result")
       .out(jsonBody[Result].example(Success))
       .errorOut(statusCode)
+
+  lazy val bookEndpoint: Endpoint[Unit, StatusCode, Book, Nothing] =
+    endpoint.get
+      .in(CommonEndpoint.baseEndpointInput / "books")
+      .name("book-resource")
+      .description("Poc Endpoint for learning and testing - book")
+      .out(jsonBody[Book].example(ApiModel.bookExample))
+      .errorOut(statusCode)
+
 }
 
 object PocEndpoint extends PocEndpoint

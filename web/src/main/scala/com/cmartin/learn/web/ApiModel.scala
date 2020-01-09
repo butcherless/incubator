@@ -8,21 +8,20 @@ object ApiModel {
 
   case class Book(author: String, title: String, year: Int)
 
-
   object Book {
     implicit val rw: ReadWriter[Book] = macroRW
   }
 
-  case class BuildInfo(appName: String, date: String, version:String, result: Result)
+  case class BuildInfo(appName: String, date: String, version: String, result: Result)
 
-  object BuildInfo{
+  object BuildInfo {
     implicit val rw: ReadWriter[BuildInfo] = macroRW
   }
 
   sealed trait Result
   object Success extends Result
   object Warning extends Result
-  object Error extends Result
+  object Error   extends Result
 
   object Result {
     implicit val rw: ReadWriter[Result] = macroRW
@@ -32,7 +31,7 @@ object ApiModel {
     API Objects examples
    */
 
-  val bookExample = Book("HealthInfo", "Dummy", 2020)
+  val bookExample = Book("Pedro Muñoz Seca", "La venganza de Don Mendo", 1918)
 
   def buildInfo(): BuildInfo =
     BuildInfo(
