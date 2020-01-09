@@ -8,11 +8,10 @@ import akka.http.scaladsl.server.RouteConcatenation._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
-
 //TODO documentar componentes necesarios para akka-tapir-logging
 /*
   - ActuatorApi
-  - ActuatorEndPoint
+  - ActuatorEndpoint
   - SwaggerApi
   - API Model
 
@@ -21,10 +20,11 @@ object AkkaWebServerApp extends App { //TODO configuration trait
 
   val routes: Route =
     ActuatorApi.route ~
+      PocApi.route ~
       SwaggerApi.route
 
   // A K K A  S Y S T E M
-  implicit lazy val system: ActorSystem = ActorSystem("WebActorSystem")
+  implicit lazy val system: ActorSystem           = ActorSystem("WebActorSystem")
   implicit val executionContext: ExecutionContext = system.dispatcher
   system.log.info(s"Starting WebServer")
 
@@ -35,9 +35,11 @@ object AkkaWebServerApp extends App { //TODO configuration trait
 
   val futureBinding: Future[Http.ServerBinding] =
     Http()
-      .bindAndHandle(routes,
+      .bindAndHandle(
+        routes,
         "localhost", //TODO configuration properties
-        8080)
+        8080
+      )
 
   futureBinding.onComplete {
     case Success(binding) =>

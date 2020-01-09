@@ -13,13 +13,32 @@ object ApiModel {
     implicit val rw: ReadWriter[Book] = macroRW
   }
 
-  case class BuildInfo(appName: String, date: String, version:String)
+  case class BuildInfo(appName: String, date: String, version:String, result: Result)
 
   object BuildInfo{
     implicit val rw: ReadWriter[BuildInfo] = macroRW
   }
 
+  sealed trait Result
+  object Success extends Result
+  object Warning extends Result
+  object Error extends Result
+
+  object Result {
+    implicit val rw: ReadWriter[Result] = macroRW
+  }
+
+  /*
+    API Objects examples
+   */
+
   val bookExample = Book("HealthInfo", "Dummy", 2020)
 
-  def buildInfo = BuildInfo("incubator web application", LocalDateTime.now(Clock.systemDefaultZone()).toString, "1.0.0-SNAPSHOT")
+  def buildInfo(): BuildInfo =
+    BuildInfo(
+      "incubator web application",
+      LocalDateTime.now(Clock.systemDefaultZone()).toString,
+      "1.0.0-SNAPSHOT",
+      Success
+    )
 }

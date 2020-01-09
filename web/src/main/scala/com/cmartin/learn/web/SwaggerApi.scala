@@ -9,7 +9,8 @@ import sttp.tapir.openapi.circe.yaml._
 trait SwaggerApi {
 
   lazy val openApi: String = Seq(
-    ActuatorEndPoint.healthEndpoint
+    ActuatorEndpoint.healthEndpoint,
+    PocEndpoint.pocEndpoint
   ).toOpenAPI("Demo Service API", "1.0.0-SNAPSHOT")
     .toYaml
 

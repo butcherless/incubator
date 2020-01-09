@@ -11,8 +11,8 @@ trait ActuatorApi {
   import ActuatorApi._
 
   val route: Route = //DebuggingDirectives.logRequestResult(LOGGER_NAME) {
-    ActuatorEndPoint.healthEndpoint.toRoute { _ =>
-      Future.successful(Right(ApiModel.bookExample))
+    ActuatorEndpoint.healthEndpoint.toRoute { _ =>
+      Future.successful(Right(ApiModel.buildInfo()))
     }
   //}
 

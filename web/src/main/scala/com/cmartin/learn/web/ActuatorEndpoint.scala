@@ -7,9 +7,9 @@ import sttp.tapir.{Endpoint, _}
 
 
 // TODO
-trait ActuatorEndPoint {
+trait ActuatorEndpoint {
 
-  type HealthInfo = Book
+  type HealthInfo = BuildInfo
 
   val baseEndpointInput: EndpointInput[Unit] = "api" / "v1.0"
 
@@ -19,9 +19,9 @@ trait ActuatorEndPoint {
       .in(baseEndpointInput / "health")
       .name("health-resource")
       .description("Health Check Endpoint")
-      .out(jsonBody[HealthInfo].example(ApiModel.bookExample))
+      .out(jsonBody[HealthInfo].example(ApiModel.buildInfo))
       .errorOut(statusCode)
 
 }
 
-object ActuatorEndPoint extends ActuatorEndPoint
+object ActuatorEndpoint extends ActuatorEndpoint
