@@ -12,7 +12,7 @@ trait ActuatorApi {
 
   val route: Route = //DebuggingDirectives.logRequestResult(LOGGER_NAME) {
     ActuatorEndPoint.healthEndpoint.toRoute { _ =>
-      Future.successful(Right(ApiModel.buildInfo))
+      Future.successful(Right(ApiModel.bookExample))
     }
   //}
 

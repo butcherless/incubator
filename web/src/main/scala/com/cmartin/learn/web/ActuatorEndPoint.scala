@@ -9,7 +9,7 @@ import sttp.tapir.{Endpoint, _}
 // TODO
 trait ActuatorEndPoint {
 
-  type HealthInfo = BuildInfo
+  type HealthInfo = Book
 
   val baseEndpointInput: EndpointInput[Unit] = "api" / "v1.0"
 
@@ -18,8 +18,8 @@ trait ActuatorEndPoint {
       .get
       .in(baseEndpointInput / "health")
       .name("health-resource")
-      .description("Health Check Endpoin")
-      .out(jsonBody[HealthInfo].example(ApiModel.buildInfo))
+      .description("Health Check Endpoint")
+      .out(jsonBody[HealthInfo].example(ApiModel.bookExample))
       .errorOut(statusCode)
 
 }
