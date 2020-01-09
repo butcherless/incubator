@@ -16,41 +16,39 @@ object Dependencies {
   lazy val slickVersion        = "3.3.2"
   lazy val sttpVersion         = "1.7.2"
   lazy val utestVersion        = "0.6.6"
-  lazy val tapirVersion        = "0.12.12"
+  lazy val tapirVersion        = "0.12.13"
   lazy val swaggerUiVersion    = "3.24.3"
 
-
   // production code
-  lazy val akkaHttp       = "com.typesafe.akka" %% "akka-http" % akkaHttpVersion
-  lazy val akkaJson       = "com.typesafe.akka" %% "akka-http-spray-json" % akkaHttpVersion
-  lazy val akkaActor      = "com.typesafe.akka" %% "akka-actor" % akkaVersion exclude("com.typesafe","config")
-  lazy val akkaTypedActor = "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion exclude("com.typesafe","config")
-  lazy val akkaStream     = "com.typesafe.akka" %% "akka-stream" % akkaVersion exclude("com.typesafe","config")
-  lazy val cats           = "org.typelevel" %% "cats-core" % catsVersion
-  lazy val catsFree       = "org.typelevel" %% "cats-free" % catsVersion
-  lazy val typesafeConfig = "com.typesafe" % "config" % configVersion
-  lazy val json4sNative   = "org.json4s" %% "json4s-native" % json4sVersion
-  lazy val h2Database     = "com.h2database" % "h2" % h2Version
-  lazy val logback        = "ch.qos.logback" % "logback-classic" % logbackVersion exclude("org.slf4j", "slf4j-api")
-  lazy val playJson       = "com.typesafe.play" %% "play-json" % playJsonVersion exclude("com.fasterxml.jackson.core","jackson-annotations")
-  lazy val scalaLogging   = "com.typesafe.scala-logging" %% "scala-logging" % scalaLoggingVersion exclude("org.slf4j", "slf4j-api")
-  lazy val scalaz         = "org.scalaz" %% "scalaz-core" % scalazVersion
-  lazy val slf4j          = "org.slf4j" % "slf4j-api" % slf4jVersion
-  lazy val slick          = "com.typesafe.slick" %% "slick" % slickVersion exclude("org.slf4j", "slf4j-api") exclude("com.typesafe","config")
-  lazy val slickPool      = "com.typesafe.slick" %% "slick-hikaricp" % slickVersion exclude("org.slf4j", "slf4j-api")
-  lazy val sttp           = "com.softwaremill.sttp" %% "core" % sttpVersion
+  lazy val akkaHttp       = "com.typesafe.akka"          %% "akka-http"            % akkaHttpVersion
+  lazy val akkaJson       = "com.typesafe.akka"          %% "akka-http-spray-json" % akkaHttpVersion
+  lazy val akkaActor      = "com.typesafe.akka"          %% "akka-actor"           % akkaVersion exclude ("com.typesafe", "config")
+  lazy val akkaTypedActor = "com.typesafe.akka"          %% "akka-actor-typed"     % akkaVersion exclude ("com.typesafe", "config")
+  lazy val akkaStream     = "com.typesafe.akka"          %% "akka-stream"          % akkaVersion exclude ("com.typesafe", "config")
+  lazy val cats           = "org.typelevel"              %% "cats-core"            % catsVersion
+  lazy val catsFree       = "org.typelevel"              %% "cats-free"            % catsVersion
+  lazy val typesafeConfig = "com.typesafe"               % "config"                % configVersion
+  lazy val json4sNative   = "org.json4s"                 %% "json4s-native"        % json4sVersion
+  lazy val h2Database     = "com.h2database"             % "h2"                    % h2Version
+  lazy val logback        = "ch.qos.logback"             % "logback-classic"       % logbackVersion exclude ("org.slf4j", "slf4j-api")
+  lazy val playJson       = "com.typesafe.play"          %% "play-json"            % playJsonVersion exclude ("com.fasterxml.jackson.core", "jackson-annotations")
+  lazy val scalaLogging   = "com.typesafe.scala-logging" %% "scala-logging"        % scalaLoggingVersion exclude ("org.slf4j", "slf4j-api")
+  lazy val scalaz         = "org.scalaz"                 %% "scalaz-core"          % scalazVersion
+  lazy val slf4j          = "org.slf4j"                  % "slf4j-api"             % slf4jVersion
+  lazy val slick          = "com.typesafe.slick"         %% "slick"                % slickVersion exclude ("org.slf4j", "slf4j-api") exclude ("com.typesafe", "config")
+  lazy val slickPool      = "com.typesafe.slick"         %% "slick-hikaricp"       % slickVersion exclude ("org.slf4j", "slf4j-api")
+  lazy val sttp           = "com.softwaremill.sttp"      %% "core"                 % sttpVersion
 
-  lazy val tapir          = "com.softwaremill.sttp.tapir" %% "tapir-core" % tapirVersion
-  lazy val tapirAkkaHttp  = "com.softwaremill.sttp.tapir" %% "tapir-akka-http-server" % tapirVersion
-  lazy val tapirJsonUPickle =  "com.softwaremill.sttp.tapir" %% "tapir-json-upickle" % tapirVersion
-  lazy val tapirOpenApi   = "com.softwaremill.sttp.tapir" %% "tapir-openapi-docs" % tapirVersion
-  lazy val tapirOpenApiYaml = "com.softwaremill.sttp.tapir" %% "tapir-openapi-circe-yaml" % tapirVersion
-  lazy val swaggerUiAkka  = "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-akka-http" % tapirVersion
-  lazy val swaggerUi      = "org.webjars" % "swagger-ui" % swaggerUiVersion
-
+  lazy val tapir            = "com.softwaremill.sttp.tapir" %% "tapir-core"                 % tapirVersion
+  lazy val tapirAkkaHttp    = "com.softwaremill.sttp.tapir" %% "tapir-akka-http-server"     % tapirVersion
+  lazy val tapirJsonCirce   = "com.softwaremill.sttp.tapir" %% "tapir-json-circe"           % tapirVersion
+  lazy val tapirOpenApi     = "com.softwaremill.sttp.tapir" %% "tapir-openapi-docs"         % tapirVersion
+  lazy val tapirOpenApiYaml = "com.softwaremill.sttp.tapir" %% "tapir-openapi-circe-yaml"   % tapirVersion
+  lazy val swaggerUiAkka    = "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-akka-http" % tapirVersion
+  lazy val swaggerUi        = "org.webjars"                 % "swagger-ui"                  % swaggerUiVersion
 
   // testing code
-  lazy val akkaHttpTest = "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion % "test"
-  lazy val scalaTest    = "org.scalatest" %% "scalatest" % scalatestVersion % "test"
-  lazy val uTest        = "com.lihaoyi" %% "utest" % utestVersion % "test"
+  lazy val akkaHttpTest = "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion  % "test"
+  lazy val scalaTest    = "org.scalatest"     %% "scalatest"         % scalatestVersion % "test"
+  lazy val uTest        = "com.lihaoyi"       %% "utest"             % utestVersion     % "test"
 }

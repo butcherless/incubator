@@ -1,15 +1,15 @@
 package com.cmartin.learn.web
 
-import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import com.cmartin.learn.web.CommonEndpoint.{API_TEXT, API_VERSION}
 import sttp.tapir.docs.openapi._
 import sttp.tapir.openapi.circe.yaml._
+import sttp.tapir.swagger.akkahttp.SwaggerAkka
 
 trait SwaggerApi {
 
-  lazy val openApi: String = Seq(
+  lazy val docsAsYaml: String = List(
     ActuatorEndpoint.healthEndpoint,
     PocEndpoint.resultEndpoint,
     PocEndpoint.bookEndpoint
@@ -18,25 +18,10 @@ trait SwaggerApi {
   private lazy val contextPath = "docs"
   private lazy val yamlName    = "docs.yaml"
 
-  private lazy val redirectUrl =
-    s"$contextPath/index.html?url=/$API_TEXT/$API_VERSION/$contextPath/$yamlName"
-
-  private lazy val resourceDirectory = "META-INF/resources/webjars/swagger-ui/3.24.3/"
-
   lazy val route: Route =
     pathPrefix(API_TEXT / API_VERSION) {
-      pathPrefix(contextPath) {
-        pathEndOrSingleSlash {
-          redirect(
-            redirectUrl,
-            StatusCodes.PermanentRedirect
-          )
-        } ~ path(yamlName) {
-          complete(openApi)
-        } ~ getFromResourceDirectory(resourceDirectory)
-      }
+      new SwaggerAkka(docsAsYaml).routes
     }
-
 }
 
 object SwaggerApi extends SwaggerApi

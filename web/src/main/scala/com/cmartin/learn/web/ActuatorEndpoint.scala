@@ -1,8 +1,9 @@
 package com.cmartin.learn.web
 
 import com.cmartin.learn.web.ApiModel.BuildInfo
+import io.circe.generic.auto._
 import sttp.model.StatusCode
-import sttp.tapir.json.upickle._
+import sttp.tapir.json.circe._
 import sttp.tapir.{Endpoint, _}
 
 // TODO
