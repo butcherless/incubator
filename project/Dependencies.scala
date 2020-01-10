@@ -17,7 +17,6 @@ object Dependencies {
   lazy val sttpVersion         = "1.7.2"
   lazy val utestVersion        = "0.6.6"
   lazy val tapirVersion        = "0.12.13"
-  lazy val swaggerUiVersion    = "3.24.3"
 
   // production code
   lazy val akkaHttp       = "com.typesafe.akka"          %% "akka-http"            % akkaHttpVersion
@@ -45,7 +44,6 @@ object Dependencies {
   lazy val tapirOpenApi     = "com.softwaremill.sttp.tapir" %% "tapir-openapi-docs"         % tapirVersion
   lazy val tapirOpenApiYaml = "com.softwaremill.sttp.tapir" %% "tapir-openapi-circe-yaml"   % tapirVersion
   lazy val swaggerUiAkka    = "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-akka-http" % tapirVersion
-  lazy val swaggerUi        = "org.webjars"                 % "swagger-ui"                  % swaggerUiVersion
 
   // testing code
   lazy val akkaHttpTest = "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion  % "test"

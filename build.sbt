@@ -62,7 +62,7 @@ lazy val web = (project in file("web"))
     name := "web",
     libraryDependencies ++= Seq(
       scalaLogging, logback, akkaHttp, akkaTypedActor, akkaStream,
-      tapir, tapirAkkaHttp, tapirJsonCirce, tapirOpenApi, tapirOpenApiYaml, swaggerUi, swaggerUiAkka)
+      tapir, tapirAkkaHttp, tapirJsonCirce, tapirOpenApi, tapirOpenApiYaml, swaggerUiAkka)
   ).dependsOn(common, controller, service)
 
 
