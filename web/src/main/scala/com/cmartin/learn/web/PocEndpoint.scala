@@ -9,7 +9,8 @@ import sttp.tapir.{Endpoint, _}
 trait PocEndpoint {
 
   lazy val resultEndpoint: Endpoint[Unit, StatusCode, Result, Nothing] =
-    endpoint.get
+    endpoint
+      .get
       .in(CommonEndpoint.baseEndpointInput / "results")
       .name("result-resource")
       .description("Poc Endpoint for learning and testing - result")

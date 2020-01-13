@@ -15,9 +15,6 @@ trait SwaggerApi {
     PocEndpoint.bookEndpoint
   ).toOpenAPI("Demo Service API", "1.0.0-SNAPSHOT").toYaml
 
-  private lazy val contextPath = "docs"
-  private lazy val yamlName    = "docs.yaml"
-
   lazy val route: Route =
     pathPrefix(API_TEXT / API_VERSION) {
       new SwaggerAkka(docsAsYaml).routes

@@ -1,4 +1,5 @@
 package com.cmartin.learn.web
+
 import akka.http.scaladsl.server.Route
 import sttp.tapir.server.akkahttp._
 
