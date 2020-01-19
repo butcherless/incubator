@@ -1,0 +1,60 @@
+[project]
+scalaVersion = "2.13.1"
+testFrameworks = ["org.scalatest.tools.Framework", "zio.test.sbt.ZTestFramework"]
+scalaOptions = [
+    "-deprecation",     
+    "-encoding", "utf-8",             
+    "-explaintypes",                    
+    "-explaintypes",                    
+    "-unchecked",                       
+    "-feature",                         
+    "-language:higherKinds",            
+    "-language:implicitConversions",
+    "-language:postfixOps",
+    "-language:reflectiveCalls"   
+]
+
+[module.common.jvm]
+root = "common/"
+sources = ["common/src/main/scala"]
+scalaDeps = []
+
+[module.common.test.jvm]
+sources = ["common/src/test/scala"]
+resources = ["common/src/test/resources"]
+scalaDeps = [
+              ["org.scalatest", "scalatest", "3.1.0"],
+            ]
+
+[module.testutils.jvm]
+root = "test/"
+sources = ["test/src/main/scala"]
+scalaDeps = []
+
+[module.testutils.test.jvm]
+sources = ["test/src/test/scala"]
+resources = ["test/src/test/resources"]
+scalaDeps = []
+
+[module.repository.jvm]
+root = "repository/"
+moduleDeps = ["testutils"]
+sources = ["repository/src/main/scala"]
+resources = ["repository/src/main/resources"]
+scalaDeps = [
+              ["com.typesafe.slick"  , "slick"  , "3.3.2" ],
+              ["com.typesafe.slick"  , "slick-hikaricp","3.3.2" ]
+            ]
+javaDeps =  [
+              ["org.slf4j"           , "slf4j-api", "1.7.30"],
+              ["ch.qos.logback"      , "logback-classic", "1.2.3" ],
+              ["com.typesafe"        , "config", "1.4.0"],
+              ["com.h2database"      , "h2", "1.4.200"]
+            ]
+
+[module.repository.test.jvm]
+sources = ["repository/src/test/scala"]
+resources = ["repository/src/test/resources"]
+scalaDeps = [
+              ["org.scalatest", "scalatest", "3.1.0"],
+            ]

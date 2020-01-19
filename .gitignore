@@ -9,3 +9,8 @@ build/
 out/
 target/
 *.iml
+.ash_history
+.bloop/
+.cache/
+.config/
+.ivy2/
