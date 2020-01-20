@@ -36,14 +36,28 @@ sources = ["test/src/test/scala"]
 resources = ["test/src/test/resources"]
 scalaDeps = []
 
+[module.service.jvm]
+root = "service/"
+moduleDeps = ["common", "repository"]
+sources = ["service/src/main/scala"]
+scalaDeps = [
+  ["com.typesafe.scala-logging" , "scala-logging"  , "3.9.2"],
+  ["org.json4s"                 , "json4s-native"  , "3.6.7"],
+  ["com.typesafe.play"          , "play-json"      , "2.8.1"],
+  ["com.softwaremill.sttp"      , "core"           , "1.7.2"]
+]
+javaDeps = [
+  ["ch.qos.logback"             , "logback-classic", "1.2.3"]
+]
+
 [module.repository.jvm]
 root = "repository/"
 moduleDeps = ["testutils"]
 sources = ["repository/src/main/scala"]
 resources = ["repository/src/main/resources"]
 scalaDeps = [
-              ["com.typesafe.slick"  , "slick"  , "3.3.2" ],
-              ["com.typesafe.slick"  , "slick-hikaricp","3.3.2" ]
+              ["com.typesafe.slick", "slick"  , "3.3.2" ],
+              ["com.typesafe.slick", "slick-hikaricp","3.3.2" ]
             ]
 javaDeps =  [
               ["org.slf4j"           , "slf4j-api", "1.7.30"],

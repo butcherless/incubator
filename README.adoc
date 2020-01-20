@@ -260,3 +260,9 @@ Finders:
 * https://github.com/spring-guides/gs-accessing-neo4j-data-rest
 * https://github.com/spring-tips/scala/blob/master/pom.xml
 * https://github.com/dnvriend/spring-boot-with-scala/blob/master/src/main/scala/com/github/dnvriend/repository/BookRepository.scala
+
+== Experimental
+
+Build with seed & bloop server
+
+ docker run -it  --mount type=bind,source="$(pwd),target=/root" tindzk/seed:0.1.6  /bin/sh
