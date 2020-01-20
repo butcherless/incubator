@@ -50,6 +50,15 @@ javaDeps = [
   ["ch.qos.logback"             , "logback-classic", "1.2.3"]
 ]
 
+[module.service.test.jvm]
+sources = ["service/src/test/scala"]
+resources = ["service/src/test/resources"]
+scalaDeps = [
+              ["org.scalatest", "scalatest", "3.1.0"],
+            ]
+
+
+
 [module.repository.jvm]
 root = "repository/"
 moduleDeps = ["testutils"]
@@ -69,6 +78,18 @@ javaDeps =  [
 [module.repository.test.jvm]
 sources = ["repository/src/test/scala"]
 resources = ["repository/src/test/resources"]
+scalaDeps = [
+              ["org.scalatest", "scalatest", "3.1.0"],
+            ]
+
+[module.controller.jvm]
+root = "controller/"
+moduleDeps = ["service"]
+sources = ["controller/src/main/scala"]
+
+[module.controller.test.jvm]
+sources = ["controller/src/test/scala"]
+resources = ["controller/src/test/resources"]
 scalaDeps = [
               ["org.scalatest", "scalatest", "3.1.0"],
             ]
