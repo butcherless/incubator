@@ -1,0 +1,3 @@
+bloop server &
+seed bloop
+bloop clean

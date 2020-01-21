@@ -23,7 +23,7 @@ scalaDeps = []
 sources = ["common/src/test/scala"]
 resources = ["common/src/test/resources"]
 scalaDeps = [
-              ["org.scalatest", "scalatest", "3.1.0"],
+              ["org.scalatest", "scalatest", "3.1.0"]
             ]
 
 [module.testutils.jvm]
@@ -54,7 +54,7 @@ javaDeps = [
 sources = ["service/src/test/scala"]
 resources = ["service/src/test/resources"]
 scalaDeps = [
-              ["org.scalatest", "scalatest", "3.1.0"],
+              ["org.scalatest", "scalatest", "3.1.0"]
             ]
 
 
@@ -79,7 +79,7 @@ javaDeps =  [
 sources = ["repository/src/test/scala"]
 resources = ["repository/src/test/resources"]
 scalaDeps = [
-              ["org.scalatest", "scalatest", "3.1.0"],
+              ["org.scalatest", "scalatest", "3.1.0"]
             ]
 
 [module.controller.jvm]
@@ -91,5 +91,26 @@ sources = ["controller/src/main/scala"]
 sources = ["controller/src/test/scala"]
 resources = ["controller/src/test/resources"]
 scalaDeps = [
-              ["org.scalatest", "scalatest", "3.1.0"],
+              ["org.scalatest", "scalatest", "3.1.0"]
+            ]
+
+[module.web.jvm]
+root = "web/"
+moduleDeps = ["service"]
+sources = ["web/src/main/scala"]
+scalaDeps = [
+              ["com.typesafe.akka",  "akka-http" , "10.1.11"],
+              ["com.softwaremill.sttp.tapir" , "tapir-core" , "0.12.15"],
+              ["com.softwaremill.sttp.tapir" , "tapir-akka-http-server" , "0.12.15"],
+              ["com.softwaremill.sttp.tapir" , "tapir-json-circe" , "0.12.15"],
+              ["com.softwaremill.sttp.tapir" , "tapir-openapi-docs" , "0.12.15"],
+              ["com.softwaremill.sttp.tapir" , "tapir-openapi-circe-yaml" , "0.12.15"],
+              ["com.softwaremill.sttp.tapir" , "tapir-swagger-ui-akka-http" , "0.12.15"]
+            ]
+
+[module.web.test.jvm]
+sources = ["web/src/test/scala"]
+resources = ["web/src/test/resources"]
+scalaDeps = [
+              ["org.scalatest", "scalatest", "3.1.0"]
             ]
