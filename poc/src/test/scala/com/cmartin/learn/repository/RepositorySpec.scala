@@ -1,6 +1,6 @@
 package com.cmartin.learn.repository
 
-import com.cmartin.learn.repository.implementation.{Aircraft, MemoryRepository}
+import com.cmartin.learn.repository.Implementation.{Airplane, MemoryRepository}
 import org.scalatest.OptionValues._
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
@@ -36,7 +36,7 @@ class RepositorySpec extends AnyFlatSpec with Matchers {
     val aSaved = repository.save(a)
 
     // functionality
-    val result: Option[Aircraft] = repository.findById(aSaved.value)
+    val result: Option[Airplane] = repository.findById(aSaved.value)
 
     // verifications
     result.value.typeCode shouldEqual a.typeCode
@@ -47,7 +47,7 @@ class RepositorySpec extends AnyFlatSpec with Matchers {
     // preconditions
 
     // functionality
-    val result: Option[Aircraft] = repository.findById("dummy-id")
+    val result: Option[Airplane] = repository.findById("dummy-id")
 
     // verifications
     result shouldBe None
@@ -72,7 +72,7 @@ class RepositorySpec extends AnyFlatSpec with Matchers {
     // preconditions
     val a                            = newAircraft(typeCodeBoeing, registrationMIG)
     val aSaved                       = repository.save(a)
-    val aRetrieved: Option[Aircraft] = repository.findById(aSaved.value)
+    val aRetrieved: Option[Airplane] = repository.findById(aSaved.value)
 
     // functionality
     repository.save(
@@ -133,5 +133,5 @@ class RepositorySpec extends AnyFlatSpec with Matchers {
   }
 
   private def newAircraft(typeCode: String, registration: String) =
-    Aircraft(typeCode = typeCode, registration = registration)
+    Airplane(typeCode = typeCode, registration = registration)
 }

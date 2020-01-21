@@ -1,6 +1,6 @@
 package com.cmartin.learn.repository
 
-package object definition {
+object Definition {
   def echo(x: Int) = x
 
   /*

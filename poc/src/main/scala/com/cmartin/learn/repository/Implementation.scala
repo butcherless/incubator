@@ -2,15 +2,16 @@ package com.cmartin.learn.repository
 
 import java.util.UUID
 
-import com.cmartin.learn.repository.definition.SimpleRepository
+import com.cmartin.learn.repository.Definition.SimpleRepository
 
 import scala.collection.mutable.TreeSet
 
-package object implementation {
-  case class Aircraft(k: String = "", typeCode: String, registration: String)
+object Implementation {
 
-  object Aircraft {
-    implicit val ord = new Ordering[Aircraft] {
+  case class Airplane(k: String = "", typeCode: String, registration: String)
+
+  object Airplane {
+    implicit val ord = new Ordering[Airplane] {
       /**
         * Comparator for dependencies classes
         *
@@ -18,31 +19,31 @@ package object implementation {
         * @param c2 another one dependency
         * @return 0 if equals, -1 if less than, +1 if greater than
         */
-      def compare(a1: Aircraft, a2: Aircraft): Int = {
+      def compare(a1: Airplane, a2: Airplane): Int = {
         a1.k.compareTo(a2.k)
       }
     }
   }
 
-  class MemoryRepository extends SimpleRepository[Option, Aircraft, String] {
-    private val repo = TreeSet[Aircraft]()
+  class MemoryRepository extends SimpleRepository[Option, Airplane, String] {
+    private val repo = TreeSet[Airplane]()
 
-    override def findAll(filter: Aircraft => Boolean): Option[List[Aircraft]] =
+    override def findAll(filter: Airplane => Boolean): Option[List[Airplane]] =
       Some(repo.filter(filter).toList)
 
-    override def findById(k: String): Option[Aircraft] = repo.find(_.k == k)
+    override def findById(k: String): Option[Airplane] = repo.find(_.k == k)
 
-    override def remove(aircraft: Aircraft): Option[String] =
+    override def remove(aircraft: Airplane): Option[String] =
       if (repo.remove(aircraft)) Some(aircraft.k) else None
 
-    override def removeAll(filter: Aircraft => Boolean): Option[List[String]] = {
+    override def removeAll(filter: Airplane => Boolean): Option[List[String]] = {
       val removableList = repo.filter(filter)
       repo --= removableList
 
       Some(removableList.map(_.k).toList)
     }
 
-    override def save(aircraft: Aircraft): Option[String] = {
+    override def save(aircraft: Airplane): Option[String] = {
       if (aircraft.k.isEmpty) {
         val id = nextId()
         repo += aircraft.copy(k = id)
@@ -62,4 +63,5 @@ package object implementation {
   object MemoryRepository extends MemoryRepository {
     def apply(): MemoryRepository = new MemoryRepository()
   }
+
 }

@@ -1,6 +1,6 @@
 package com.cmartin.learn
 
-import com.cmartin.learn.repository.definition.echo
+import com.cmartin.learn.repository.Definition.echo
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
