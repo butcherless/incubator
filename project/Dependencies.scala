@@ -17,6 +17,8 @@ object Dependencies {
   lazy val sttpVersion         = "1.7.2"
   lazy val utestVersion        = "0.6.6"
   lazy val tapirVersion        = "0.12.23"
+  lazy val zioVersion          = "1.0.0-RC18-1"
+
 
   // production code
   lazy val akkaHttp       = "com.typesafe.akka"          %% "akka-http"            % akkaHttpVersion
@@ -45,8 +47,13 @@ object Dependencies {
   lazy val tapirOpenApiYaml = "com.softwaremill.sttp.tapir" %% "tapir-openapi-circe-yaml"   % tapirVersion
   lazy val swaggerUiAkka    = "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-akka-http" % tapirVersion
 
+  lazy val zio              = "dev.zio" %% "zio" % zioVersion
+
   // testing code
   lazy val akkaHttpTest = "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion  % "test"
   lazy val scalaTest    = "org.scalatest"     %% "scalatest"         % scalatestVersion % "test"
   lazy val uTest        = "com.lihaoyi"       %% "utest"             % utestVersion     % "test"
+
+  lazy val zioTest      = "dev.zio"           %% "zio-test"          % zioVersion       % "test"
+  lazy val zioTestSbt   = "dev.zio"           %% "zio-test-sbt"      % zioVersion       % "test"
 }

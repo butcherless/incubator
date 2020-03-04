@@ -80,3 +80,11 @@ lazy val poc = (project in file("poc"))
     libraryDependencies ++= Seq(akkaHttp, akkaStream, scalaLogging, slick, slickPool, logback, slf4j, h2Database),
     parallelExecution in Test := false
   ).dependsOn(testUtils)
+
+lazy val pocZioZLayer = (project in file("poc-zio-zlayer"))
+  .settings(
+    commonSettings,
+    name := "poc-zio-zlayer",
+    libraryDependencies ++= Seq(zio,zioTest,zioTestSbt),
+    testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework"))
+  )
