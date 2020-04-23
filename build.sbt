@@ -2,7 +2,7 @@ import Dependencies._
 
 lazy val projectVersion = "1.0.0-SNAPSHOT"
 
-scalaVersion := "2.13.1"
+scalaVersion := "2.13.2"
 
 lazy val commonSettings = Seq(
   organization := "com.cmartin.learn",
