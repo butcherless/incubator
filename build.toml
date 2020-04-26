@@ -1,5 +1,5 @@
 [project]
-scalaVersion = "2.13.1"
+scalaVersion = "2.13.2"
 testFrameworks = ["org.scalatest.tools.Framework", "zio.test.sbt.ZTestFramework"]
 scalaOptions = [
     "-deprecation",     
