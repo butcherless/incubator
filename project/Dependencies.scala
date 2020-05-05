@@ -6,7 +6,7 @@ object Dependencies {
   lazy val catsVersion         = "2.0.0"
   lazy val configVersion       = "1.4.0"
   lazy val h2Version           = "1.4.200"
-  lazy val json4sVersion       = "3.6.7"
+  lazy val json4sVersion       = "3.6.8"
   lazy val logbackVersion      = "1.2.3"
   lazy val playJsonVersion     = "2.8.1"
   lazy val scalaLoggingVersion = "3.9.2"
