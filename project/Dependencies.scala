@@ -16,7 +16,7 @@ object Dependencies {
   lazy val slickVersion        = "3.3.2"
   lazy val sttpVersion         = "1.7.2"
   lazy val utestVersion        = "0.6.6"
-  lazy val tapirVersion        = "0.14.4"
+  lazy val tapirVersion        = "0.14.5"
   lazy val zioVersion          = "1.0.0-RC18-2"
 
 
