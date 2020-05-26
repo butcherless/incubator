@@ -1,7 +1,7 @@
 package com.cmartin.learn
 
 import com.cmartin.learn.Library.Gav
-import zio.{Has, Task, ZIO, ZLayer}
+import zio.{Has, Layer, Task, ZIO, ZLayer}
 
 package object filemanager {
 
@@ -19,7 +19,7 @@ package object filemanager {
       def logPairCollection(collection: List[String]): Task[Unit]
     }
 
-    val dummyFileManager: ZLayer.NoDeps[Nothing, FileManager] =
+    val dummyFileManager: Layer[Nothing, Has[Service]] =
       ZLayer.succeed(
         new Service {
           override def getLinesFromFile(filename: String): Task[List[String]] =
@@ -41,8 +41,8 @@ package object filemanager {
       ZIO.accessM(_.get.getLinesFromFile(filename))
 
     def logDepCollection(
-        dependencies: List[Either[String, Gav]]
-    ): ZIO[FileManager, Throwable, Unit] =
+                          dependencies: List[Either[String, Gav]]
+                        ): ZIO[FileManager, Throwable, Unit] =
       ZIO.accessM(_.get.logDepCollection(dependencies))
 
     def logMessage(message: String): ZIO[FileManager, Throwable, Unit] =
