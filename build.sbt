@@ -7,7 +7,7 @@ scalaVersion := "2.13.2"
 lazy val commonSettings = Seq(
   organization := "com.cmartin.learn",
   version := projectVersion,
-  scalaVersion := "2.13.2",
+  scalaVersion := "2.13.3",
   libraryDependencies ++= Seq(scalaTest),
   scalacOptions ++= Seq( // some of the Rob Norris tpolecat options
     "-deprecation",                      // Emit warning and location for usages of deprecated APIs.
