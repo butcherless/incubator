@@ -135,7 +135,7 @@ trait RelationalInfrastructure {
 
     override def count(): DBIO[Int] = entities.length.result
 
-    override def insert(e: E): DBIO[Long] = entityReturningId += e
+    override def insert(e: E): DBIO[Long] = entityReturningId() += e
 
     override def insert(seq: Seq[E]): DBIO[Seq[Long]] =
       entities returning entities.map(_.id) ++= seq

@@ -16,7 +16,7 @@ trait ActuatorEndpoint {
       .in(CommonEndpoint.baseEndpointInput / "health")
       .name("health-endpoint")
       .description("Health Check Endpoint")
-      .out(jsonBody[HealthInfo].example(ApiModel.buildInfo))
+      .out(jsonBody[HealthInfo].example(ApiModel.buildInfo()))
       .errorOut(statusCode)
 
 }
