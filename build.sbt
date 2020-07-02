@@ -22,12 +22,12 @@ lazy val commonSettings = Seq(
     "-language:reflectiveCalls"
   ),
   test in assembly := {}
-
 )
 
 lazy val common = (project in file("common"))
   .settings(
     commonSettings,
+    Defaults.itSettings,
     name := "common",
     libraryDependencies ++= Seq(scalaTest)
   )
