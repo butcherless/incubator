@@ -53,7 +53,7 @@ class AirlineRepositorySpec extends BaseRepositorySpec with OptionValues {
     val result = for {
       (_, aid) <- insertCountryAirline()
       deleted  <- dal.airlineRepo.delete(aid)
-      count    <- dal.airlineRepo.count
+      count    <- dal.airlineRepo.count()
     } yield (aid, deleted, count)
 
     result map { tuple =>

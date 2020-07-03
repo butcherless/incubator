@@ -38,7 +38,7 @@ trait Repositories extends RelationalInfrastructure {
 
     def code = column[String]("CODE")
 
-    def * = (name, code, id.?) <> (Country.tupled, Country.unapply)
+    def * = (name, code, id.?).<>(Country.tupled, Country.unapply)
 
     // indexes
     def codeIndex = index("code_idx", code, unique = true)
@@ -59,7 +59,7 @@ trait Repositories extends RelationalInfrastructure {
     // foreign columns:
     def countryId = column[Long]("COUNTRY_ID")
 
-    def * = (name, foundationDate, countryId, id.?) <> (Airline.tupled, Airline.unapply)
+    def * = (name, foundationDate, countryId, id.?).<>(Airline.tupled, Airline.unapply)
 
     // foreign keys
     def country = foreignKey("FK_COUNTRY_AIRLINE", countryId, countries)(_.id)
@@ -79,7 +79,7 @@ trait Repositories extends RelationalInfrastructure {
 
     def airlineId = column[Long]("AIRLINE_ID")
 
-    def * = (typeCode, registration, airlineId, id.?) <> (Aircraft.tupled, Aircraft.unapply)
+    def * = (typeCode, registration, airlineId, id.?). <> (Aircraft.tupled, Aircraft.unapply)
 
     // foreign keys
     def airline = foreignKey("FK_AIRLINE_FLEET", airlineId, airlines)(_.id)
@@ -102,7 +102,7 @@ trait Repositories extends RelationalInfrastructure {
     // foreign columns:
     def countryId = column[Long]("COUNTRY_ID")
 
-    def * = (name, iataCode, icaoCode, countryId, id.?) <> (Airport.tupled, Airport.unapply)
+    def * = (name, iataCode, icaoCode, countryId, id.?). <> (Airport.tupled, Airport.unapply)
 
     // foreign keys
     def country = foreignKey("FK_COUNTRY_AIRPORT", countryId, countries)(_.id)
@@ -126,7 +126,7 @@ trait Repositories extends RelationalInfrastructure {
 
     def destinationId = column[Long]("DESTINATION_ID")
 
-    def * = (distance, originId, destinationId, id.?) <> (Route.tupled, Route.unapply)
+    def * = (distance, originId, destinationId, id.?). <> (Route.tupled, Route.unapply)
 
     // foreign keys
     def origin =
@@ -167,8 +167,7 @@ trait Repositories extends RelationalInfrastructure {
 
     def routeId = column[Long]("ROUTE_ID")
 
-    def * =
-      (code, alias, schedDeparture, schedArrival, airlineId, routeId, id.?) <> (Flight.tupled, Flight.unapply)
+    def * = (code, alias, schedDeparture, schedArrival, airlineId, routeId, id.?).<>(Flight.tupled, Flight.unapply)
 
     // foreign keys
     def route = foreignKey("FK_ROUTE", routeId, routes)(_.id)
@@ -196,8 +195,7 @@ trait Repositories extends RelationalInfrastructure {
 
     def aircraftId = column[Long]("AIRCRAFT_ID")
 
-    def * =
-      (departureDate, arrivalDate, flightId, aircraftId, id.?) <> (Journey.tupled, Journey.unapply)
+    def * = (departureDate, arrivalDate, flightId, aircraftId, id.?).<>(Journey.tupled, Journey.unapply)
 
     // foreign keys
     def flight = foreignKey("FK_FLIGHT_JOURNEY", flightId, flights)(_.id)
@@ -207,7 +205,7 @@ trait Repositories extends RelationalInfrastructure {
 
   lazy val journeys = TableQuery[Journeys]
 
-/*
+  /*
 case class UserRole(var role: String, var extra: String)
 case class UserInfo(var login: String, var password: String, var firstName: String, var lastName: String)
 
@@ -239,7 +237,7 @@ class UserTable(tag: Tag) extends Table[User](tag, "USER") {
       Some((u.id.get, f1(u.info), f2(u.role)))
   })
 }
- */
+   */
 
   final class Assets(tag: Tag) extends RelationalTable[Asset](tag, "ASSETS") {
     def tenantId = column[Long]("TENANT_ID")
@@ -248,18 +246,13 @@ class UserTable(tag: Tag) extends Table[User](tag, "USER") {
 
     def predicates = column[String]("PREDICATES")
 
-    def * = (
-      (tenantId, assetId),
-      predicates,
-      id
-      ).shaped <> ( {
-      case (businessId, pred_, id_) =>
-        Asset(AssetSeedId.tupled.apply(businessId), pred_, Option(id_))
-    }, { a: Asset =>
-      def f1(p: AssetSeedId) = AssetSeedId.unapply(p).get
-      Some((f1(a.businessId), a.predicates, a.id.get))
-    }
-    )
+    def * = ((tenantId, assetId), predicates, id).shaped.<> ({
+        case (businessId, pred_, id_) =>
+          Asset(AssetSeedId.tupled.apply(businessId), pred_, Option(id_))
+      }, { a: Asset =>
+        def f1(p: AssetSeedId) = AssetSeedId.unapply(p).get
+        Some((f1(a.businessId), a.predicates, a.id.get))
+      })
   }
 
   /*

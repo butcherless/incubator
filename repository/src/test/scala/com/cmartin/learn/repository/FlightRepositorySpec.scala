@@ -34,7 +34,7 @@ class FlightRepositorySpec extends BaseRepositorySpec with OptionValues {
 
   "Flight Repository" should "insert a flight into the database" in {
     val result = for {
-      (aeaId, madTfnId) <- insertCountryAirportAirlineRoute
+      (aeaId, madTfnId) <- insertCountryAirportAirlineRoute()
 
       flightId <- dal.flightRepo.insert(
         Flight(flightUx9059._1, flightUx9059._2, flightUx9059._3, flightUx9059._4, aeaId, madTfnId)
@@ -80,7 +80,7 @@ class FlightRepositorySpec extends BaseRepositorySpec with OptionValues {
 
   it should "delete a flight from the database" in {
     val result = for {
-      (aeaId, madTfnId) <- insertCountryAirportAirlineRoute
+      (aeaId, madTfnId) <- insertCountryAirportAirlineRoute()
 
       id <- dal.flightRepo.insert(
         Flight(flightUx9059._1, flightUx9059._2, flightUx9059._3, flightUx9059._4, aeaId, madTfnId)
@@ -97,7 +97,7 @@ class FlightRepositorySpec extends BaseRepositorySpec with OptionValues {
 
   it should "find a flight by code" in {
     val result = for {
-      (aeaId, madTfnId) <- insertCountryAirportAirlineRoute
+      (aeaId, madTfnId) <- insertCountryAirportAirlineRoute()
       _ <- dal.flightRepo.insert(
         Flight(flightUx9059._1, flightUx9059._2, flightUx9059._3, flightUx9059._4, aeaId, madTfnId)
       )
@@ -112,7 +112,7 @@ class FlightRepositorySpec extends BaseRepositorySpec with OptionValues {
 
   it should "fail to find a flight by non-existent code" in {
     val result = for {
-      (aeaId, madTfnId) <- insertCountryAirportAirlineRoute
+      (aeaId, madTfnId) <- insertCountryAirportAirlineRoute()
       _ <- dal.flightRepo.insert(
         Flight(flightUx9059._1, flightUx9059._2, flightUx9059._3, flightUx9059._4, aeaId, madTfnId)
       )
@@ -121,7 +121,7 @@ class FlightRepositorySpec extends BaseRepositorySpec with OptionValues {
     } yield flight
 
     result map { flight =>
-      assert(flight == None)
+      assert(flight.isEmpty)
     }
   }
 
