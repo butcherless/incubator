@@ -2,12 +2,11 @@ import Dependencies._
 
 lazy val projectVersion = "1.0.0-SNAPSHOT"
 
-scalaVersion := "2.13.3"
+ThisBuild / scalaVersion := "2.13.3"
+ThisBuild / organization := "com.cmartin.learn"
 
 lazy val commonSettings = Seq(
-  organization := "com.cmartin.learn",
   version := projectVersion,
-  scalaVersion := "2.13.3",
   libraryDependencies ++= Seq(scalaTest),
   scalacOptions ++= Seq( // some of the Rob Norris tpolecat options
     "-deprecation",                      // Emit warning and location for usages of deprecated APIs.
