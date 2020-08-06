@@ -8,6 +8,7 @@ import akka.stream.scaladsl._
 import akka.util.ByteString
 import com.typesafe.scalalogging.Logger
 
+import scala.concurrent.{ExecutionContextExecutor, Future}
 import scala.io.StdIn
 import scala.util.Random
 
@@ -17,9 +18,9 @@ import scala.util.Random
 
 object WebServer {
   def main(args: Array[String]): Unit = {
-    implicit val system = ActorSystem()
+    implicit val system: ActorSystem = ActorSystem()
     // needed for the future flatMap/onComplete in the end
-    implicit val executionContext = system.dispatcher
+    implicit val executionContext: ExecutionContextExecutor = system.dispatcher
 
     val logger: Logger = Logger[WebServer.type]
 
@@ -37,7 +38,7 @@ object WebServer {
               // transform each number to a chunk of bytes
               numbers.map(n => {
                 counter = counter + 1
-                logger.debug(s"number: $n, counter=${counter}")
+                logger.debug(s"number: $n, counter=$counter")
                 ByteString(s"$n\n")
               })
             )
@@ -45,7 +46,11 @@ object WebServer {
         }
       }
 
-    val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
+    val bindingFuture: Future[Http.ServerBinding] =
+      Http()
+        .newServerAt("localhost", 8080)
+        .bind(route)
+
     println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
     StdIn.readLine() // let it run until user presses return
     bindingFuture

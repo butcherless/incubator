@@ -29,15 +29,12 @@ object AkkaWebServerApp extends App { //TODO configuration trait
   implicit val executionContext: ExecutionContext = system.dispatcher
   system.log.info(s"Starting WebServer")
 
-  val futureBinding: Future[Http.ServerBinding] =
+  val bindingFuture: Future[Http.ServerBinding] =
     Http()
-      .bindAndHandle(
-        routes,
-        "localhost", //TODO configuration properties
-        8080
-      )
+      .newServerAt("localhost", 8080)
+      .bind(routes)
 
-  futureBinding.onComplete {
+  bindingFuture.onComplete {
     case Success(binding) =>
       val address = binding.localAddress
       system.log.info("Server online at http://{}:{}/", address.getHostString, address.getPort)
