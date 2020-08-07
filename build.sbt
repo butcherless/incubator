@@ -42,7 +42,7 @@ lazy val service = (project in file("service"))
   .settings(
     commonSettings,
     name := "service",
-    libraryDependencies ++= Seq(typesafeConfig, json4sNative, playJson, scalaLogging, logback, sttp)
+    libraryDependencies ++= Seq(typesafeConfig, json4sNative, playJson, scalaLogging, logback)
   ).dependsOn(common, repository)
 
 
