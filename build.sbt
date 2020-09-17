@@ -85,3 +85,5 @@ lazy val pocZioZLayer = (project in file("poc-zio-zlayer"))
     libraryDependencies ++= Seq(zio,zioTest,zioTestSbt),
     testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework"))
   )
+
+addCommandAlias("mycc", "clean;coverage;test;coverageReport")
