@@ -16,7 +16,7 @@ object Dependencies {
   lazy val slickVersion        = "3.3.3"
   lazy val utestVersion        = "0.6.6"
   lazy val tapirVersion        = "0.16.16"
-  lazy val zioVersion          = "1.0.2"
+  lazy val zioVersion          = "1.0.3"
 
   // production code
   lazy val akkaHttp = "com.typesafe.akka" %% "akka-http"            % akkaHttpVersion
