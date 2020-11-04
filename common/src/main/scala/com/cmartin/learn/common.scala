@@ -10,4 +10,5 @@ package object common {
   def getDummyInt() = Random.nextInt()
 
   def getDummyDouble() = Random.nextDouble()
+
 }
