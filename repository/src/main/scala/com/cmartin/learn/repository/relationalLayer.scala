@@ -79,7 +79,7 @@ trait Repositories extends RelationalInfrastructure {
 
     def airlineId = column[Long]("AIRLINE_ID")
 
-    def * = (typeCode, registration, airlineId, id.?). <> (Aircraft.tupled, Aircraft.unapply)
+    def * = (typeCode, registration, airlineId, id.?).<>(Aircraft.tupled, Aircraft.unapply)
 
     // foreign keys
     def airline = foreignKey("FK_AIRLINE_FLEET", airlineId, airlines)(_.id)
@@ -102,7 +102,7 @@ trait Repositories extends RelationalInfrastructure {
     // foreign columns:
     def countryId = column[Long]("COUNTRY_ID")
 
-    def * = (name, iataCode, icaoCode, countryId, id.?). <> (Airport.tupled, Airport.unapply)
+    def * = (name, iataCode, icaoCode, countryId, id.?).<>(Airport.tupled, Airport.unapply)
 
     // foreign keys
     def country = foreignKey("FK_COUNTRY_AIRPORT", countryId, countries)(_.id)
@@ -126,7 +126,7 @@ trait Repositories extends RelationalInfrastructure {
 
     def destinationId = column[Long]("DESTINATION_ID")
 
-    def * = (distance, originId, destinationId, id.?). <> (Route.tupled, Route.unapply)
+    def * = (distance, originId, destinationId, id.?).<>(Route.tupled, Route.unapply)
 
     // foreign keys
     def origin =
@@ -167,7 +167,8 @@ trait Repositories extends RelationalInfrastructure {
 
     def routeId = column[Long]("ROUTE_ID")
 
-    def * = (code, alias, schedDeparture, schedArrival, airlineId, routeId, id.?).<>(Flight.tupled, Flight.unapply)
+    def * = (code, alias, schedDeparture, schedArrival, airlineId, routeId, id.?)
+      .<>(Flight.tupled, Flight.unapply)
 
     // foreign keys
     def route = foreignKey("FK_ROUTE", routeId, routes)(_.id)
@@ -195,7 +196,8 @@ trait Repositories extends RelationalInfrastructure {
 
     def aircraftId = column[Long]("AIRCRAFT_ID")
 
-    def * = (departureDate, arrivalDate, flightId, aircraftId, id.?).<>(Journey.tupled, Journey.unapply)
+    def * =
+      (departureDate, arrivalDate, flightId, aircraftId, id.?).<>(Journey.tupled, Journey.unapply)
 
     // foreign keys
     def flight = foreignKey("FK_FLIGHT_JOURNEY", flightId, flights)(_.id)
@@ -205,39 +207,6 @@ trait Repositories extends RelationalInfrastructure {
 
   lazy val journeys = TableQuery[Journeys]
 
-  /*
-case class UserRole(var role: String, var extra: String)
-case class UserInfo(var login: String, var password: String, var firstName: String, var lastName: String)
-
-case class User(id: Option[String], var info: UserInfo, var role: UserRole)
-
-class UserTable(tag: Tag) extends Table[User](tag, "USER") {
-
-  def id = column[String]("id", O.PrimaryKey)
-  def role = column[String]("role", O.NotNull)
-  def extra = column[String]("extra", O.NotNull)
-  def login = column[String]("login", O.NotNull)
-  def password = column[String]("password", O.NotNull)
-  def firstName = column[String]("first_name", O.NotNull)
-  def lastName = column[String]("last_name", O.NotNull)
-
-  /** Projection */
-  def * = (
-    id,
-    (login, password, firstName, lastName),
-    (role, extra)
-  ).shaped <> (
-
-  { case (id, userInfo, userRole) =>
-    User(Option[id], UserInfo.tupled.apply(userInfo), UserRole.tupled.apply(userRole))
-  },
-  { u: User =>
-      def f1(p: UserInfo) = UserInfo.unapply(p).get
-      def f2(p: UserRole) = UserRole.unapply(p).get
-      Some((u.id.get, f1(u.info), f2(u.role)))
-  })
-}
-   */
 
   final class Assets(tag: Tag) extends RelationalTable[Asset](tag, "ASSETS") {
     def tenantId = column[Long]("TENANT_ID")
@@ -246,22 +215,25 @@ class UserTable(tag: Tag) extends Table[User](tag, "USER") {
 
     def predicates = column[String]("PREDICATES")
 
-    def * = ((tenantId, assetId), predicates, id).shaped.<> ({
-        case (businessId, pred_, id_) =>
-          Asset(AssetSeedId.tupled.apply(businessId), pred_, Option(id_))
-      }, { a: Asset =>
+    def * = ((tenantId, assetId), predicates, id).shaped.<>(
+      { case (businessId, pred_, id_) =>
+        Asset(AssetSeedId.tupled.apply(businessId), pred_, Option(id_))
+      },
+      { a: Asset =>
         def f1(p: AssetSeedId) = AssetSeedId.unapply(p).get
         Some((f1(a.businessId), a.predicates, a.id.get))
-      })
+      }
+    )
   }
+
 
   /*
       R E P O S I T O R I E S
    */
 
-  class AirlineRepository
+  final class AirlineRepository
       extends AbstractRelationalRepository[Airline, Airlines]
-      with AirlineRelationalRepository[DBIO, Airline] {
+      with AirlineRelationalRepository[DBIO] {
     override lazy val entities = airlines
 
     override def findByCountryCode(code: String): DBIO[Seq[Airline]] = {
@@ -274,18 +246,18 @@ class UserTable(tag: Tag) extends Table[User](tag, "USER") {
     }
   }
 
-  class CountryRepository
+  final class CountryRepository
       extends AbstractRelationalRepository[Country, Countries]
-      with CountryRelationalRepository[DBIO, Country] {
+      with CountryRelationalRepository[DBIO] {
     override lazy val entities = countries
 
     override def findByCode(code: String): DBIO[Option[Country]] =
       entities.filter(_.code === code).result.headOption
   }
 
-  class AircraftRepository
+  final class AircraftRepository
       extends AbstractRelationalRepository[Aircraft, Fleet]
-      with AircraftRelationalRepository[DBIO, Aircraft] {
+      with AircraftRelationalRepository[DBIO] {
     override lazy val entities = fleet
 
     override def findByRegistration(registration: String): DBIO[Option[Aircraft]] =
@@ -301,9 +273,9 @@ class UserTable(tag: Tag) extends Table[User](tag, "USER") {
     }
   }
 
-  class AirportRepository
+  final class AirportRepository
       extends AbstractRelationalRepository[Airport, Airports]
-      with AirportRelationalRepository[DBIO, Airport] {
+      with AirportRelationalRepository[DBIO] {
     lazy val entities = airports
 
     override def findByCountryCode(code: String): DBIO[Seq[Airport]] = {
@@ -318,7 +290,7 @@ class UserTable(tag: Tag) extends Table[User](tag, "USER") {
 
   final class RouteRepository
       extends AbstractRelationalRepository[Route, Routes]
-      with RouteRelationalRepository[DBIO, Route] {
+      with RouteRelationalRepository[DBIO] {
     override lazy val entities = routes
 
     override def findByIataDestination(iataCode: String): DBIO[Seq[Route]] = {
@@ -342,7 +314,7 @@ class UserTable(tag: Tag) extends Table[User](tag, "USER") {
 
   final class FlightRepository
       extends AbstractRelationalRepository[Flight, Flights]
-      with FlightRelationalRepository[DBIO, Flight] {
+      with FlightRelationalRepository[DBIO] {
     override lazy val entities = flights
 
     override def findByCode(code: String): DBIO[Option[Flight]] =
@@ -361,7 +333,7 @@ class UserTable(tag: Tag) extends Table[User](tag, "USER") {
 
   final class JourneyRepository
       extends AbstractRelationalRepository[Journey, Journeys]
-      with JourneyRelationalRepository[DBIO, Journey] {
+      with JourneyRelationalRepository[DBIO] {
     override lazy val entities = journeys
   }
 }
