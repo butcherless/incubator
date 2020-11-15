@@ -14,9 +14,10 @@ import scala.concurrent.duration._
 abstract class BaseRepositorySpec extends AsyncFlatSpec with Matchers with BeforeAndAfterEach {
   val config = DatabaseConfig.forConfig[JdbcProfile]("h2_dc")
 
+  // implicit conversion for execution: DBIO[A] => Future[A]
   implicit def executeFromDb[A](action: DBIO[A]): Future[A] = config.db.run(action)
 
-  val timeout = 5 seconds //TODO refactor test module
+  val timeout: FiniteDuration = 5 seconds //TODO refactor test module
 
-  val spainCountry = Country(esCountry._1, esCountry._2)
+  val spainCountry: Country = Country(esCountry._1, esCountry._2)
 }

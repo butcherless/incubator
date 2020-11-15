@@ -8,7 +8,7 @@ import org.scalatest.OptionValues
 import scala.concurrent.{Await, Future}
 
 class AirportRepositorySpec extends BaseRepositorySpec with OptionValues {
-  val dal = new DatabaseAccessLayer2(config) {
+  val dal = new DatabaseLayer(config) {
     import profile.api._
 
     val countryRepo = new CountryRepository
@@ -23,7 +23,9 @@ class AirportRepositorySpec extends BaseRepositorySpec with OptionValues {
     }
   }
 
-  "Airport Repository" should "create an airport into the database" in {
+  behavior of "Airport Repository"
+
+  it should "create an airport into the database" in {
     val result = for {
       countryId <- dal.countryRepo.insert(spainCountry)
       id        <- dal.airportRepo.insert(Airport(madAirport._1, madAirport._2, madAirport._3, countryId))

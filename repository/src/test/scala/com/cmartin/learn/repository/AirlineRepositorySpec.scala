@@ -8,10 +8,10 @@ import org.scalatest.OptionValues
 import scala.concurrent.{Await, Future}
 
 class AirlineRepositorySpec extends BaseRepositorySpec with OptionValues {
-  val norway = Country(noCountry._1, noCountry._2)
+  val norway: Country = Country(noCountry._1, noCountry._2)
   //val iberia = Airline(ibkAirline._1, ibkAirline._2, )
 
-  val dal = new DatabaseAccessLayer2(config) {
+  val dal = new DatabaseLayer(config) {
     import profile.api._
 
     val countryRepo = new CountryRepository
@@ -26,7 +26,9 @@ class AirlineRepositorySpec extends BaseRepositorySpec with OptionValues {
     }
   }
 
-  "Airline Repository" should "insert an airline into the database" in {
+  behavior of "Airline Repository"
+
+  it should "insert an airline into the database" in {
     val result = insertCountryAirline()
 
     result map { tuple =>

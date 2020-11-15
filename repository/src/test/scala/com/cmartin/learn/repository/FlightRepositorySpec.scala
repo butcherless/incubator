@@ -8,7 +8,7 @@ import org.scalatest.OptionValues
 import scala.concurrent.Await
 
 class FlightRepositorySpec extends BaseRepositorySpec with OptionValues {
-  val dal = new DatabaseAccessLayer2(config) {
+  val dal = new DatabaseLayer(config) {
     import profile.api._
 
     val countryRepo = new CountryRepository
@@ -32,7 +32,9 @@ class FlightRepositorySpec extends BaseRepositorySpec with OptionValues {
     }
   }
 
-  "Flight Repository" should "insert a flight into the database" in {
+  behavior of "Flight Repository"
+
+  it should "insert a flight into the database" in {
     val result = for {
       (aeaId, madTfnId) <- insertCountryAirportAirlineRoute()
 

@@ -207,7 +207,6 @@ trait Repositories extends RelationalInfrastructure {
 
   lazy val journeys = TableQuery[Journeys]
 
-
   final class Assets(tag: Tag) extends RelationalTable[Asset](tag, "ASSETS") {
     def tenantId = column[Long]("TENANT_ID")
 
@@ -225,7 +224,6 @@ trait Repositories extends RelationalInfrastructure {
       }
     )
   }
-
 
   /*
       R E P O S I T O R I E S
@@ -338,10 +336,16 @@ trait Repositories extends RelationalInfrastructure {
   }
 }
 
-class DatabaseAccessLayer(val profile: JdbcProfile) extends Profile with Repositories
+/** Database access layer with jdbc profile only
+  *
+  * @param profile
+  */
+class SimpleDatabaseLayer(val profile: JdbcProfile) extends Profile with Repositories
 
-class DatabaseAccessLayer2(val config: DatabaseConfig[JdbcProfile])
-    extends Profile
-    with Repositories {
+/** Database access layer with config and jdbc profile
+  *
+  * @param config
+  */
+class DatabaseLayer(val config: DatabaseConfig[JdbcProfile]) extends Profile with Repositories {
   override val profile = config.profile
 }

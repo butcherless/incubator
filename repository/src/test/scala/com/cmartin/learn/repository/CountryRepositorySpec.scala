@@ -8,11 +8,12 @@ import org.scalatest.OptionValues
 import scala.concurrent.{Await, Future}
 
 class CountryRepositorySpec extends BaseRepositorySpec with OptionValues {
+
   val spainUpperCase                = Country(esCountry._1.toUpperCase, esCountry._2.toUpperCase)
   val unitedKingdom                 = Country(ukCountry._1, ukCountry._2)
   val countrySequence: Seq[Country] = Seq(spainCountry, unitedKingdom)
 
-  val dal = new DatabaseAccessLayer2(config) {
+  val dal = new DatabaseLayer(config) {
     import profile.api._
 
     val countryRepo = new CountryRepository
@@ -26,7 +27,9 @@ class CountryRepositorySpec extends BaseRepositorySpec with OptionValues {
     }
   }
 
-  "Country Repository" should "insert a country into the database" in {
+  behavior of "Country Repository"
+
+  it should "insert a country into the database" in {
     val result = dal.countryRepo.insert(spainCountry)
 
     result map { id =>

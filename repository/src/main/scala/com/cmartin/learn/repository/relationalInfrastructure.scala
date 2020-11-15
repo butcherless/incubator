@@ -2,6 +2,7 @@ package com.cmartin.learn.repository
 
 import slick.jdbc.JdbcProfile
 
+/** Abstract profile for accessing databases. */
 trait Profile {
   val profile: JdbcProfile
 }

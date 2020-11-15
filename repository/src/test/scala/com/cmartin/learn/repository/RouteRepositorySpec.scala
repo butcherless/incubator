@@ -9,7 +9,7 @@ import scala.concurrent.Await
 
 class RouteRepositorySpec extends BaseRepositorySpec with OptionValues with BeforeAndAfterAll {
 
-  val dal = new DatabaseAccessLayer2(config) {
+  val dal = new DatabaseLayer(config) {
     import profile.api._
 
     val countryRepo = new CountryRepository
@@ -28,7 +28,9 @@ class RouteRepositorySpec extends BaseRepositorySpec with OptionValues with Befo
   val barajasAirport = Airport(madAirport._1, madAirport._2, madAirport._3, 0)
   val rodeosAirport  = Airport(tfnAirport._1, tfnAirport._2, tfnAirport._3, 0)
 
-  "Route Repository" should "insert a route into the database" in {
+  behavior of "Route Repository"
+
+  it should "insert a route into the database" in {
     val result = for {
       (oAirportId, dAirportId) <- insertCountryAirport()
       routeId                  <- dal.routeRepo.insert(Route(madTotfnDistance, oAirportId, dAirportId))

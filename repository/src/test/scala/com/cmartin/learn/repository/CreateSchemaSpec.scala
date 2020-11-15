@@ -3,7 +3,7 @@ package com.cmartin.learn.repository
 /** Spec helper for development
   */
 class CreateSchemaSpec extends BaseRepositorySpec {
-  val dal = new DatabaseAccessLayer2(config) {
+  val dal = new DatabaseLayer(config) {
     import profile.api._
 
     val countryRepo = new CountryRepository
