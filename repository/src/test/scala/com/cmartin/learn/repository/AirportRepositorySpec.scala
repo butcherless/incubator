@@ -23,6 +23,8 @@ class AirportRepositorySpec extends BaseRepositorySpec with OptionValues {
     }
   }
 
+  import dal.executeFromDb
+
   behavior of "Airport Repository"
 
   it should "create an airport into the database" in {

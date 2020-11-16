@@ -26,6 +26,8 @@ class AirlineRepositorySpec extends BaseRepositorySpec with OptionValues {
     }
   }
 
+  import dal.executeFromDb
+
   behavior of "Airline Repository"
 
   it should "insert an airline into the database" in {

@@ -27,6 +27,8 @@ class CountryRepositorySpec extends BaseRepositorySpec with OptionValues {
     }
   }
 
+  import dal.executeFromDb
+
   behavior of "Country Repository"
 
   it should "insert a country into the database" in {

@@ -25,6 +25,8 @@ class AircraftRepositorySpec extends BaseRepositorySpec with OptionValues {
     }
   }
 
+  import dal.executeFromDb
+
   behavior of "Aircraft Repository"
 
   it should "insert an aircraft into the database" in {

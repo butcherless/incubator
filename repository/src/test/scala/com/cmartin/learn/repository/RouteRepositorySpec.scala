@@ -25,6 +25,8 @@ class RouteRepositorySpec extends BaseRepositorySpec with OptionValues with Befo
     }
   }
 
+  import dal.executeFromDb
+
   val barajasAirport = Airport(madAirport._1, madAirport._2, madAirport._3, 0)
   val rodeosAirport  = Airport(tfnAirport._1, tfnAirport._2, tfnAirport._3, 0)
 

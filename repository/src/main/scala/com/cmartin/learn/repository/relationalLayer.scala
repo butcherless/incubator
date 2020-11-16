@@ -2,8 +2,10 @@ package com.cmartin.learn.repository
 
 import java.time.{LocalDate, LocalTime}
 
-import slick.basic.DatabaseConfig
+import slick.basic.{DatabaseConfig, DatabasePublisher}
 import slick.jdbc.JdbcProfile
+
+import scala.concurrent.Future
 
 trait Repositories extends RelationalInfrastructure {
   self: Profile =>
@@ -347,5 +349,14 @@ class SimpleDatabaseLayer(val profile: JdbcProfile) extends Profile with Reposit
   * @param config
   */
 class DatabaseLayer(val config: DatabaseConfig[JdbcProfile]) extends Profile with Repositories {
+  import profile.api._
+
   override val profile = config.profile
+
+  // implicit conversion for execution: DBIO[A] => Future[A]
+  implicit def executeFromDb[A](action: DBIO[A]): Future[A] = config.db.run(action)
+  // implicit conversion for execution: DBIO[A] => DatabasePublisher[A]
+  implicit def executeFromDb[A](action: StreamingDBIO[Seq[A], A]): DatabasePublisher[A] =
+    config.db.stream(action)
+
 }
