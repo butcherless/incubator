@@ -1,0 +1,14 @@
+# Use postgres/example user/password credentials
+version: '3.7'
+
+services:
+
+  postgres:
+    image: postgres:13.1
+    ports: 
+      - 5432:5432
+    restart: always
+    environment:
+      POSTGRES_DB: "aviation_db"
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+      POSTGRES_PASSWORD: postgres

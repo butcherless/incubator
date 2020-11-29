@@ -15,7 +15,9 @@ object Dependencies {
   lazy val catsFree       = "org.typelevel" %% "cats-free"     % Versions.cats
   lazy val typesafeConfig = "com.typesafe"   % "config"        % Versions.config
   lazy val json4sNative   = "org.json4s"    %% "json4s-native" % Versions.json4s
-  lazy val h2Database     = "com.h2database" % "h2"            % Versions.h2
+      // P O S T G R E S
+  lazy val postgresDB     = "org.postgresql" % "postgresql"    % Versions.postgres
+
   lazy val logback =
     "ch.qos.logback" % "logback-classic" % Versions.logback exclude ("org.slf4j", "slf4j-api")
   lazy val playJson =
@@ -42,9 +44,12 @@ object Dependencies {
 
   // testing code
   lazy val akkaHttpTest = "com.typesafe.akka" %% "akka-http-testkit" % Versions.akkaHttp  % "test"
-  lazy val scalaTest    = "org.scalatest"     %% "scalatest"         % Versions.scalatest % "test"
+  lazy val scalaTest    = "org.scalatest"     %% "scalatest"         % Versions.scalatest % "test,it"
   lazy val uTest        = "com.lihaoyi"       %% "utest"             % Versions.utest     % "test"
 
   lazy val zioTest    = "dev.zio" %% "zio-test"     % Versions.zio % "test"
   lazy val zioTestSbt = "dev.zio" %% "zio-test-sbt" % Versions.zio % "test"
+   
+  lazy val h2Database     = "com.h2database" % "h2"            % Versions.h2 % "test"
+
 }
