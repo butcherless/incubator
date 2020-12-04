@@ -1,7 +1,7 @@
 language: scala
 
 scala:
-  - 2.13.1
+  - 2.13.4
 
 build:
   ci:
