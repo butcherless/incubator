@@ -123,10 +123,10 @@ class CountryRepositorySpec extends BaseRepositorySpec with OptionValues {
   }
 
   override def beforeEach(): Unit = {
-    Await.result(dal.createSchema(), timeout)
+    Await.result(dal.createSchema(), waitTimeout)
   }
 
   override def afterEach(): Unit = {
-    Await.result(dal.dropSchema(), timeout)
+    Await.result(dal.dropSchema(), waitTimeout)
   }
 }
