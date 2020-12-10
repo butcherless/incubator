@@ -7,10 +7,13 @@ import org.scalatest.matchers.should.Matchers
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 
-import scala.concurrent.duration._
+// "h2_dc"
+abstract class BaseRepositorySpec(path: String)
+    extends AsyncFlatSpec
+    with Matchers
+    with BeforeAndAfterEach {
 
-abstract class BaseRepositorySpec extends AsyncFlatSpec with Matchers with BeforeAndAfterEach {
-  val config = DatabaseConfig.forConfig[JdbcProfile]("h2_dc")
+  val config = DatabaseConfig.forConfig[JdbcProfile](path)
 
   val spainCountry: Country = Country(esCountry._1, esCountry._2)
 }

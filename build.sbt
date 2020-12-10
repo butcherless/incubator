@@ -32,7 +32,7 @@ lazy val common = (project in file("common"))
   )
 
 lazy val repository = (project in file("repository"))
-  .configs(IntegrationTest)
+  .configs(IntegrationTest extend Test)
   .settings(
     commonSettings,
     Defaults.itSettings,

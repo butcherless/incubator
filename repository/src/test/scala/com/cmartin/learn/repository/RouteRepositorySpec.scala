@@ -1,13 +1,15 @@
 package com.cmartin.learn.repository
 
-import java.sql.SQLIntegrityConstraintViolationException
-
 import com.cmartin.learn.test.Constants._
 import org.scalatest.{BeforeAndAfterAll, OptionValues}
 
+import java.sql.SQLIntegrityConstraintViolationException
 import scala.concurrent.Await
 
-class RouteRepositorySpec extends BaseRepositorySpec with OptionValues with BeforeAndAfterAll {
+abstract class RouteRepositorySpec(path: String)
+    extends BaseRepositorySpec(path)
+    with OptionValues
+    with BeforeAndAfterAll {
 
   val dal = new DatabaseLayer(config) {
     import profile.api._
@@ -60,7 +62,7 @@ class RouteRepositorySpec extends BaseRepositorySpec with OptionValues with Befo
   }
 
   it should "fail to insert a duplicate route into the database" in {
-    recoverToSucceededIf[SQLIntegrityConstraintViolationException] {
+    recoverToSucceededIf[java.sql.SQLException] {
       for {
         (oAirportId, dAirportId) <- insertCountryAirport()
         _ <- dal.routeRepo.insert(
@@ -74,7 +76,7 @@ class RouteRepositorySpec extends BaseRepositorySpec with OptionValues with Befo
   }
 
   it should "fail to insert a route into the database with a missing origin airport" in {
-    recoverToSucceededIf[SQLIntegrityConstraintViolationException] {
+    recoverToSucceededIf[java.sql.SQLException] {
       for {
         (_, dAirportId) <- insertCountryAirport()
         _               <- dal.routeRepo.insert(Route(madTotfnDistance, 0, dAirportId))
@@ -83,7 +85,7 @@ class RouteRepositorySpec extends BaseRepositorySpec with OptionValues with Befo
   }
 
   it should "fail to insert a route into the database with a missing destination airport" in {
-    recoverToSucceededIf[SQLIntegrityConstraintViolationException] {
+    recoverToSucceededIf[java.sql.SQLException] {
       for {
         (oAirportId, _) <- insertCountryAirport()
         _               <- dal.routeRepo.insert(Route(madTotfnDistance, oAirportId, 0))

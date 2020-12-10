@@ -1,13 +1,14 @@
 package com.cmartin.learn.repository
 
-import java.sql.SQLIntegrityConstraintViolationException
-
 import com.cmartin.learn.test.Constants._
 import org.scalatest.OptionValues
 
+import java.sql.SQLIntegrityConstraintViolationException
 import scala.concurrent.{Await, Future}
 
-class AircraftRepositorySpec extends BaseRepositorySpec with OptionValues {
+abstract class AircraftRepositorySpec(path: String)
+    extends BaseRepositorySpec(path)
+    with OptionValues {
 
   val dal = new DatabaseLayer(config) {
     import profile.api._
@@ -43,7 +44,7 @@ class AircraftRepositorySpec extends BaseRepositorySpec with OptionValues {
   }
 
   it should "fail to insert an aircraft into the database with a missing airline" in {
-    recoverToSucceededIf[SQLIntegrityConstraintViolationException] {
+    recoverToSucceededIf[java.sql.SQLException] {
       for {
         _ <- dal.aircraftRepo.insert(Aircraft(TypeCodes.BOEING_787_800, registrationMIG, 0))
       } yield ()

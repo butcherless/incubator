@@ -1,13 +1,15 @@
 package com.cmartin.learn.repository
 
-import java.sql.SQLIntegrityConstraintViolationException
-
 import com.cmartin.learn.test.Constants._
 import org.scalatest.OptionValues
 
+import java.sql.SQLIntegrityConstraintViolationException
 import scala.concurrent.Await
 
-class FlightRepositorySpec extends BaseRepositorySpec with OptionValues {
+abstract class FlightRepositorySpec(path: String)
+    extends BaseRepositorySpec(path)
+    with OptionValues {
+
   val dal = new DatabaseLayer(config) {
     import profile.api._
 
@@ -51,7 +53,7 @@ class FlightRepositorySpec extends BaseRepositorySpec with OptionValues {
   }
 
   it should "fail to insert a flight into the database with missing airline" in {
-    recoverToSucceededIf[SQLIntegrityConstraintViolationException] {
+    recoverToSucceededIf[java.sql.SQLException] {
       for {
         countryId <- dal.countryRepo.insert(spainCountry)
         madId <- dal.airportRepo.insert(
@@ -70,7 +72,7 @@ class FlightRepositorySpec extends BaseRepositorySpec with OptionValues {
   }
 
   it should "fail to insert a flight into the database with missing route" in {
-    recoverToSucceededIf[SQLIntegrityConstraintViolationException] {
+    recoverToSucceededIf[java.sql.SQLException] {
       for {
         countryId <- dal.countryRepo.insert(spainCountry)
         aeaId     <- dal.airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2, countryId))

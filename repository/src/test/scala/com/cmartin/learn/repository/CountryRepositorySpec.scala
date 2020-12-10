@@ -1,16 +1,17 @@
 package com.cmartin.learn.repository
 
-import java.sql.SQLIntegrityConstraintViolationException
-
 import com.cmartin.learn.test.Constants._
 import org.scalatest.OptionValues
 
+import java.sql.SQLIntegrityConstraintViolationException
 import scala.concurrent.{Await, Future}
 
-class CountryRepositorySpec extends BaseRepositorySpec with OptionValues {
+abstract class CountryRepositorySpec(path: String)
+    extends BaseRepositorySpec(path)
+    with OptionValues {
 
-  val spainUpperCase                = Country(esCountry._1.toUpperCase, esCountry._2.toUpperCase)
-  val unitedKingdom                 = Country(ukCountry._1, ukCountry._2)
+  val spainUpperCase: Country       = Country(esCountry._1.toUpperCase, esCountry._2.toUpperCase)
+  val unitedKingdom: Country        = Country(ukCountry._1, ukCountry._2)
   val countrySequence: Seq[Country] = Seq(spainCountry, unitedKingdom)
 
   val dal = new DatabaseLayer(config) {
@@ -40,7 +41,7 @@ class CountryRepositorySpec extends BaseRepositorySpec with OptionValues {
   }
 
   it should "fail to insert a duplicate country intro the database" in {
-    recoverToSucceededIf[SQLIntegrityConstraintViolationException] {
+    recoverToSucceededIf[java.sql.SQLException] {
       for {
         _ <- dal.countryRepo.insert(spainCountry)
         _ <- dal.countryRepo.insert(spainCountry)

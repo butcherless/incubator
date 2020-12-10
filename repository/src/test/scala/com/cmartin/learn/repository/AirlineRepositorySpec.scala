@@ -1,13 +1,15 @@
 package com.cmartin.learn.repository
 
-import java.time.LocalDate
-
 import com.cmartin.learn.test.Constants._
 import org.scalatest.OptionValues
 
+import java.time.LocalDate
 import scala.concurrent.{Await, Future}
 
-class AirlineRepositorySpec extends BaseRepositorySpec with OptionValues {
+abstract class AirlineRepositorySpec(path: String)
+    extends BaseRepositorySpec(path)
+    with OptionValues {
+
   val norway: Country = Country(noCountry._1, noCountry._2)
   //val iberia = Airline(ibkAirline._1, ibkAirline._2, )
 
