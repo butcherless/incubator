@@ -31,15 +31,6 @@ object Dependencies {
   lazy val slickPool =
     "com.typesafe.slick" %% "slick-hikaricp" % Versions.slick exclude ("org.slf4j", "slf4j-api")
 
-  lazy val tapir          = "com.softwaremill.sttp.tapir" %% "tapir-core"             % Versions.tapir
-  lazy val tapirAkkaHttp  = "com.softwaremill.sttp.tapir" %% "tapir-akka-http-server" % Versions.tapir
-  lazy val tapirJsonCirce = "com.softwaremill.sttp.tapir" %% "tapir-json-circe"       % Versions.tapir
-  lazy val tapirOpenApi   = "com.softwaremill.sttp.tapir" %% "tapir-openapi-docs"     % Versions.tapir
-  lazy val tapirOpenApiYaml =
-    "com.softwaremill.sttp.tapir" %% "tapir-openapi-circe-yaml" % Versions.tapir
-  lazy val swaggerUiAkka =
-    "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-akka-http" % Versions.tapir
-
   lazy val zio = "dev.zio" %% "zio" % Versions.zio
 
   // testing code
