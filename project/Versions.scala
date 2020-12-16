@@ -14,6 +14,6 @@ object Versions {
   val slf4j        = "1.7.30"
   val slick        = "3.3.3"
   val utest        = "0.6.6"
-  val tapir        = "0.16.16"
+  val tapir        = "0.17.0"
   val zio          = "1.0.3"
 }
