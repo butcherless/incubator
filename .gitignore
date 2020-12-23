@@ -15,4 +15,5 @@ target/
 .cache/
 .config/
 .ivy2/
+project/metals.sbt
 project/project/
