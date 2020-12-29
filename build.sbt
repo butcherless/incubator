@@ -92,4 +92,14 @@ lazy val pocZioZLayer = (project in file("poc-zio-zlayer"))
     testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework"))
   )
 
+lazy val hexagonal = (project in file("hexagonal"))
+  .configs(IntegrationTest)
+  .settings(
+    commonSettings,
+    Defaults.itSettings,
+    name := "hexagonal",
+    libraryDependencies ++= Seq(zioPrelude, scalaTest)
+  )
+
+
 addCommandAlias("mycc", "clean;coverage;test;coverageReport")

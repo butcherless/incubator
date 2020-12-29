@@ -1,7 +1,7 @@
 .DS_Store
+.bloop/
 .bsp
 .idea
-.gradle
 .metals/
 .sbtopts
 .vscode/
@@ -11,9 +11,7 @@ out/
 target/
 *.iml
 .ash_history
-.bloop/
 .cache/
 .config/
 .ivy2/
-project/metals.sbt
-project/project/
+metals.sbt

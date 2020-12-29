@@ -1,0 +1,44 @@
+@startuml
+skinparam monochrome true
+skinparam BoxPadding 5
+header Ports and Adapter POC
+title Create Country Use Case
+
+hide footbox
+actor HttpClient as user << User >>
+
+box "Primary Adapter" #FBFBFB
+participant "RestApi" as api << API >>
+participant "CountryValidator" as validator << RequestValidator >>
+participant "CountryView" as view << Converter >>
+end box
+box "Domain" #FBFBFB
+participant "Country" as country << Model >>
+participant "CountryService" as service << Service >>
+participant "CountryRepository" as repository << Repository >>
+end box
+box "Secondary Adapter" #FBFBFB
+participant "CountryDbo" as dbo << Entity >>
+participant "SlickDriver" as db << DatabaseDriver >>
+end box
+
+database PostgreSQL as pgdb
+
+autonumber
+user -> api: Post[CountryRequest]
+api -> validator : from(TupleN[CountryRequest])
+validator -> country ** : validate(TupleN)
+validator --> api: Country
+api -> service: create(Country)
+service -> repository: save(Country)
+repository -> dbo: from(Country)
+dbo --> repository: CountryDbo
+repository -> db : insert(CountryDbo)
+db -> pgdb : sql-insert
+db --> repository : Future[Id]
+repository --> service : Future[Country]
+service --> api : Future[Country]
+api -> view : from(Country)
+view --> api : Future[CountryView]
+api --> user : CountryView
+@enduml
