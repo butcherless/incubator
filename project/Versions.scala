@@ -7,7 +7,7 @@ object Versions {
   val postgres     = "42.2.18"
   val json4s       = "3.6.10"
   val logback      = "1.2.3"
-  val playJson     = "2.9.1"
+  val playJson     = "2.9.2"
   val scalaLogging = "3.9.2"
   val scalaz       = "7.2.27"
   val scalatest    = "3.2.3"
