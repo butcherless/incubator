@@ -4,6 +4,6 @@ import com.cmartin.learn.domain.Model.Country
 
 import scala.concurrent.Future
 
-trait CountryRepository {
-  def save(country: Country): Future[Country]
+trait CountryRepository extends AbstractRepository[Future, Country] {
+  def findByCode(code: String): Future[Country]
 }

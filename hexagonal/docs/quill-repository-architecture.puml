@@ -1,0 +1,33 @@
+@startuml
+skinparam monochrome true
+skinparam BoxPadding 5
+header Ports and Adapter POC
+title Quill Repository Architecture
+
+interface Idiom
+interface NamingStrategy
+interface Context
+interface AbstractRepository {
+  {method} insert(e: Entity)
+  {method} findById(id: Long)
+  {method} update(e: Entity)
+  {method} delete(id: Long)
+}
+interface ModularContext
+class     CountryRepository {
+  {method} findByCode(code: String)
+}
+
+Idiom <-- ModularContext
+NamingStrategy <-- ModularContext
+Context <-- ModularContext
+
+NamingStrategy <-- PostgresAsyncContext
+
+AbstractRepository <|-- CountryRepository
+ModularContext <-- CountryRepository
+PostgresAsyncContext <-- CountryRepository
+
+CountryRepository -right-> ExecutionContext
+
+@enduml

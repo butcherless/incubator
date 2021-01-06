@@ -27,8 +27,7 @@ lazy val common = (project in file("common"))
     commonSettings,
     Defaults.itSettings,
     //Defaults.itSettings,
-    name := "common",
-    libraryDependencies ++= Seq(scalaTest)
+    name := "common"
   )
 
 lazy val repository = (project in file("repository"))
@@ -98,7 +97,7 @@ lazy val hexagonal = (project in file("hexagonal"))
     commonSettings,
     Defaults.itSettings,
     name := "hexagonal",
-    libraryDependencies ++= Seq(zioPrelude, scalaTest)
+    libraryDependencies ++= Seq(zioPrelude, quillJdbc, quillPostgres, scalaTest) //,scalaReflect, scalaCompiler)
   )
 
 

@@ -17,4 +17,12 @@ object Model {
       icaoCode: String,
       countryId: Long
   )
+
+  case class Airport2(
+      name: String,
+      iataCode: String,
+      icaoCode: String,
+      country: Country
+  )
+
 }

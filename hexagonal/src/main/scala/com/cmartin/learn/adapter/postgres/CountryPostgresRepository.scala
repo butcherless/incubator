@@ -9,12 +9,17 @@ class CountryPostgresRepository extends CountryRepository {
 
   import Model._
 
-  override def save(country: Country): Future[Country] = {
-    val dbo = CountryDbo.fromCountry(country)
+
+  override def insert(e: Country): Future[Country] = {
+    val dbo = CountryDbo.fromCountry(e)
 
     //TODO postgres driver ops
     // Postgres.insert(dbo)
 
-    Future.successful(country)
+    Future.successful(e)
   }
+
+  override def findById(id: Long): Future[Option[Country]] = ???
+
+  override def findByCode(code: String): Future[Country] = ???
 }

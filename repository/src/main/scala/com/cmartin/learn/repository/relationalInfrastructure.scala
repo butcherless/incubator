@@ -145,4 +145,5 @@ trait RelationalInfrastructure {
     private def entityReturningId(): profile.ReturningInsertActionComposer[E, Long] =
       entities returning entities.map(_.id)
   }
+
 }

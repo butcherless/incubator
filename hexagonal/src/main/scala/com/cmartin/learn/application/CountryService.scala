@@ -9,7 +9,7 @@ import scala.concurrent.Future
 class CountryService(countryRepository: CountryRepository) {
   def create(country: Country): Future[Country] = {
     for {
-      _ <- countryRepository.save(country)
+      _ <- countryRepository.insert(country)
     } yield country
   }
 }
