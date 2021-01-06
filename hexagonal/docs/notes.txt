@@ -1,5 +1,16 @@
+#
+# ports and adapter architecture
+#
+
 https://github.com/rdelgatte/spring-hexagonal-architecture
 https://github.com/tedyoung/kid-bank
 https://www.youtube.com/watch?v=ujb_O6myknY
 https://www.youtube.com/watch?v=MY6K4FP3Lxg
 https://www.youtube.com/watch?v=u-0PfHpKwT4
+
+
+#
+# quill macros example generic crud ops
+#
+
+https://github.com/getquill/quill-example
