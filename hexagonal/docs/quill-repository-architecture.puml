@@ -8,19 +8,19 @@ interface Idiom
 interface NamingStrategy
 interface Context
 interface AbstractRepository {
-  {method} insert(e: Entity)
-  {method} findById(id: Long)
-  {method} update(e: Entity)
-  {method} delete(id: Long)
+  {method} insert(e: Entity) : Id
+  {method} update(e: Entity) : Int
+  {method} delete(id: Long) : Int
+  {method} findById(code: String) : Entity
 }
-interface ModularContext
+interface ModularContext <I,N>
 class     CountryRepository {
-  {method} findByCode(code: String)
+  {method} findByCode(code: String) : Country
 }
 
+Context <-- ModularContext
 Idiom <-- ModularContext
 NamingStrategy <-- ModularContext
-Context <-- ModularContext
 
 NamingStrategy <-- PostgresAsyncContext
 

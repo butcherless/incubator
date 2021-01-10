@@ -7,13 +7,18 @@ import scala.concurrent.Future
 
 import com.cmartin.learn.domain.Model.Airport2
 import com.cmartin.learn.domain.Model.Country
+import io.getquill.Delete
+import io.getquill.EntityQuery
+import io.getquill.Insert
 import io.getquill.Literal
 import io.getquill.NamingStrategy
 import io.getquill.PostgresAsyncContext
 import io.getquill.PostgresDialect
+import io.getquill.PostgresJdbcContext
+import io.getquill.Update
 import io.getquill.context.Context
 import io.getquill.idiom.Idiom
-import izumi.reflect.macrortti.LTag.Weak
+import io.getquill.monad.IOMonad
 
 object Abstractions {
 
@@ -192,6 +197,69 @@ object Implementations {
         .fold(
           IO.failed[T](RepositoryException(error))
         )(e => IO.successful(e))
+    }
+
+  }
+
+  import scala.language.experimental.macros
+
+  /* AbstractContext: Query DSL for common operations via macro implmentations */
+  trait EntityContext extends IOMonad {
+    this: Context[_, _] =>
+
+    def insertQuery[T](entity: T): Quoted[Insert[T]] = macro CommonOpsMacro.insert[T]
+
+    def updateQuery[T](entity: T): Quoted[Update[T]] = macro CommonOpsMacro.update[T]
+
+    def deleteQuery[T](entity: T): Quoted[Delete[T]] = macro CommonOpsMacro.delete[T]
+
+    def findCountryByCodeQuery(code: String) =
+      quote {
+        query[CountryDbo]
+          .filter(c => c.code == lift(code))
+      }
+
+    def checkHeadElement[T](seq: Seq[T], error: String) = {
+      seq.headOption
+        .fold(
+          IO.failed[T](RepositoryException(error))
+        )(e => IO.successful(e))
+    }
+  }
+
+  class CountryDboMacroRepo(configPrefix: String)(implicit ec: ExecutionContext) {
+    val ctx = new PostgresAsyncContext(Literal, configPrefix) with EntityContext
+    import ctx._
+
+    def insert(country: Country) = {
+      val dbo = CountryDbo.fromCountry(country)
+      val program =
+        for {
+          _ <- runIO(insertQuery(dbo))
+        } yield country
+
+      performIO(program)
+    }
+
+    def update(country: Country) = {
+      val program =
+        for {
+          dbos <- runIO(findCountryByCodeQuery(country.code))
+          dbo  <- checkHeadElement(dbos, s"country code not found: ${country.code}}")
+          _    <- runIO(updateQuery(dbo))
+        } yield country
+
+      performIO(program)
+    }
+
+    def delete(country: Country) = {
+      val program = for {
+        dbos <- runIO(findCountryByCodeQuery(country.code))
+        dbo  <- checkHeadElement(dbos, s"country code not found: ${country.code})")
+        _    <- runIO(deleteQuery(dbo))
+      } yield country
+
+      performIO(program)
     }
 
   }
