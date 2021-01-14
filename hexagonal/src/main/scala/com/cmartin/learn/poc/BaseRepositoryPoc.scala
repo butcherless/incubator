@@ -219,6 +219,14 @@ object Implementations {
           .filter(c => c.code == lift(code))
       }
 
+    def findAirportByCountryCodeQuery(code: String) =
+      quote {
+        for {
+          c  <- query[CountryDbo] if (c.code == lift(code))
+          as <- query[AirportDbo] if (as.countryId == c.id)
+        } yield (as, c)
+      }
+
     def checkHeadElement[T](seq: Seq[T], error: String) = {
       seq.headOption
         .fold(
@@ -227,11 +235,15 @@ object Implementations {
     }
   }
 
-  class CountryDboMacroRepo(configPrefix: String)(implicit ec: ExecutionContext) {
+  class CountryDboMacroRepo(configPrefix: String)(implicit ec: ExecutionContext)
+      extends CountryRepository {
+
     val ctx = new PostgresAsyncContext(Literal, configPrefix) with EntityContext
     import ctx._
 
-    def insert(country: Country) = {
+    override def findByCode(code: String): Future[Country] = ???
+
+    def insert(country: Country): Future[Country] = {
       val dbo = CountryDbo.fromCountry(country)
       val program =
         for {
@@ -241,7 +253,7 @@ object Implementations {
       performIO(program)
     }
 
-    def update(country: Country) = {
+    def update(country: Country): Future[Country] = {
       val program =
         for {
           dbos <- runIO(findCountryByCodeQuery(country.code))
@@ -252,7 +264,7 @@ object Implementations {
       performIO(program)
     }
 
-    def delete(country: Country) = {
+    def delete(country: Country): Future[Country] = {
       val program = for {
         dbos <- runIO(findCountryByCodeQuery(country.code))
         dbo  <- checkHeadElement(dbos, s"country code not found: ${country.code})")
@@ -263,6 +275,44 @@ object Implementations {
     }
 
   }
+
+  class AirportDboMacroRepo(configPrefix: String)(implicit ec: ExecutionContext)
+      extends AirportRepository {
+
+    // TODO refactor to common class
+    val ctx = new PostgresAsyncContext(Literal, configPrefix) with EntityContext
+    import ctx._
+
+    override def insert(airport: Airport2): Future[Airport2] = {
+      val program = for {
+        countries <- runIO(findCountryByCodeQuery(airport.country.code))
+        country   <- checkHeadElement(countries, s"country code not found: ${airport.country.code})")
+        dbo       <- IO.successful(AirportDbo.from(airport, country.id))
+        _         <- runIO(insertQuery(dbo))
+      } yield airport
+
+      performIO(program)
+    }
+
+    override def update(e: Airport2): Future[Airport2] = ???
+
+    override def delete(e: Airport2): Future[Airport2] = ???
+
+    override def findByCountryCode(code: String): Future[Seq[Airport2]] = {
+      val program = for {
+        tupleDbos <- runIO(findAirportByCountryCodeQuery(code))
+        airports <- IO.successful(
+          tupleDbos
+            .map(airport_country => AirportDbo.toModel(airport_country._1, airport_country._2))
+        )
+      } yield airports
+
+      performIO(program)
+    }
+
+  }
+
+  // FOR REMOVING
 
   class CountryPostgresRepository(configPrefix: String)(implicit ec: ExecutionContext)
       extends CommonPostgresRepository(configPrefix)

@@ -13,19 +13,28 @@ interface AbstractRepository {
   {method} delete(id: Long) : Int
   {method} findById(code: String) : Entity
 }
-interface ModularContext <I,N>
-class     CountryRepository {
-  {method} findByCode(code: String) : Country
+interface EntityContext <I,N> {
+  {method} insertQuery[T](entity: T)
+  {method} updateQuery[T](entity: T)
+  {method} deleteQuery[T](entity: T)
+  {method} findCountryByCodeQuery(code: String)
+}
+class CountryRepository {
+  {method} insert(country: Country): Future[Country]
+  {method} update(country: Country): Future[Country]
+  {method} delete(country: Country): Future[Country]
+  {method} findByCode(code: String): Future[Country]
 }
 
-Context <-- ModularContext
-Idiom <-- ModularContext
-NamingStrategy <-- ModularContext
+Context <-- EntityContext
+Idiom <-- EntityContext
+IOMonad <-- EntityContext
+NamingStrategy <-- EntityContext
 
 NamingStrategy <-- PostgresAsyncContext
 
 AbstractRepository <|-- CountryRepository
-ModularContext <-- CountryRepository
+EntityContext <-- CountryRepository
 PostgresAsyncContext <-- CountryRepository
 
 CountryRepository -right-> ExecutionContext
