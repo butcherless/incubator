@@ -58,6 +58,9 @@ object Implementations {
         name = dbo.name,
         code = dbo.code
       )
+
+    def update(dbo: CountryDbo, country: Country) =
+      dbo.copy(name = country.name, code = country.code)
   }
 
   case class AirportDbo(
@@ -82,6 +85,14 @@ object Implementations {
         iataCode = dbo.iataCode,
         icaoCode = dbo.icaoCode,
         country = CountryDbo.toModel(c)
+      )
+
+    def update(dbo: AirportDbo, airport: Airport2, countryId: Long) =
+      dbo.copy(
+        name = airport.name,
+        iataCode = airport.iataCode,
+        icaoCode = airport.icaoCode,
+        countryId
       )
   }
 
@@ -219,6 +230,12 @@ object Implementations {
           .filter(c => c.code == lift(code))
       }
 
+    def findAirportByIataCodeQuery(code: String) =
+      quote {
+        query[AirportDbo]
+          .filter(a => a.iataCode == lift(code))
+      }
+
     def findAirportByCountryCodeQuery(code: String) =
       quote {
         for {
@@ -258,7 +275,7 @@ object Implementations {
         for {
           dbos <- runIO(findCountryByCodeQuery(country.code))
           dbo  <- checkHeadElement(dbos, s"country code not found: ${country.code}}")
-          _    <- runIO(updateQuery(dbo))
+          _    <- runIO(updateQuery(CountryDbo.update(dbo, country)))
         } yield country
 
       performIO(program)
@@ -294,9 +311,34 @@ object Implementations {
       performIO(program)
     }
 
-    override def update(e: Airport2): Future[Airport2] = ???
+    /* countries.head is guaranteed by the restriction of the
+       Country foreign key in the Airport table
+     */
+    override def update(airport: Airport2): Future[Airport2] = {
+      val program = for {
+        dbo       <- findUniqueAirportByIataCode(airport.iataCode)
+        countries <- runIO(findCountryByCodeQuery(airport.country.code))
+        _         <- runIO(updateQuery(AirportDbo.update(dbo, airport, countries.head.id)))
+      } yield airport
 
-    override def delete(e: Airport2): Future[Airport2] = ???
+      performIO(program)
+    }
+
+    override def delete(airport: Airport2): Future[Airport2] = {
+      val program = for {
+        dbo <- findUniqueAirportByIataCode(airport.iataCode)
+        _   <- runIO(deleteQuery(dbo))
+      } yield airport
+
+      performIO(program)
+    }
+
+    private def findUniqueAirportByIataCode(code: String) = {
+      for {
+        dbos <- runIO(findAirportByIataCodeQuery(code))
+        dbo  <- checkHeadElement(dbos, s"airport code not found: $code)")
+      } yield dbo
+    }
 
     override def findByCountryCode(code: String): Future[Seq[Airport2]] = {
       val program = for {
