@@ -1,6 +1,6 @@
 object Versions {
   val akkaHttp     = "10.2.2"
-  val akka         = "2.6.10"
+  val akka         = "2.6.11"
   val cats         = "2.0.0"
   val config       = "1.4.1"
   val h2           = "1.4.200"
