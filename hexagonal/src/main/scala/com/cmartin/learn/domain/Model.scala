@@ -11,14 +11,20 @@ object Model {
       code: String
   )
 
-  case class Airport(
+  case class Airport1(
       name: String,
       iataCode: String,
       icaoCode: String,
       countryId: Long
   )
 
-  case class Airport2(
+  /** Country object
+    * @param name airport name
+    * @param iataCode 3 letter code
+    * @param icaoCode 4 letter code
+    * @param country country to which the airport belongs
+    */
+  case class Airport(
       name: String,
       iataCode: String,
       icaoCode: String,

@@ -1,5 +1,5 @@
 object Versions {
-  val akkaHttp     = "10.2.2"
+  val akkaHttp     = "10.2.3"
   val akka         = "2.6.11"
   val cats         = "2.0.0"
   val config       = "1.4.1"
@@ -15,7 +15,7 @@ object Versions {
   val slf4j        = "1.7.30"
   val slick        = "3.3.3"
   val utest        = "0.6.6"
-  val zio          = "1.0.3"
+  val zio          = "1.0.4"
   val zioPrelude   = "1.0.0-RC1"
 
   val scalaVersion = "2.13.4"

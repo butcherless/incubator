@@ -1,9 +1,8 @@
 package com.cmartin.learn.repository
 
-import com.cmartin.learn.test.Constants._
+import com.cmartin.learn.test.AviationData.Constants._
 import org.scalatest.OptionValues
 
-import java.sql.SQLIntegrityConstraintViolationException
 import scala.concurrent.{Await, Future}
 
 abstract class AircraftRepositorySpec(path: String)

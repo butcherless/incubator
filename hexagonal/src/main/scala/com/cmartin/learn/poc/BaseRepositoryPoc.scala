@@ -6,7 +6,7 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import scala.language.experimental.macros
 
-import com.cmartin.learn.domain.Model.Airport2
+import com.cmartin.learn.domain.Model.Airport
 import com.cmartin.learn.domain.Model.Country
 import io.getquill.Delete
 import io.getquill.EntityQuery
@@ -69,22 +69,22 @@ object Model {
   ) extends LongEntity(id)
 
   object AirportDbo {
-    def from(airport: Airport2, countryId: Long): AirportDbo =
+    def from(airport: Airport, countryId: Long): AirportDbo =
       AirportDbo(
         name = airport.name,
         iataCode = airport.iataCode,
         icaoCode = airport.icaoCode,
         countryId = countryId
       )
-    def toModel(dbo: AirportDbo, c: CountryDbo): Airport2 =
-      Airport2(
+    def toModel(dbo: AirportDbo, c: CountryDbo): Airport =
+      Airport(
         name = dbo.name,
         iataCode = dbo.iataCode,
         icaoCode = dbo.icaoCode,
         country = CountryDbo.toModel(c)
       )
 
-    def update(dbo: AirportDbo, airport: Airport2, countryId: Long) =
+    def update(dbo: AirportDbo, airport: Airport, countryId: Long) =
       dbo.copy(
         name = airport.name,
         iataCode = airport.iataCode,
@@ -110,8 +110,8 @@ object DomainPorts {
   /* Domain Port
      TODO refactor: Future => zio.Task
    */
-  trait AirportRepository extends BaseRepository[Future, Airport2] {
-    def findByCountryCode(code: String): Future[Seq[Airport2]]
+  trait AirportRepository extends BaseRepository[Future, Airport] {
+    def findByCountryCode(code: String): Future[Seq[Airport]]
   }
 
 }
@@ -210,7 +210,7 @@ object AlternativeImplementation {
 
     import ctx._
 
-    override def insert(airport: Airport2): Future[Airport2] = {
+    override def insert(airport: Airport): Future[Airport] = {
       val program = for {
         countries <- runIO(findCountryByCodeQuery(airport.country.code))
         country   <- checkHeadElement(countries, s"country code not found: ${airport.country.code})")
@@ -224,7 +224,7 @@ object AlternativeImplementation {
     /* countries.head is guaranteed by the restriction of the
        Country foreign key in the Airport table
      */
-    override def update(airport: Airport2): Future[Airport2] = {
+    override def update(airport: Airport): Future[Airport] = {
       val program = for {
         dbo       <- findUniqueAirportByIataCode(airport.iataCode)
         countries <- runIO(findCountryByCodeQuery(airport.country.code))
@@ -234,7 +234,7 @@ object AlternativeImplementation {
       performIO(program)
     }
 
-    override def delete(airport: Airport2): Future[Airport2] = {
+    override def delete(airport: Airport): Future[Airport] = {
       val program = for {
         dbo <- findUniqueAirportByIataCode(airport.iataCode)
         _   <- runIO(deleteQuery(dbo))
@@ -250,7 +250,7 @@ object AlternativeImplementation {
       } yield dbo
     }
 
-    override def findByCountryCode(code: String): Future[Seq[Airport2]] = {
+    override def findByCountryCode(code: String): Future[Seq[Airport]] = {
       val program = for {
         tupleDbos <- runIO(findAirportByCountryCodeQuery(code))
         airports <- IO.successful(
@@ -332,7 +332,7 @@ object Implementations {
       with AirportDboContext[PostgresDialect, Literal]
       with AirportRepository {
 
-    override def insert(airport: Airport2): Future[Airport2] = {
+    override def insert(airport: Airport): Future[Airport] = {
       val program = for {
         countries <- runIO(findCountryByCodeQuery(airport.country.code))
         country   <- checkHeadElement(countries, s"country code not found: ${airport.country.code}")
@@ -343,11 +343,11 @@ object Implementations {
       performIO(program)
     }
 
-    override def update(e: Airport2): Future[Airport2] = ???
+    override def update(e: Airport): Future[Airport] = ???
 
-    override def delete(e: Airport2): Future[Airport2] = ???
+    override def delete(e: Airport): Future[Airport] = ???
 
-    override def findByCountryCode(code: String): Future[Seq[Airport2]] = {
+    override def findByCountryCode(code: String): Future[Seq[Airport]] = {
       val program = for {
         dbos <- runIO(findByCountryCodeQuery(code))
         airports <- IO.successful(

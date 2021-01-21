@@ -1,6 +1,6 @@
 package com.cmartin.learn.repository
 
-import com.cmartin.learn.test.Constants._
+import com.cmartin.learn.test.AviationData.Constants._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatest.matchers.should.Matchers

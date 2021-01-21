@@ -1,10 +1,9 @@
 package com.cmartin.learn.repository
 
-import java.time.{LocalDate, LocalTime}
-
 import slick.basic.{DatabaseConfig, DatabasePublisher}
 import slick.jdbc.JdbcProfile
 
+import java.time.{LocalDate, LocalTime}
 import scala.concurrent.Future
 
 trait Repositories extends RelationalInfrastructure {
@@ -354,7 +353,9 @@ class DatabaseLayer(val config: DatabaseConfig[JdbcProfile]) extends Profile wit
   override val profile = config.profile
 
   // implicit conversion for execution: DBIO[A] => Future[A]
-  implicit def executeFromDb[A](action: DBIO[A]): Future[A] = config.db.run(action)
+  implicit def executeFromDb[A](action: DBIO[A]): Future[A] =
+    config.db.run(action)
+
   // implicit conversion for execution: DBIO[A] => DatabasePublisher[A]
   implicit def executeFromDb[A](action: StreamingDBIO[Seq[A], A]): DatabasePublisher[A] =
     config.db.stream(action)

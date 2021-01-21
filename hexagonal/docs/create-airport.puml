@@ -1,0 +1,50 @@
+@startuml
+skinparam monochrome true
+skinparam BoxPadding 5
+header Ports and Adapter POC
+title [WIP] Create Airport Use Case
+
+hide footbox
+actor HttpClient as user << User >>
+
+box "Primary Adapter" #FBFBFB
+participant "RestApi" as api << API >>
+participant "AirportValidator" as validator << RequestValidator >>
+participant "AirportView" as view << Converter >>
+end box
+box "Domain" #FBFBFB
+participant "Airport" as airport << Model >>
+participant "AirportService" as service << Service >>
+participant "CountryRepository" as countryRepo << Repository >>
+participant "AirportRepository" as airportRepo << Repository >>
+end box
+box "Secondary Adapter" #FBFBFB
+participant "AirportDbo" as dbo << Entity >>
+participant "SlickDriver" as db << DatabaseDriver >>
+end box
+
+database PostgreSQL as pgdb
+
+autonumber
+user -> api: Post[AirportRequest]
+api -> validator : from(TupleN[AirportRequest])
+validator -> airport ** : validate(TupleN)
+validator --> api: Airport
+api -> service: create(Airport)
+service -> countryRepo : findByCode(airport.country.code)
+countryRepo -> db: findByCode(code)
+db -> pgdb : sql-select
+db --> countryRepo: CountryDbo
+countryRepo --> service: CountryDbo
+service -> dbo: from(Airport, countryCode)
+dbo --> service: AirportDbo
+service -> airportRepo: insert(airportDbo)
+repository -> db : insert(CountryDbo)
+db -> pgdb : sql-insert
+db --> repository : Future[Id]
+repository --> service : Future[Country]
+service --> api : Future[Country]
+api -> view : from(Country)
+view --> api : Future[CountryView]
+api --> user : CountryView
+@enduml

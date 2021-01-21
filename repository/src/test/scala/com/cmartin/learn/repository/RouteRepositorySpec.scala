@@ -1,9 +1,8 @@
 package com.cmartin.learn.repository
 
-import com.cmartin.learn.test.Constants._
+import com.cmartin.learn.test.AviationData.Constants._
 import org.scalatest.{BeforeAndAfterAll, OptionValues}
 
-import java.sql.SQLIntegrityConstraintViolationException
 import scala.concurrent.Await
 
 abstract class RouteRepositorySpec(path: String)

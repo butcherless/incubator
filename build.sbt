@@ -122,12 +122,19 @@ lazy val hexagonal = (project in file("hexagonal"))
     Defaults.itSettings,
     name := "hexagonal",
     libraryDependencies ++= Seq(
-      zioPrelude,
+      logback,
       quillJdbc,
       quillPostgres,
+      postgresDB,
+        slick,
+      slickPool,
+      typesafeConfig,
+      zioPrelude,
+      h2Database,
       scalaTest
-    ) //,scalaReflect, scalaCompiler)
+    ),
+    parallelExecution in Test := false
   )
-  .dependsOn(quillMacros)
+  .dependsOn(quillMacros,testUtils)
 
 addCommandAlias("mycc", "clean;coverage;test;coverageReport")

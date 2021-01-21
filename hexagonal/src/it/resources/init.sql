@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS "country_dbo"
+(
+    "id" SERIAL PRIMARY KEY,
+    "name" VARCHAR NOT NULL,
+    "code" VARCHAR NOT NULL
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS "CODE_INDEX" ON "country_dbo" ("code");

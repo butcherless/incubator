@@ -1,10 +1,10 @@
 package com.cmartin.learn.adapter.rest
 
-import com.cmartin.learn.application.CountryService
 import com.cmartin.learn.domain.Model.Country
 import zio.prelude.Validation
 
 import scala.concurrent.Future
+/*
 
 class CountryRestApi(countryCreator: CountryService) {
 
@@ -23,3 +23,4 @@ class CountryRestApi(countryCreator: CountryService) {
       )
   }
 }
+*/
