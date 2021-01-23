@@ -83,6 +83,7 @@ abstract class CountryRepositorySpec(path: String)
 
     result map { tuple =>
       assert(tuple._1 > 0L)
+      assert(tuple._2 == 1)
       assert(tuple._3 == 0)
     }
   }

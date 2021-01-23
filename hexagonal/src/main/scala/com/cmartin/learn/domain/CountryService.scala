@@ -1,7 +1,7 @@
 package com.cmartin.learn.domain
-import scala.concurrent.Future
+import com.cmartin.learn.domain.Model._
 
-import Model._
+import scala.concurrent.Future
 
 trait CountryService {
   def create(country: Country): Future[Country]

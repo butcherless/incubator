@@ -1,25 +1,14 @@
 package com.cmartin.learn.poc
 
-import java.util.UUID
-
-import scala.concurrent.ExecutionContext
-import scala.concurrent.Future
-import scala.language.experimental.macros
-
-import com.cmartin.learn.domain.Model.Airport
-import com.cmartin.learn.domain.Model.Country
-import io.getquill.Delete
-import io.getquill.EntityQuery
-import io.getquill.Insert
-import io.getquill.Literal
-import io.getquill.NamingStrategy
-import io.getquill.PostgresAsyncContext
-import io.getquill.PostgresDialect
-import io.getquill.PostgresJdbcContext
-import io.getquill.Update
+import com.cmartin.learn.domain.Model.{Airport, Country}
+import io.getquill._
 import io.getquill.context.Context
 import io.getquill.idiom.Idiom
 import io.getquill.monad.IOMonad
+
+import java.util.UUID
+import scala.concurrent.{ExecutionContext, Future}
+import scala.language.experimental.macros
 
 object Abstractions {
 
@@ -43,6 +32,17 @@ object Model {
   /* C L A S S E S */
 
   case class CountryDbo(name: String, code: String, id: Long = 0L) extends LongEntity(id)
+
+  case class AirportDbo(
+      name: String,
+      iataCode: String,
+      icaoCode: String,
+      countryId: Long,
+      id: Long = 0L
+  ) extends LongEntity(id)
+
+  case class RepositoryException(m: String) extends RuntimeException(m)
+
   object CountryDbo {
     def fromCountry(country: Country): CountryDbo =
       CountryDbo(
@@ -59,14 +59,6 @@ object Model {
     def update(dbo: CountryDbo, country: Country) =
       dbo.copy(name = country.name, code = country.code)
   }
-
-  case class AirportDbo(
-      name: String,
-      iataCode: String,
-      icaoCode: String,
-      countryId: Long,
-      id: Long = 0L
-  ) extends LongEntity(id)
 
   object AirportDbo {
     def from(airport: Airport, countryId: Long): AirportDbo =
@@ -93,13 +85,10 @@ object Model {
       )
   }
 
-  case class RepositoryException(m: String) extends RuntimeException(m)
-
 }
 
 object DomainPorts {
   import Abstractions._
-  import Model._
   /* Domain Port
      TODO refactor: Future => zio.Task
    */
@@ -117,19 +106,12 @@ object DomainPorts {
 }
 
 object AlternativeImplementation {
-  import Abstractions._
   import DomainPorts._
   import Model._
 
   /* AbstractContext: Query DSL for common operations via macro implementations */
   trait EntityContext extends IOMonad {
     this: Context[_, _] =>
-
-    def insertQuery[T](entity: T): Quoted[Insert[T]] = macro CommonOpsMacro.insert[T]
-
-    def updateQuery[T](entity: T): Quoted[Update[T]] = macro CommonOpsMacro.update[T]
-
-    def deleteQuery[T](entity: T): Quoted[Delete[T]] = macro CommonOpsMacro.delete[T]
 
     def findCountryByCodeQuery(code: String) =
       quote {
@@ -157,6 +139,12 @@ object AlternativeImplementation {
           IO.failed[T](RepositoryException(error))
         )(e => IO.successful(e))
     }
+
+    def insertQuery[T](entity: T): Quoted[Insert[T]] = macro CommonOpsMacro.insert[T]
+
+    def updateQuery[T](entity: T): Quoted[Update[T]] = macro CommonOpsMacro.update[T]
+
+    def deleteQuery[T](entity: T): Quoted[Delete[T]] = macro CommonOpsMacro.delete[T]
   }
 
   abstract class AbstractDboRepository(configPrefix: String) {
@@ -267,7 +255,6 @@ object AlternativeImplementation {
 }
 
 object Implementations {
-  import Abstractions._
   import DomainPorts._
   import Model._
 

@@ -3,30 +3,25 @@ package com.cmartin.learn.adapter.postgres
 import com.cmartin.learn.adapter.postgres.Model.CountryDbo
 import com.cmartin.learn.adapter.postgres.SlickRepositories.DatabaseLayer
 import com.cmartin.learn.test.AviationData.Constants._
-import org.scalatest.BeforeAndAfterEach
-import org.scalatest.flatspec.AsyncFlatSpec
-import org.scalatest.matchers.should.Matchers
-import slick.basic.DatabaseConfig
-import slick.jdbc.JdbcProfile
 
 import scala.concurrent.{Await, Future}
 
-class CountryRepositorySpec extends AsyncFlatSpec with Matchers with BeforeAndAfterEach {
+abstract class CountryRepositorySpec(path: String) extends BaseRepositorySpec(path) {
 
-  val spainCountryDbo               = CountryDbo(esCountry._1, esCountry._2)
-  val spainUpperCaseDbo: CountryDbo = CountryDbo(esCountry._1.toUpperCase, esCountry._2.toUpperCase)
-
-  val config = DatabaseConfig.forConfig[JdbcProfile]("h2_dc")
   val dbl = new DatabaseLayer(config) {
     import profile.api._
 
     val countryRepo = new CountrySlickRepository
 
     def createSchema(): Future[Unit] = {
-      config.db.run(countries.schema.create)
+      config.db.run(
+        countries.schema.create
+      )
     }
     def dropSchema(): Future[Unit] = {
-      config.db.run(countries.schema.drop)
+      config.db.run(
+        countries.schema.drop
+      )
     }
 
   }
@@ -36,7 +31,7 @@ class CountryRepositorySpec extends AsyncFlatSpec with Matchers with BeforeAndAf
   behavior of "Country Repository"
 
   it should "insert a country into the database" in {
-    val result: Future[Long] = dbl.countryRepo.insert(spainCountryDbo)
+    val result: Future[Long] = dbl.countryRepo.insert(esCountryDbo)
 
     result map { id =>
       assert(id > 0)
@@ -46,15 +41,27 @@ class CountryRepositorySpec extends AsyncFlatSpec with Matchers with BeforeAndAf
   it should "fail to insert a duplicate country intro the database" in {
     recoverToSucceededIf[java.sql.SQLException] {
       for {
-        _ <- dbl.countryRepo.insert(spainCountryDbo)
-        _ <- dbl.countryRepo.insert(spainCountryDbo)
+        _ <- dbl.countryRepo.insert(esCountryDbo)
+        _ <- dbl.countryRepo.insert(esCountryDbo)
       } yield ()
+    }
+  }
+
+  it should "insert a sequence of countries into the database" in {
+    val result: Future[Seq[Long]] = for {
+      cs <- dbl.countryRepo.insert(countrySequence)
+    } yield cs
+
+    result map { cs =>
+      assert(cs.nonEmpty)
+      assert(cs.size == countrySequence.size)
+      assert(cs.forall(_ > 0L))
     }
   }
 
   it should "update a country from the database" in {
     val result = for {
-      cid     <- dbl.countryRepo.insert(spainCountryDbo)
+      cid     <- dbl.countryRepo.insert(esCountryDbo)
       uid     <- dbl.countryRepo.update(spainUpperCaseDbo.copy(id = Option(cid)))
       updated <- dbl.countryRepo.findById(cid)
     } yield (cid, uid, updated)
@@ -63,6 +70,58 @@ class CountryRepositorySpec extends AsyncFlatSpec with Matchers with BeforeAndAf
       assert(tuple._1 > 0L)
       assert(tuple._1 == tuple._2)
       assert(tuple._3 == Option(spainUpperCaseDbo.copy(id = Option(tuple._1))))
+    }
+  }
+
+  it should "delete a country from the database" in {
+    val result = for {
+      cid   <- dbl.countryRepo.insert(esCountryDbo)
+      did   <- dbl.countryRepo.delete(cid)
+      count <- dbl.countryRepo.count()
+    } yield (cid, did, count)
+
+    result map { tuple =>
+      val (cid, dCount, count) = tuple
+      assert(cid > 0L)
+      assert(dCount == 1)
+      assert(count == 0)
+    }
+  }
+
+  it should "delete all countries from the database" in {
+    val result = for {
+      cs <- dbl.countryRepo.insert(countrySequence)
+      fs <- dbl.countryRepo.findAll()
+      ds <- dbl.countryRepo.deleteAll()
+    } yield (cs, fs, ds)
+
+    result map { tuple =>
+      val (cs, fs, ds) = tuple
+      assert(cs.size == fs.size)
+      assert(cs.size == ds)
+    }
+  }
+
+  it should "find a country by its code" in {
+    val result = for {
+      _       <- dbl.countryRepo.insert(esCountryDbo)
+      country <- dbl.countryRepo.findByCode(esCountryDbo.code)
+    } yield country
+
+    result map { country =>
+      assert(country.isDefined)
+      assert(country.get.code == esCountryDbo.code)
+    }
+  }
+
+  it should "retrieve all countries from the database" in {
+    val result: Future[Seq[CountryDbo]] = for {
+      _  <- dbl.countryRepo.insert(countrySequence)
+      cs <- dbl.countryRepo.findAll()
+    } yield cs
+
+    result map { seq =>
+      assert(seq.size == 2)
     }
   }
 
