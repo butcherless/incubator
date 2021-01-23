@@ -44,7 +44,7 @@ jobs:
     - name: tests
       run: sbt -v -Dfile.encoding=UTF-8 --client test
     - name: integration tests
-      run: sbt -v -Dfile.encoding=UTF-8 --client it:test
+      run: sbt -v -Dfile.encoding=UTF-8 --client "hexagonal/it:test"
     - name: assembly
       run: sbt -v -Dfile.encoding=UTF-8 --client assembly
     - name: dependency updates report

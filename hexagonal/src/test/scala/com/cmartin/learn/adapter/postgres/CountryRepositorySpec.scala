@@ -62,14 +62,14 @@ abstract class CountryRepositorySpec(path: String) extends BaseRepositorySpec(pa
   it should "update a country from the database" in {
     val result = for {
       cid     <- dbl.countryRepo.insert(esCountryDbo)
-      uid     <- dbl.countryRepo.update(spainUpperCaseDbo.copy(id = Option(cid)))
+      _       <- dbl.countryRepo.update(spainUpperCaseDbo.copy(id = Option(cid)))
       updated <- dbl.countryRepo.findById(cid)
-    } yield (cid, uid, updated)
+    } yield (cid, updated)
 
     result map { tuple =>
-      assert(tuple._1 > 0L)
-      assert(tuple._1 == tuple._2)
-      assert(tuple._3 == Option(spainUpperCaseDbo.copy(id = Option(tuple._1))))
+      val (cid, updated) = tuple
+      assert(cid > 0L)
+      assert(updated == Option(spainUpperCaseDbo.copy(id = Option(cid))))
     }
   }
 

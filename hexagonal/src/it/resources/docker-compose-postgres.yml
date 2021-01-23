@@ -10,9 +10,11 @@ services:
     ports:
       - 5432:5432
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      #POSTGRES_DB: "aviation_db"
+      POSTGRES_DB: "aviation_db"
       POSTGRES_HOST_AUTH_METHOD: "trust"
-    volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      #POSTGRES_USER: postgres
+      #POSTGRES_PASSWORD: postgres
+    #volumes:
+    #  - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+

@@ -16,8 +16,8 @@ abstract class BaseRepositorySpec(path: String)
 
   val config = DatabaseConfig.forConfig[JdbcProfile](path)
 
-  val esCountryDbo               = CountryDbo(esCountry._1, esCountry._2)
-  val ukCountryDbo               = CountryDbo(ukCountry._1, ukCountry._2)
-  val countrySequence = Seq(esCountryDbo, ukCountryDbo)
+  val esCountryDbo                  = CountryDbo(esCountry._1, esCountry._2)
+  val ukCountryDbo                  = CountryDbo(ukCountry._1, ukCountry._2)
+  val countrySequence               = Seq(esCountryDbo, ukCountryDbo)
   val spainUpperCaseDbo: CountryDbo = CountryDbo(esCountry._1.toUpperCase, esCountry._2.toUpperCase)
 }

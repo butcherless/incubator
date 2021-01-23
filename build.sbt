@@ -76,26 +76,6 @@ lazy val testUtils = (project in file("test"))
     name := "test-utils"
   )
 
-lazy val poc = (project in file("poc"))
-  .configs(IntegrationTest)
-  .settings(
-    commonSettings,
-    Defaults.itSettings,
-    name := "poc",
-    libraryDependencies ++= Seq(
-      akkaHttp,
-      akkaStream,
-      scalaLogging,
-      slick,
-      slickPool,
-      logback,
-      slf4j,
-      h2Database
-    ),
-    parallelExecution in Test := false
-  )
-  .dependsOn(testUtils)
-
 lazy val pocZioZLayer = (project in file("poc-zio-zlayer"))
   .configs(IntegrationTest)
   .settings(
@@ -116,7 +96,7 @@ lazy val quillMacros = project
   )
 
 lazy val hexagonal = (project in file("hexagonal"))
-  .configs(IntegrationTest)
+  .configs(IntegrationTest extend Test)
   .settings(
     commonSettings,
     Defaults.itSettings,
