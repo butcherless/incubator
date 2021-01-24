@@ -21,7 +21,8 @@ jobs:
       - run:
           name: clean, compile
           command: |
-                   sbt -mem 2048 clean compile
+            java -version
+            sbt -mem 2048 clean compile
 
       - run:
           name: test, coverage

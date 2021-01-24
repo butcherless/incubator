@@ -2,16 +2,17 @@ package com.cmartin.learn.adapter.postgres
 
 import com.cmartin.learn.adapter.postgres.Model.AirportDbo
 import com.cmartin.learn.adapter.postgres.SlickRepositories.DatabaseLayer
-import com.cmartin.learn.test.AviationData.Constants.{esCountry, waitTimeout}
+import com.cmartin.learn.test.AviationData.Constants.esCountry
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 
 abstract class AirportRepositorySpec(path: String) extends BaseRepositorySpec(path) {
 
-  val barajasAirportDbo   = AirportDbo("Barajas", "MAD", "LEMD", 0L)
+  val barajasAirportDbo = AirportDbo("Barajas", "MAD", "LEMD", 0L)
   val barajasUppercaseDbo = AirportDbo("BARAJAS", "MAD", "LEMD", 0L)
 
   val dbl = new DatabaseLayer(config) {
+
     import profile.api._
 
     val countryRepo = new CountrySlickRepository
@@ -22,15 +23,16 @@ abstract class AirportRepositorySpec(path: String) extends BaseRepositorySpec(pa
         (
           countries.schema ++
             airports.schema
-        ).create
+          ).create
       )
     }
+
     def dropSchema(): Future[Unit] = {
       config.db.run(
         (
           countries.schema ++
             airports.schema
-        ).drop
+          ).drop
       )
     }
 
@@ -76,9 +78,9 @@ abstract class AirportRepositorySpec(path: String) extends BaseRepositorySpec(pa
   it should "update an airport from the database" in {
     val result = for {
       (aid, _) <- insertAirport()
-      ukid     <- dbl.countryRepo.insert(ukCountryDbo)
-      _        <- dbl.airportRepo.update(barajasUppercaseDbo.copy(id = Some(aid), countryId = ukid))
-      updated  <- dbl.airportRepo.findById(aid)
+      ukid <- dbl.countryRepo.insert(ukCountryDbo)
+      _ <- dbl.airportRepo.update(barajasUppercaseDbo.copy(id = Some(aid), countryId = ukid))
+      updated <- dbl.airportRepo.findById(aid)
     } yield (aid, ukid, updated)
 
     result map { tuple =>
@@ -91,8 +93,8 @@ abstract class AirportRepositorySpec(path: String) extends BaseRepositorySpec(pa
   it should "delete an airport from the database" in {
     val result = for {
       (aid, _) <- insertAirport()
-      did      <- dbl.airportRepo.delete(aid)
-      count    <- dbl.airportRepo.count()
+      did <- dbl.airportRepo.delete(aid)
+      count <- dbl.airportRepo.count()
     } yield (aid, did, count)
 
     result map { tuple =>
@@ -106,7 +108,7 @@ abstract class AirportRepositorySpec(path: String) extends BaseRepositorySpec(pa
   it should "find an airport by its id" in {
     val result = for {
       (aid, _) <- insertAirport()
-      airport  <- dbl.airportRepo.findById(aid)
+      airport <- dbl.airportRepo.findById(aid)
     } yield (airport, aid)
 
     result map { tuple =>
@@ -119,7 +121,7 @@ abstract class AirportRepositorySpec(path: String) extends BaseRepositorySpec(pa
   it should "find an airport by its country code" in {
     val result = for {
       (aid, cid) <- insertAirport()
-      airports   <- dbl.airportRepo.findByCountryCode(esCountry._2) // "ES"
+      airports <- dbl.airportRepo.findByCountryCode(esCountry._2) // "ES"
     } yield (airports, aid, cid)
 
     result map { tuple =>
@@ -132,7 +134,7 @@ abstract class AirportRepositorySpec(path: String) extends BaseRepositorySpec(pa
 
   it should "find an airport by its iata code" in {
     val result = for {
-      _       <- insertAirport()
+      _ <- insertAirport()
       airport <- dbl.airportRepo.findByIataCode(barajasAirportDbo.iataCode)
     } yield airport
 
@@ -148,13 +150,5 @@ abstract class AirportRepositorySpec(path: String) extends BaseRepositorySpec(pa
       barajasAirportDbo.copy(countryId = countryId)
     )
   } yield (airportId, countryId)
-
-  override def beforeEach(): Unit = {
-    Await.result(dbl.createSchema(), waitTimeout)
-  }
-
-  override def afterEach(): Unit = {
-    Await.result(dbl.dropSchema(), waitTimeout)
-  }
 
 }

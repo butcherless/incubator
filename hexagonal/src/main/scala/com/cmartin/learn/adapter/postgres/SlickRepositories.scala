@@ -122,7 +122,7 @@ object SlickRepositories {
       config.db.run(dbAction)
   }
 
-  trait DAL extends SlickRepositories { self: Profile =>
+  trait DAL1 extends SlickRepositories { self: Profile =>
     import profile.api._
 
     implicit val ec: ExecutionContext
@@ -135,8 +135,30 @@ object SlickRepositories {
     val airportRepo = new AirportSlickRepository
   }
 
-  class DalConfiguration(configPrefix: String) extends DAL { self: Profile =>
-    override val config               = DatabaseConfig.forConfig[JdbcProfile](configPrefix)
-    implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.global
+  trait DAL extends Profile with SlickRepositories {
+    import profile.api._
+
+    //val config: DatabaseConfig[JdbcProfile]
+    val countryRepo = new CountrySlickRepository
+    val airportRepo = new AirportSlickRepository
+
+    implicit val ec: ExecutionContext
+
+    implicit def executeFromDb[A](dbAction: DBIO[A]): Future[A] // = config.db.run(dbAction)
   }
+
+  class Database2Layer(configPath: String) extends DAL {
+
+    //TODO make config private, create database layer for testing
+     val config: DatabaseConfig[JdbcProfile] =
+      DatabaseConfig.forConfig[JdbcProfile](configPath)
+
+    override val profile = config.profile
+
+    override implicit val ec: ExecutionContext = scala.concurrent.ExecutionContext.global
+
+    override implicit def executeFromDb[A](dbAction: profile.api.DBIO[A]): Future[A] =
+      config.db.run(dbAction)
+  }
+
 }
