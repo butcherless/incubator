@@ -2,9 +2,9 @@ package com.cmartin.learn.adapter.postgres
 
 import com.cmartin.learn.adapter.postgres.Model.AirportDbo
 import com.cmartin.learn.adapter.postgres.SlickRepositories.DatabaseLayer
-import com.cmartin.learn.test.AviationData.Constants.esCountry
+import com.cmartin.learn.test.AviationData.Constants.{esCountry, waitTimeout}
 
-import scala.concurrent.Future
+import scala.concurrent.{Await, Future}
 
 abstract class AirportRepositorySpec(path: String) extends BaseRepositorySpec(path) {
 
@@ -150,5 +150,14 @@ abstract class AirportRepositorySpec(path: String) extends BaseRepositorySpec(pa
       barajasAirportDbo.copy(countryId = countryId)
     )
   } yield (airportId, countryId)
+
+
+  override def beforeEach(): Unit = {
+    Await.result(dbl.createSchema(), waitTimeout)
+  }
+
+  override def afterEach(): Unit = {
+    Await.result(dbl.dropSchema(), waitTimeout)
+  }
 
 }
