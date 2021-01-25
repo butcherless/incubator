@@ -2,7 +2,7 @@
 skinparam monochrome true
 skinparam BoxPadding 5
 header Ports and Adapter POC
-title [WIP] Create Airport Use Case
+title Create Airport Use Case
 
 hide footbox
 actor HttpClient as user << User >>
@@ -19,7 +19,7 @@ participant "CountryRepository" as countryRepo << Repository >>
 participant "AirportRepository" as airportRepo << Repository >>
 end box
 box "Secondary Adapter" #FBFBFB
-participant "AirportDbo" as dbo << Entity >>
+participant "AirportDbo" as dbo << Converter >>
 participant "SlickDriver" as db << DatabaseDriver >>
 end box
 
@@ -39,12 +39,12 @@ countryRepo --> service: CountryDbo
 service -> dbo: from(Airport, countryCode)
 dbo --> service: AirportDbo
 service -> airportRepo: insert(airportDbo)
-repository -> db : insert(CountryDbo)
+airportRepo -> db : add(CountryDbo)
 db -> pgdb : sql-insert
-db --> repository : Future[Id]
-repository --> service : Future[Country]
-service --> api : Future[Country]
-api -> view : from(Country)
-view --> api : Future[CountryView]
-api --> user : CountryView
+db --> airportRepo : Future[Id]
+airportRepo --> service : Future[Airport]
+service --> api : Future[Airport]
+api -> view : from(Airport)
+view --> api : Future[AirportView]
+api --> user : AirportView
 @enduml

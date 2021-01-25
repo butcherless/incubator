@@ -1,13 +1,14 @@
 package com.cmartin.learn.application
 
+import scala.concurrent.Future
+
 import com.cmartin.learn.adapter.postgres.Model.AirportDboConverter
 import com.cmartin.learn.adapter.postgres.SlickRepositories.DAL
 import com.cmartin.learn.domain.ApplicationPorts.AirportService
 import com.cmartin.learn.domain.Model.Airport
 
-import scala.concurrent.Future
-
-/* dbo.id.get: Access to the identifier is guaranteed by the Repository primary key
+/* dbo.id.get: Access to the identifier is guaranteed by
+   the Repository primary key
  */
 class AirportUseCases(dal: DAL) extends AirportService {
 
@@ -15,19 +16,39 @@ class AirportUseCases(dal: DAL) extends AirportService {
 
   override def create(airport: Airport): Future[Airport] = {
     for {
-      countryOption <- dal.countryRepo.findByCode(airport.country.code)
-      country       <- checkElement(countryOption, s"country code not found: ${airport.country.code}")
-      _             <- dal.airportRepo.insert(AirportDboConverter.from(airport, country.id.get))
+      country <- findCountryByCode(airport.country.code)
+      _       <- airportRepo.insert(AirportDboConverter.from(airport, country.id.get))
     } yield airport
   }
 
   override def update(airport: Airport): Future[Airport] = {
     for {
-      airportOption <- dal.airportRepo.findByIataCode(airport.iataCode)
-      airportDbo    <- checkElement(airportOption, s"airport iata code not found: ${airport.iataCode}")
-      countryOption <- dal.countryRepo.findByCode(airport.country.code)
-      country       <- checkElement(countryOption, s"country code not found: ${airport.country.code}")
-      _             <- dal.airportRepo.update(AirportDboConverter.update(airportDbo, airport, country.id.get))
+      airportDbo <- findAirportByIataCode(airport.iataCode)
+      country    <- findCountryByCode(airport.country.code)
+      _          <- airportRepo.update(AirportDboConverter.update(airportDbo, airport, country.id.get))
+    } yield airport
+  }
+
+  override def delete(airport: Airport): Future[Int] = {
+    for {
+      airportDbo <- findAirportByIataCode(airport.iataCode)
+      count      <- airportRepo.delete(airportDbo.id.get)
+    } yield count
+  }
+
+  /* H E L P E R   F U N C T I O N S */
+  //TODO move to common use cases class
+  private def findCountryByCode(code: String) = {
+    for {
+      countryOption <- countryRepo.findByCode(code)
+      country       <- checkElement(countryOption, s"country code not found: $code")
+    } yield country
+  }
+
+  private def findAirportByIataCode(code: String) = {
+    for {
+      airportOption <- airportRepo.findByIataCode(code)
+      airport       <- checkElement(airportOption, s"airport iata code not found: $code")
     } yield airport
   }
 }

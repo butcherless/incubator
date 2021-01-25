@@ -18,7 +18,7 @@ participant "CountryService" as service << Service >>
 participant "CountryRepository" as repository << Repository >>
 end box
 box "Secondary Adapter" #FBFBFB
-participant "CountryDbo" as dbo << Entity >>
+participant "CountryDbo" as dbo << Converter >>
 participant "SlickDriver" as db << DatabaseDriver >>
 end box
 
@@ -30,10 +30,10 @@ api -> validator : from(TupleN[CountryRequest])
 validator -> country ** : validate(TupleN)
 validator --> api: Country
 api -> service: create(Country)
-service -> repository: save(Country)
-repository -> dbo: from(Country)
-dbo --> repository: CountryDbo
-repository -> db : insert(CountryDbo)
+service -> dbo: from(Country)
+dbo --> service: CountryDbo
+service -> repository: insert(CountryDbo)
+repository -> db : add(CountryDbo)
 db -> pgdb : sql-insert
 db --> repository : Future[Id]
 repository --> service : Future[Country]
