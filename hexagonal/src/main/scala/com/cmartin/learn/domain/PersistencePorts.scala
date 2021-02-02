@@ -5,7 +5,11 @@ import scala.concurrent.Future
 object PersistencePorts {
   import Model._
 
-  // Domain Port
+  /** Domain Port
+    *
+    * @tparam F
+    * @tparam E
+    */
   trait BaseRepository[F[_], E] {
     def insert(entity: E): F[E]
     def update(entity: E): F[E]

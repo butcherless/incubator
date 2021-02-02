@@ -6,7 +6,8 @@ import com.cmartin.learn.test.AviationData.Constants._
 
 import scala.concurrent.{Await, Future}
 
-abstract class CountryRepositorySpec(path: String) extends BaseRepositorySpec(path) {
+abstract class CountryRepositorySpec(path: String) /*                                            */
+    extends BaseRepositorySpec(path) {
 
   val dbl = new DatabaseLayer(config) {
     import profile.api._

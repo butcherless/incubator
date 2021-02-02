@@ -10,7 +10,10 @@ import org.scalatest.matchers.should.Matchers
 
 import scala.concurrent.{Await, Future}
 
-class CountryUseCasesSpec extends AsyncFlatSpec with Matchers with BeforeAndAfterEach {
+class CountryUseCasesSpec /*                                            */
+    extends AsyncFlatSpec
+    with Matchers
+    with BeforeAndAfterEach {
 
   import CountryUseCasesSpec._
 

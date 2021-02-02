@@ -1,16 +1,17 @@
 package com.cmartin.learn.application
 
-import scala.concurrent.Future
-
 import com.cmartin.learn.adapter.postgres.Model.AirportDboConverter
 import com.cmartin.learn.adapter.postgres.SlickRepositories.DAL
 import com.cmartin.learn.domain.ApplicationPorts.AirportService
 import com.cmartin.learn.domain.Model.Airport
 
+import scala.concurrent.Future
+
 /* dbo.id.get: Access to the identifier is guaranteed by
    the Repository primary key
  */
-class AirportUseCases(dal: DAL) extends AirportService {
+class AirportUseCases(dal: DAL) /*                                            */
+    extends AirportService {
 
   import dal._
 

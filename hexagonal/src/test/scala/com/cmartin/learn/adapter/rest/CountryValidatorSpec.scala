@@ -7,7 +7,9 @@ import zio.NonEmptyChunk
 import zio.prelude.Validation
 import zio.prelude.Validation.Failure
 
-class CountryValidatorSpec extends AnyFlatSpec with Matchers {
+class CountryValidatorSpec /*                                            */
+    extends AnyFlatSpec
+    with Matchers {
 
   import CountryValidator._
   import CountryValidatorSpec._
