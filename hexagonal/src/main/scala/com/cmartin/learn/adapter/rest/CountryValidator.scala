@@ -29,10 +29,14 @@ object CountryValidator {
 
   def validateNameChars(name: String): Validation[RestValidationError, String] = {
     Validation
-      .fromPredicateWith(
-        InvalidNameCharacters(s"invalid characters for name: $name"),
-        name
-      )(n => countryNamePattern.matches(n))
+      .fromEither(
+        Either
+          .cond(
+            countryNamePattern.matches(name),
+            name,
+            InvalidNameCharacters(s"invalid characters for name: $name")
+          )
+      )
   }
 
   def validateCode(code: String): Validation[RestValidationError, String] =
@@ -42,18 +46,25 @@ object CountryValidator {
     } yield result
 
   def validateCountryCode(code: String): Validation[RestValidationError, String] = {
+
+    val x = Either.cond(
+      countryCodes.contains(code),
+      code,
+      InvalidCountryCode(s"the code supplied does not exist: $code")
+    )
+
     Validation
-      .fromPredicateWith(
-        InvalidCountryCode(s"the code supplied does not exist: $code"),
-        code
-      )(c => countryCodes.contains(c))
+      .fromEither(x)
   }
 
   private def validateEmptyText(
       text: String,
       error: RestValidationError
   ): Validation[RestValidationError, String] = {
-    Validation.fromPredicateWith(error, text)(_.nonEmpty)
+    Validation
+      .fromEither(
+        Either.cond(text.nonEmpty, text, error)
+      )
   }
 
   sealed trait RestValidationError
@@ -62,9 +73,9 @@ object CountryValidator {
     val description: String
   }
 
-  case class InvalidCountryCode(description: String)    extends DescribedError
+  case class InvalidCountryCode(description: String) extends DescribedError
 
-  case class EmptyProperty(description: String)         extends DescribedError
+  case class EmptyProperty(description: String) extends DescribedError
 
   case class InvalidNameCharacters(description: String) extends DescribedError
 

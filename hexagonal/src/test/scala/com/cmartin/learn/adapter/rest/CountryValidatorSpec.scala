@@ -5,7 +5,6 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import zio.NonEmptyChunk
 import zio.prelude.Validation
-import zio.prelude.Validation.Failure
 
 class CountryValidatorSpec /*                                            */
     extends AnyFlatSpec
@@ -16,18 +15,18 @@ class CountryValidatorSpec /*                                            */
 
   behavior of "Aircraft Validator"
 
-  it should "validate a single word country request" in {
+  it should "TODO validate a single word country request" in {
     val result: Validation[RestValidationError, Country] =
       validate(name = SPAIN_NAME, code = SPAIN_CODE)
 
-    result shouldBe Validation(gbCountry)
+    result.either.run shouldBe Right(gbCountry)
   }
 
   it should "validate a multiple word country request" in {
     val result: Validation[RestValidationError, Country] =
       validate(name = GB_NAME, code = GB_CODE)
 
-    result shouldBe Validation(spainCountry)
+    result.either.run shouldBe Right(spainCountry)
   }
 
   it should "fail to validate an empty country name" in {
@@ -35,9 +34,7 @@ class CountryValidatorSpec /*                                            */
     val result: Validation[RestValidationError, Country] =
       validate(name = emptyName, code = GB_CODE)
 
-    result shouldBe Failure(
-      NonEmptyChunk(EmptyProperty(s"name property is empty"))
-    )
+    result.either.run shouldBe Left(EmptyProperty(s"name property is empty"))
   }
 
   it should "fail to validate an empty country code" in {
@@ -45,9 +42,7 @@ class CountryValidatorSpec /*                                            */
     val result: Validation[RestValidationError, Country] =
       validate(name = GB_NAME, code = emptyCode)
 
-    result shouldBe Failure(
-      NonEmptyChunk(EmptyProperty(s"code property is empty"))
-    )
+    result.either.run shouldBe Left(EmptyProperty(s"code property is empty"))
   }
 
   it should "fail to validate an invalid country code" in {
@@ -55,8 +50,8 @@ class CountryValidatorSpec /*                                            */
     val result: Validation[RestValidationError, Country] =
       validate(name = GB_NAME, code = invalidCode)
 
-    result shouldBe Failure(
-      NonEmptyChunk(InvalidCountryCode(s"the code supplied does not exist: $invalidCode"))
+    result.either.run shouldBe Left(
+      InvalidCountryCode(s"the code supplied does not exist: $invalidCode")
     )
   }
 
