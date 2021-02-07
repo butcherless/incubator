@@ -15,7 +15,7 @@ class CountryValidatorSpec /*                                            */
 
   behavior of "Aircraft Validator"
 
-  it should "TODO validate a single word country request" in {
+  it should "validate a single word country request" in {
     val result: Validation[RestValidationError, Country] =
       validate(name = SPAIN_NAME, code = SPAIN_CODE)
 
