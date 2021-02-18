@@ -4,7 +4,7 @@ object Versions {
   val cats         = "2.0.0"
   val config       = "1.4.1"
   val h2           = "1.4.200"
-  val postgres     = "42.2.18"
+  val postgres     = "42.2.19"
   val json4s       = "3.6.10"
   val logback      = "1.2.3"
   val playJson     = "2.9.2"
