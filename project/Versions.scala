@@ -18,5 +18,5 @@ object Versions {
   val zio          = "1.0.4-2"
   val zioPrelude   = "1.0.0-RC2"
 
-  val scalaVersion = "2.13.4"
+  val scalaVersion = "2.13.5"
 }
