@@ -76,15 +76,6 @@ lazy val testUtils = (project in file("test"))
     name := "test-utils"
   )
 
-lazy val pocZioZLayer = (project in file("poc-zio-zlayer"))
-  .configs(IntegrationTest)
-  .settings(
-    commonSettings,
-    Defaults.itSettings,
-    name := "poc-zio-zlayer",
-    libraryDependencies ++= Seq(zio, zioTest, zioTestSbt),
-    testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework"))
-  )
 
 lazy val quillMacros = project
   .in(file("hexagonal/macro"))
