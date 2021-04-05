@@ -49,25 +49,6 @@ lazy val repository = (project in file("repository"))
   )
   .dependsOn(common, testUtils)
 
-lazy val service = (project in file("service"))
-  .configs(IntegrationTest)
-  .settings(
-    commonSettings,
-    Defaults.itSettings,
-    name := "service",
-    libraryDependencies ++= Seq(typesafeConfig, json4sNative, playJson, scalaLogging, logback)
-  )
-  .dependsOn(common, repository)
-
-lazy val controller = (project in file("controller"))
-  .configs(IntegrationTest)
-  .settings(
-    commonSettings,
-    Defaults.itSettings,
-    name := "controller"
-  )
-  .dependsOn(common, service)
-
 lazy val testUtils = (project in file("test"))
   .configs(IntegrationTest)
   .settings(
@@ -76,14 +57,14 @@ lazy val testUtils = (project in file("test"))
     name := "test-utils"
   )
 
-
 lazy val quillMacros = project
   .in(file("hexagonal/macro"))
   .configs(IntegrationTest)
   .settings(
     commonSettings,
     name := "quillMacros",
-    libraryDependencies ++= Seq(quillJdbc, quillPostgres, scalaTest, scalaReflect, scalaCompiler)
+    libraryDependencies ++= Seq(quillJdbc, quillPostgres, scalaTest, scalaReflect, scalaCompiler),
+    assemblyStrategy
   )
 
 lazy val hexagonal = (project in file("hexagonal"))
@@ -97,16 +78,26 @@ lazy val hexagonal = (project in file("hexagonal"))
       quillJdbc,
       quillPostgres,
       postgresDB,
-        slick,
+      slick,
       slickPool,
       typesafeConfig,
       zioPrelude,
       h2Database,
       scalaTest
     ),
-    parallelExecution in Test := false
+    parallelExecution in Test := false,
+    assemblyStrategy
   )
-  .dependsOn(quillMacros,testUtils)
+  .dependsOn(quillMacros, testUtils)
+
+lazy val assemblyStrategy = assemblyMergeStrategy in assembly := {
+  case "module-info.class"                                    => MergeStrategy.last
+  case "META-INF/io.netty.versions.properties"                => MergeStrategy.last
+  case "META-INF/maven/org.webjars/swagger-ui/pom.properties" => MergeStrategy.first
+  case x =>
+    val oldStrategy = (assemblyMergeStrategy in assembly).value
+    oldStrategy(x)
+}
 
 addCommandAlias("xcoverage", "clean;coverage;test;coverageReport")
 addCommandAlias("xreload", "clean;reload")
