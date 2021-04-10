@@ -22,10 +22,6 @@ NOTE: Research project through small concept tests
 | https://app.shippable.com/github/butcherless/incubator[Build ShippableCI]
 | image:https://api.shippable.com/projects/5b68c6d57dafeb0700d706c0/badge?branch=master[ShippableCI build]
 
-| TravisCI
-| https://travis-ci.org/butcherless/incubator[Build TravisCI]
-| image:https://travis-ci.org/butcherless/scala.svg?branch=master[TravisCI build]
-
 | Codecov
 | https://codecov.io/gh/butcherless/incubator[Codecov coverage]
 | image:https://codecov.io/gh/butcherless/incubator/branch/master/graph/badge.svg[Codecov coverage]
