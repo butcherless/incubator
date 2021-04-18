@@ -1,7 +1,7 @@
 #
 # ports and adapter architecture
 #
-
+https://herbertograca.com/2017/11/16/explicit-architecture-01-ddd-hexagonal-onion-clean-cqrs-how-i-put-it-all-together/
 https://github.com/rdelgatte/spring-hexagonal-architecture
 https://github.com/tedyoung/kid-bank
 https://www.youtube.com/watch?v=ujb_O6myknY

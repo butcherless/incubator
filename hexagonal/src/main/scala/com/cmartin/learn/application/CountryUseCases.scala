@@ -8,7 +8,7 @@ import com.cmartin.learn.domain.Model._
 import scala.concurrent.Future
 
 /* dbo.id.get: Access to the identifier is guaranteed by
-   the Repository primary key
+               the primary key of the Entity in the Repository.
  */
 class CountryUseCases(dal: DAL) /*                                            */
     extends CountryService {
