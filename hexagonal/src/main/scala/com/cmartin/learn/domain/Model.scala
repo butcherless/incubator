@@ -11,13 +11,6 @@ object Model {
       code: String
   )
 
-  case class Airport1(
-      name: String,
-      iataCode: String,
-      icaoCode: String,
-      countryId: Long
-  )
-
   /** Country object
     * @param name airport name
     * @param iataCode 3 letter code

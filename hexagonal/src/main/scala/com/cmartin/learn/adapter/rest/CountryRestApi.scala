@@ -1,27 +1,25 @@
 package com.cmartin.learn.adapter.rest
 
-import com.cmartin.learn.domain.CountryService
+import com.cmartin.learn.domain.ApplicationPorts.CountryService
 import com.cmartin.learn.domain.Model.Country
 import zio.prelude.Validation
 
 import scala.concurrent.Future
 
+import CountryValidator.RestValidationError
 
-class CountryRestApi(countryCreator: CountryService) {
-/*
-  // Dummy api, returns http-code only
+class CountryRestApi(countryService: CountryService) {
+
+  // Dummy API
   def post(name: String, code: String): Future[Country] = {
-    val countryValidation: Validation[CountryValidator.RestValidationError, Country] =
+    val countryValidation: Validation[RestValidationError, Country] =
       CountryValidator.validate(name, code)
 
-    countryValidation
-      .fold(
-        _ => Future.failed(new RuntimeException("StatusCode: 500")), // KO
-        country => {
-          countryCreator.create(country)
-          //200 // OK
-        }
-      )
+    //TODO
+    countryValidation.sandbox.either.run.fold(
+      _ => Future.failed(new RuntimeException("StatusCode: 500")), // KO
+      country => countryService.create(country)                    // OK
+    )
   }
-*/
+
 }

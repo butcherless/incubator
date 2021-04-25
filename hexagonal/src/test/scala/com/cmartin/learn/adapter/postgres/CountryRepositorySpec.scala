@@ -4,7 +4,8 @@ import com.cmartin.learn.adapter.postgres.Model.CountryDbo
 import com.cmartin.learn.adapter.postgres.SlickRepositories.DatabaseLayer
 import com.cmartin.learn.test.AviationData.Constants._
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Await
+import scala.concurrent.Future
 
 abstract class CountryRepositorySpec(path: String) /*                                            */
     extends BaseRepositorySpec(path) {

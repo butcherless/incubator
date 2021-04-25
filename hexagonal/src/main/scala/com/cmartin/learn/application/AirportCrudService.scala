@@ -7,11 +7,9 @@ import com.cmartin.learn.domain.Model.Airport
 
 import scala.concurrent.Future
 
-/* dbo.id.get: Access to the identifier is guaranteed by
-   the Repository primary key
+/* dbo.id.get: Safe access to the identifier is guaranteed by the Repository primary key
  */
-class AirportUseCases(dal: DAL) /*                                            */
-    extends AirportService {
+class AirportCrudService(dal: DAL) extends AirportService {
 
   import dal._
 

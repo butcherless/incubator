@@ -2,7 +2,7 @@ package com.cmartin.learn.application
 
 import com.cmartin.learn.adapter.postgres.Model.CountryDboConverter
 import com.cmartin.learn.adapter.postgres.SlickRepositories.DAL
-import com.cmartin.learn.domain.CountryService
+import com.cmartin.learn.domain.ApplicationPorts.CountryService
 import com.cmartin.learn.domain.Model._
 
 import scala.concurrent.Future
@@ -10,8 +10,7 @@ import scala.concurrent.Future
 /* dbo.id.get: Access to the identifier is guaranteed by
                the primary key of the Entity in the Repository.
  */
-class CountryUseCases(dal: DAL) /*                                            */
-    extends CountryService {
+class CountryCrudService(dal: DAL) extends CountryService {
 
   import dal._
 

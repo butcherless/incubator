@@ -1,23 +1,24 @@
 package com.cmartin.learn.application
 
 import com.cmartin.learn.adapter.postgres.SlickRepositories.Database2Layer
-import com.cmartin.learn.domain.CountryService
+import com.cmartin.learn.domain.ApplicationPorts.CountryService
 import com.cmartin.learn.domain.Model.Country
 import com.cmartin.learn.test.AviationData.Constants.waitTimeout
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Await
+import scala.concurrent.Future
 
-class CountryUseCasesSpec /*                                            */
+class CountryCrudServiceSpec /*                                            */
     extends AsyncFlatSpec
     with Matchers
     with BeforeAndAfterEach {
 
   import CountryUseCasesSpec._
 
-  behavior of "CountryUseCases"
+  behavior of "CountryCrudService"
 
   val dal = new Database2Layer("h2_dc") {
     import profile.api._
@@ -33,7 +34,7 @@ class CountryUseCasesSpec /*                                            */
     }
   }
 
-  val countryService: CountryService = new CountryUseCases(dal)
+  val countryService: CountryService = new CountryCrudService(dal)
 
   it should "create a country" in {
     // given
