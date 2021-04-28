@@ -4,7 +4,7 @@ version: '3.7'
 services:
 
   postgres:
-    image: postgres:13.2-alpine
+    image: postgres:13-alpine
     container_name: postgres-db
     ports: 
       - 5432:5432
