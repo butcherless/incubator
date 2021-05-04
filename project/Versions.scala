@@ -8,7 +8,7 @@ object Versions {
   val json4s       = "3.6.11"
   val logback      = "1.2.3"
   val playJson     = "2.9.2"
-  val quill        = "3.7.0"
+  val quill        = "3.7.1"
   val scalaLogging = "3.9.3"
   val scalaz       = "7.2.27"
   val scalatest    = "3.2.8"
@@ -16,7 +16,7 @@ object Versions {
   val slick        = "3.3.3"
   val utest        = "0.6.6"
   val zio          = "1.0.7"
-  val zioPrelude   = "1.0.0-RC3"
+  val zioPrelude   = "1.0.0-RC4"
 
   val scalaVersion = "2.13.5"
 }

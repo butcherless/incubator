@@ -16,10 +16,12 @@ class CountryRestApi(countryService: CountryService) {
       CountryValidator.validate(name, code)
 
     //TODO
-    countryValidation.sandbox.either.run.fold(
-      _ => Future.failed(new RuntimeException("StatusCode: 500")), // KO
-      country => countryService.create(country)                    // OK
-    )
+    countryValidation.toEither
+      .fold[Future[Country]](
+        nec =>
+          Future.failed(new RuntimeException(s"StatusCode: 500 - ${nec.mkString("[", ",", "]")}")),
+        country => countryService.create(country)
+      )
   }
 
 }

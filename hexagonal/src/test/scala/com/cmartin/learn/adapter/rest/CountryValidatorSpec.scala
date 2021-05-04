@@ -16,42 +16,38 @@ class CountryValidatorSpec /*                                            */
   behavior of "Aircraft Validator"
 
   it should "validate a single word country request" in {
-    val result: Validation[RestValidationError, Country] =
-      validate(name = SPAIN_NAME, code = SPAIN_CODE)
+    val result: Either[NonEmptyChunk[RestValidationError], Country] =
+      validate(name = SPAIN_NAME, code = SPAIN_CODE).toEither
 
-    result.either.run shouldBe Right(gbCountry)
+    result shouldBe Right(gbCountry)
   }
 
   it should "validate a multiple word country request" in {
-    val result: Validation[RestValidationError, Country] =
-      validate(name = GB_NAME, code = GB_CODE)
+    val result = validate(name = GB_NAME, code = GB_CODE).toEither
 
-    result.either.run shouldBe Right(spainCountry)
+    result shouldBe Right(spainCountry)
   }
 
   it should "fail to validate an empty country name" in {
     val emptyName = ""
-    val result: Validation[RestValidationError, Country] =
-      validate(name = emptyName, code = GB_CODE)
+    val result    = validate(name = emptyName, code = GB_CODE).toEither
 
-    result.either.run shouldBe Left(EmptyProperty(s"name property is empty"))
+    result shouldBe Left(NonEmptyChunk(EmptyProperty(s"name property is empty")))
   }
 
   it should "fail to validate an empty country code" in {
     val emptyCode = ""
-    val result: Validation[RestValidationError, Country] =
-      validate(name = GB_NAME, code = emptyCode)
+    val result    = validate(name = GB_NAME, code = emptyCode).toEither
 
-    result.either.run shouldBe Left(EmptyProperty(s"code property is empty"))
+    result shouldBe Left(NonEmptyChunk(EmptyProperty(s"code property is empty")))
   }
 
   it should "fail to validate an invalid country code" in {
     val invalidCode = "XY"
-    val result: Validation[RestValidationError, Country] =
-      validate(name = GB_NAME, code = invalidCode)
+    val result      = validate(name = GB_NAME, code = invalidCode).toEither
 
-    result.either.run shouldBe Left(
-      InvalidCountryCode(s"the code supplied does not exist: $invalidCode")
+    result shouldBe Left(
+      NonEmptyChunk(InvalidCountryCode(s"the code supplied does not exist: $invalidCode"))
     )
   }
 

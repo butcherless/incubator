@@ -11,11 +11,8 @@ object CountryValidator {
   private val countryCodes              = Locale.getISOCountries(Locale.IsoCountryCode.PART1_ALPHA2)
   private val countryNamePattern: Regex = raw"[a-zA-Z ]+".r
 
-  def validate(
-      name: String,
-      code: String
-  ): Validation[RestValidationError, Country] = {
-    Validation.mapParN(
+  def validate(name: String, code: String): Validation[RestValidationError, Country] = {
+    Validation.validateWith(
       validateName(name),
       validateCode(code)
     )(Country)
