@@ -26,14 +26,9 @@ object CountryValidator {
 
   def validateNameChars(name: String): Validation[RestValidationError, String] = {
     Validation
-      .fromEither(
-        Either
-          .cond(
-            countryNamePattern.matches(name),
-            name,
-            InvalidNameCharacters(s"invalid characters for name: $name")
-          )
-      )
+      .fromPredicateWith(
+        InvalidNameCharacters(s"invalid characters for name: $name")
+      )(name)(countryNamePattern.matches)
   }
 
   def validateCode(code: String): Validation[RestValidationError, String] =
@@ -43,15 +38,10 @@ object CountryValidator {
     } yield result
 
   def validateCountryCode(code: String): Validation[RestValidationError, String] = {
-
-    val x = Either.cond(
-      countryCodes.contains(code),
-      code,
-      InvalidCountryCode(s"the code supplied does not exist: $code")
-    )
-
     Validation
-      .fromEither(x)
+      .fromPredicateWith(
+        InvalidCountryCode(s"the code supplied does not exist: $code")
+      )(code)(countryCodes.contains)
   }
 
   private def validateEmptyText(
@@ -59,9 +49,7 @@ object CountryValidator {
       error: RestValidationError
   ): Validation[RestValidationError, String] = {
     Validation
-      .fromEither(
-        Either.cond(text.nonEmpty, text, error)
-      )
+      .fromPredicateWith(error)(text)(_.nonEmpty)
   }
 
   sealed trait RestValidationError
