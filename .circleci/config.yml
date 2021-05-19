@@ -19,14 +19,14 @@ jobs:
 
       # compiler, test & run
       - run:
-          name: clean, compile
+          name: clean, test
           command: |
             java -version
-            sbt -mem 2048 clean compile
+            sbt -mem 2048 clean test
 
       - run:
-          name: test, coverage
+          name: coverage, dependencies
           command: |
-            sbt -mem 2048 xcoverage
+            sbt ++2.13.5 -mem 2048 xcoverage
             sbt -mem 2048 xdup
             bash <(curl -s https://codecov.io/bash) -t db92a4a7-4ab4-49ab-9ba9-164a43a25009
