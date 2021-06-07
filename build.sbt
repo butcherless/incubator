@@ -17,8 +17,7 @@ lazy val commonSettings = Seq(
     "-language:implicitConversions",
     "-language:postfixOps",
     "-language:reflectiveCalls"
-  ),
-  test in assembly := {}
+  )
 )
 
 lazy val common = (project in file("common"))
@@ -45,7 +44,7 @@ lazy val repository = (project in file("repository"))
       h2Database,
       postgresDB
     ),
-    parallelExecution in Test := false
+    parallelExecution := false
   )
   .dependsOn(common, testUtils)
 
@@ -85,12 +84,12 @@ lazy val hexagonal = (project in file("hexagonal"))
       h2Database,
       scalaTest
     ),
-    parallelExecution in Test := false,
+    parallelExecution := false,
     assemblyStrategy
   )
   .dependsOn(quillMacros, testUtils)
 
-lazy val assemblyStrategy = assemblyMergeStrategy in assembly := {
+lazy val assemblyStrategy = ThisBuild / assemblyMergeStrategy := {
   case "module-info.class"                                    => MergeStrategy.last
   case "META-INF/io.netty.versions.properties"                => MergeStrategy.last
   case "META-INF/maven/org.webjars/swagger-ui/pom.properties" => MergeStrategy.first
@@ -98,6 +97,8 @@ lazy val assemblyStrategy = assemblyMergeStrategy in assembly := {
     val oldStrategy = (assemblyMergeStrategy in assembly).value
     oldStrategy(x)
 }
+
+Global / onChangedBuildSource := ReloadOnSourceChanges
 
 addCommandAlias("xcoverage", "clean;coverage;test;coverageReport")
 addCommandAlias("xreload", "clean;reload")
