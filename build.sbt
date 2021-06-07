@@ -94,7 +94,7 @@ lazy val assemblyStrategy = ThisBuild / assemblyMergeStrategy := {
   case "META-INF/io.netty.versions.properties"                => MergeStrategy.last
   case "META-INF/maven/org.webjars/swagger-ui/pom.properties" => MergeStrategy.first
   case x =>
-    val oldStrategy = (assemblyMergeStrategy in assembly).value
+    val oldStrategy = assemblyMergeStrategy.value
     oldStrategy(x)
 }
 
