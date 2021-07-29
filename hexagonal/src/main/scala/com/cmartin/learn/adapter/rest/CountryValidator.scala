@@ -18,11 +18,10 @@ object CountryValidator {
     )(Country)
   }
 
-  def validateName(name: String): Validation[RestValidationError, String] =
-    for {
-      nonEmpty <- validateEmptyText(name, EmptyProperty(s"name property is empty"))
-      result   <- validateNameChars(nonEmpty)
-    } yield result
+  def validateName(name: String): Validation[RestValidationError, String] = {
+    validateEmptyText(name, EmptyProperty(s"name property is empty"))
+      .flatMap(validateNameChars)
+  }
 
   def validateNameChars(name: String): Validation[RestValidationError, String] = {
     Validation
@@ -31,11 +30,10 @@ object CountryValidator {
       )(name)(countryNamePattern.matches)
   }
 
-  def validateCode(code: String): Validation[RestValidationError, String] =
-    for {
-      nonEmpty <- validateEmptyText(code, EmptyProperty(s"code property is empty"))
-      result   <- validateCountryCode(nonEmpty)
-    } yield result
+  def validateCode(code: String): Validation[RestValidationError, String] = {
+    validateEmptyText(code, EmptyProperty(s"code property is empty"))
+      .flatMap(validateCountryCode)
+  }
 
   def validateCountryCode(code: String): Validation[RestValidationError, String] = {
     Validation
