@@ -1,32 +1,12 @@
 package com.cmartin.learn.adapter.postgres
 
 import com.cmartin.learn.adapter.postgres.Model.CountryDbo
-import com.cmartin.learn.adapter.postgres.SlickRepositories.DatabaseLayer
 import com.cmartin.learn.test.AviationData.Constants._
 
-import scala.concurrent.Await
-import scala.concurrent.Future
+import scala.concurrent.{Await, Future}
 
 abstract class CountryRepositorySpec(path: String) /*                                            */
     extends BaseRepositorySpec(path) {
-
-  val dbl = new DatabaseLayer(config) {
-    import profile.api._
-
-    val countryRepo = new CountrySlickRepository
-
-    def createSchema(): Future[Unit] = {
-      config.db.run(
-        countries.schema.create
-      )
-    }
-    def dropSchema(): Future[Unit] = {
-      config.db.run(
-        countries.schema.drop
-      )
-    }
-
-  }
 
   import dbl.executeFromDb
 
@@ -68,8 +48,7 @@ abstract class CountryRepositorySpec(path: String) /*                           
       updated <- dbl.countryRepo.findById(cid)
     } yield (cid, updated)
 
-    result map { tuple =>
-      val (cid, updated) = tuple
+    result map { case (cid, updated) =>
       assert(cid > 0L)
       assert(updated == Option(spainUpperCaseDbo.copy(id = Option(cid))))
     }
@@ -82,8 +61,7 @@ abstract class CountryRepositorySpec(path: String) /*                           
       count <- dbl.countryRepo.count()
     } yield (cid, did, count)
 
-    result map { tuple =>
-      val (cid, dCount, count) = tuple
+    result map { case (cid, dCount, count) =>
       assert(cid > 0L)
       assert(dCount == 1)
       assert(count == 0)
@@ -97,8 +75,7 @@ abstract class CountryRepositorySpec(path: String) /*                           
       ds <- dbl.countryRepo.deleteAll()
     } yield (cs, fs, ds)
 
-    result map { tuple =>
-      val (cs, fs, ds) = tuple
+    result map { case (cs, fs, ds) =>
       assert(cs.size == fs.size)
       assert(cs.size == ds)
     }
@@ -128,11 +105,8 @@ abstract class CountryRepositorySpec(path: String) /*                           
   }
 
   override def beforeEach(): Unit = {
-    Await.result(dbl.createSchema(), waitTimeout)
-  }
-
-  override def afterEach(): Unit = {
     Await.result(dbl.dropSchema(), waitTimeout)
+    Await.result(dbl.createSchema(), waitTimeout)
   }
 
 }

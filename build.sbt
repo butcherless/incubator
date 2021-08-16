@@ -4,6 +4,7 @@ ThisBuild / scalaVersion := "2.13.6"
 ThisBuild / organization := "com.cmartin.learn"
 
 lazy val commonSettings = Seq(
+  resolvers += Resolver.sonatypeRepo("snapshot"),
   libraryDependencies ++= Seq(scalaTest),
   scalacOptions ++= Seq( // some of the Rob Norris tpolecat options
     "-deprecation",      // Emit warning and location for usages of deprecated APIs.
@@ -106,3 +107,12 @@ addCommandAlias("xstart", "clean;reStart")
 addCommandAlias("xstop", "reStop;clean")
 addCommandAlias("xupdate", "clean;update")
 addCommandAlias("xdup", "dependencyUpdates")
+
+lazy val cls = taskKey[Unit]("Prints a separator")
+cls := {
+  val brs = "\n".repeat(4)
+  val chars = "*".repeat(37)
+  println(s"$brs$chars")
+  println("* B U I L D   S T A R T S   H E R E *")
+  println(s"$chars$brs ")
+}

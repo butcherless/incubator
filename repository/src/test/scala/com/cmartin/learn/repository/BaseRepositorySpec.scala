@@ -8,10 +8,7 @@ import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 
 // "h2_dc"
-abstract class BaseRepositorySpec(path: String)
-    extends AsyncFlatSpec
-    with Matchers
-    with BeforeAndAfterEach {
+abstract class BaseRepositorySpec(path: String) extends AsyncFlatSpec with Matchers with BeforeAndAfterEach {
 
   val config = DatabaseConfig.forConfig[JdbcProfile](path)
 

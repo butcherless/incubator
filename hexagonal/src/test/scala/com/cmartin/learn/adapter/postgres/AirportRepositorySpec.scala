@@ -1,43 +1,15 @@
 package com.cmartin.learn.adapter.postgres
 
 import com.cmartin.learn.adapter.postgres.Model.AirportDbo
-import com.cmartin.learn.adapter.postgres.SlickRepositories.DatabaseLayer
 import com.cmartin.learn.test.AviationData.Constants.{esCountry, waitTimeout}
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Await
 
 abstract class AirportRepositorySpec(path: String) /*                                            */
     extends BaseRepositorySpec(path) {
 
   val barajasAirportDbo   = AirportDbo("Barajas", "MAD", "LEMD", 0L)
   val barajasUppercaseDbo = AirportDbo("BARAJAS", "MAD", "LEMD", 0L)
-
-  val dbl = new DatabaseLayer(config) {
-
-    import profile.api._
-
-    val countryRepo = new CountrySlickRepository
-    val airportRepo = new AirportSlickRepository
-
-    def createSchema(): Future[Unit] = {
-      config.db.run(
-        (
-          countries.schema ++
-            airports.schema
-        ).create
-      )
-    }
-
-    def dropSchema(): Future[Unit] = {
-      config.db.run(
-        (
-          countries.schema ++
-            airports.schema
-        ).drop
-      )
-    }
-
-  }
 
   import dbl.executeFromDb
 
@@ -46,8 +18,7 @@ abstract class AirportRepositorySpec(path: String) /*                           
   it should "insert an airport into the database" in {
     val result = insertAirport()
 
-    result map { tuple =>
-      val (aid, _) = tuple
+    result map { case (aid, _) =>
       assert(aid > 0)
     }
   }
@@ -84,8 +55,7 @@ abstract class AirportRepositorySpec(path: String) /*                           
       updated  <- dbl.airportRepo.findById(aid)
     } yield (aid, ukid, updated)
 
-    result map { tuple =>
-      val (aid, ukid, updated) = tuple
+    result map { case (aid, ukid, updated) =>
       assert(aid > 0L)
       assert(updated == Option(barajasUppercaseDbo.copy(id = Some(aid), countryId = ukid)))
     }
@@ -98,8 +68,7 @@ abstract class AirportRepositorySpec(path: String) /*                           
       count    <- dbl.airportRepo.count()
     } yield (aid, did, count)
 
-    result map { tuple =>
-      val (aid, dCount, count) = tuple
+    result map { case (aid, dCount, count) =>
       assert(aid > 0L)
       assert(dCount == 1)
       assert(count == 0)
@@ -112,8 +81,7 @@ abstract class AirportRepositorySpec(path: String) /*                           
       airport  <- dbl.airportRepo.findById(aid)
     } yield (airport, aid)
 
-    result map { tuple =>
-      val (airport, id) = tuple
+    result map { case (airport, id) =>
       assert(airport.isDefined)
       assert(airport.get.id.contains(id))
     }
@@ -125,8 +93,7 @@ abstract class AirportRepositorySpec(path: String) /*                           
       airports   <- dbl.airportRepo.findByCountryCode(esCountry._2) // "ES"
     } yield (airports, aid, cid)
 
-    result map { tuple =>
-      val (as, airportId, countryId) = tuple
+    result map { case (as, airportId, countryId) =>
       assert(as.size == 1)
       assert(as.head.id.contains(airportId))
       assert(as.head.countryId == countryId)
@@ -153,11 +120,7 @@ abstract class AirportRepositorySpec(path: String) /*                           
   } yield (airportId, countryId)
 
   override def beforeEach(): Unit = {
+    Await.result(dbl.dropSchema(), waitTimeout)
     Await.result(dbl.createSchema(), waitTimeout)
   }
-
-  override def afterEach(): Unit = {
-    Await.result(dbl.dropSchema(), waitTimeout)
-  }
-
 }

@@ -4,11 +4,8 @@ import com.cmartin.learn.domain.Model.Country
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import zio.NonEmptyChunk
-import zio.prelude.Validation
 
-class CountryValidatorSpec /*                                            */
-    extends AnyFlatSpec
-    with Matchers {
+class CountryValidatorSpec /*                                            */ extends AnyFlatSpec with Matchers {
 
   import CountryValidator._
   import CountryValidatorSpec._

@@ -96,13 +96,12 @@ abstract class RouteRepositorySpec(path: String)
     val result = for {
       (oAirportId, dAirportId) <- insertCountryAirport()
       _                        <- dal.routeRepo.insert(Route(madTotfnDistance, oAirportId, dAirportId))
-      route                    <- dal.routeRepo.findByIataOrigin(barajasAirport.iataCode)
-    } yield (route, oAirportId, dAirportId)
+      routes                   <- dal.routeRepo.findByIataOrigin(barajasAirport.iataCode)
+    } yield (routes, oAirportId)
 
-    result map { tuple =>
-      assert(tuple._1.size == 1)
-      val route = tuple._1
-      assert(route.head.originId == tuple._2)
+    result map { case (routes, oAirportId) =>
+      assert(routes.size == 1)
+      assert(routes.head.originId == oAirportId)
     }
   }
 
@@ -110,13 +109,12 @@ abstract class RouteRepositorySpec(path: String)
     val result = for {
       (oAirportId, dAirportId) <- insertCountryAirport()
       _                        <- dal.routeRepo.insert(Route(madTotfnDistance, oAirportId, dAirportId))
-      route                    <- dal.routeRepo.findByIataDestination(rodeosAirport.iataCode)
-    } yield (route, oAirportId, dAirportId)
+      routes                   <- dal.routeRepo.findByIataDestination(rodeosAirport.iataCode)
+    } yield (routes, dAirportId)
 
-    result map { tuple =>
-      assert(tuple._1.size == 1)
-      val route = tuple._1
-      assert(route.head.destinationId == tuple._3)
+    result map { case (routes, dAirportId) =>
+      assert(routes.size == 1)
+      assert(routes.head.destinationId == dAirportId)
     }
   }
 

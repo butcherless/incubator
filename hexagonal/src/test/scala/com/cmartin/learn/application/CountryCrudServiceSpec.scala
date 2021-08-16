@@ -9,7 +9,6 @@ import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalatest.matchers.should.Matchers
 
 import scala.concurrent.Await
-import scala.concurrent.Future
 
 class CountryCrudServiceSpec /*                                            */
     extends AsyncFlatSpec
@@ -22,16 +21,15 @@ class CountryCrudServiceSpec /*                                            */
 
   val dal = new Database2Layer("h2_dc") {
     import profile.api._
-    def createSchema(): Future[Unit] = {
-      config.db.run(
-        countries.schema.create
-      )
-    }
-    def dropSchema(): Future[Unit] = {
-      config.db.run(
-        countries.schema.drop
-      )
-    }
+
+    private val schema = airports.schema ++ countries.schema
+
+    def createSchema() =
+      countries.schema.create.zip(airports.schema.create)
+
+    def dropSchema() =
+      airports.schema.dropIfExists.zip(countries.schema.dropIfExists)
+
   }
 
   val countryService: CountryService = new CountryCrudService(dal)
@@ -104,11 +102,9 @@ class CountryCrudServiceSpec /*                                            */
   }
 
   override def beforeEach(): Unit = {
-    Await.result(dal.createSchema(), waitTimeout)
-  }
-
-  override def afterEach(): Unit = {
+    import dal.executeFromDb
     Await.result(dal.dropSchema(), waitTimeout)
+    Await.result(dal.createSchema(), waitTimeout)
   }
 
 }

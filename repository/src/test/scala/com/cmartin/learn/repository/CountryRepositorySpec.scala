@@ -5,9 +5,7 @@ import org.scalatest.OptionValues
 
 import scala.concurrent.{Await, Future}
 
-abstract class CountryRepositorySpec(path: String)
-    extends BaseRepositorySpec(path)
-    with OptionValues {
+abstract class CountryRepositorySpec(path: String) extends BaseRepositorySpec(path) with OptionValues {
 
   val spainUpperCase: Country       = Country(esCountry._1.toUpperCase, esCountry._2.toUpperCase)
   val unitedKingdom: Country        = Country(ukCountry._1, ukCountry._2)
@@ -67,10 +65,10 @@ abstract class CountryRepositorySpec(path: String)
       updated <- dal.countryRepo.findById(cid)
     } yield (cid, uid, updated)
 
-    result map { tuple =>
-      assert(tuple._1 > 0L)
-      assert(tuple._1 == tuple._2)
-      assert(tuple._3 == Option(spainUpperCase.copy(id = Option(tuple._1))))
+    result map { case (cid, uid, updated) =>
+      assert(cid > 0L)
+      assert(cid == uid)
+      assert(updated == Option(spainUpperCase.copy(id = Option(cid))))
     }
   }
 
@@ -81,10 +79,10 @@ abstract class CountryRepositorySpec(path: String)
       count <- dal.countryRepo.count()
     } yield (cid, did, count)
 
-    result map { tuple =>
-      assert(tuple._1 > 0L)
-      assert(tuple._2 == 1)
-      assert(tuple._3 == 0)
+    result map { case (cid, did, count) =>
+      assert(cid > 0L)
+      assert(did == 1)
+      assert(count == 0)
     }
   }
 
@@ -117,9 +115,9 @@ abstract class CountryRepositorySpec(path: String)
       ds <- dal.countryRepo.deleteAll()
     } yield (cs, fs, ds)
 
-    result map { tuple =>
-      assert(tuple._1.size == tuple._2.size)
-      assert(tuple._1.size == tuple._3)
+    result map { case (cs, fs, ds) =>
+      assert(cs.size == fs.size)
+      assert(cs.size == ds)
     }
   }
 

@@ -1,13 +1,11 @@
 package com.cmartin.learn.adapter.postgres
 
-import com.cmartin.learn.adapter.postgres.SlickInfrastructure.Profile
-import com.cmartin.learn.adapter.postgres.SlickInfrastructure.SlickRepository
+import com.cmartin.learn.adapter.postgres.SlickInfrastructure.{Profile, SlickRepository}
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 import slick.lifted.ProvenShape
 
-import scala.concurrent.ExecutionContext
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 trait SlickRepositories extends SlickRepository {
   self: Profile =>
@@ -114,9 +112,7 @@ trait SlickRepositories extends SlickRepository {
 
 object SlickRepositories {
 
-  class DatabaseLayer(val config: DatabaseConfig[JdbcProfile])
-      extends Profile
-      with SlickRepositories {
+  class DatabaseLayer(val config: DatabaseConfig[JdbcProfile]) extends Profile with SlickRepositories {
     import profile.api._
 
     override val profile = config.profile

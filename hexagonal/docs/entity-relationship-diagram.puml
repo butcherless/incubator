@@ -1,0 +1,85 @@
+@startuml
+header Edge elements and relationships
+title Entity Relationship Diagram
+
+hide footbox
+
+entity EdgeDbo {
+ * id: Long <<pk>>
+ --
+ * startId
+ * endId
+ * metadata
+}
+
+entity VertexDbo {
+ * id: Long <<pk>>
+ --
+ * businessId: UUID <<idx>>
+ * context: JSON
+}
+
+entity TaskNodeDbo {
+ * id: Long <<pk>>
+}
+
+entity TaskGroupDbo {
+ * id: Long <<fk>>
+ --
+ * name: String <<idx>>
+}
+
+entity TaskReferenceDbo {
+ * id: Long <<fk>>
+ --
+ * taskId <<fk>>
+ * name: String
+ alias: String
+}
+
+entity TaskDbo {
+ * id: Long <<fk>>
+ --
+ * metadata: JSON
+   name: String <<idx>>
+}
+
+'entity NamedTaskDbo {
+' * id: Long <<fk>>
+' --
+' * name: String <<idx>>
+'}
+
+entity EdgeTaskNodeRelDbo <<(R,lightblue)>> {
+ * edgeId <<pk>> <<fk>>
+ * taskNodeId <<pk>> <<fk>>
+ --
+ * position: Int
+}
+
+entity GroupTaskRelDbo <<(R,lightblue)>> {
+ * groupId <<pk>> <<fk>>
+ * taskId <<pk>> <<fk>>
+ --
+ * position: Int
+}
+
+
+EdgeDbo ||-left- VertexDbo : start
+EdgeDbo ||-left- VertexDbo : end
+
+TaskNodeDbo <|-- TaskGroupDbo
+TaskNodeDbo <|-- TaskReferenceDbo
+TaskNodeDbo <|-- TaskDbo
+TaskReferenceDbo o-left-> TaskDbo :namedTask
+
+'TaskDbo <|-- NamedTaskDbo
+'TaskReferenceDbo o--> NamedTaskDbo :namedTask
+
+EdgeDbo }o-right- EdgeTaskNodeRelDbo
+TaskNodeDbo }o-up- EdgeTaskNodeRelDbo
+
+TaskGroupDbo }o-right- GroupTaskRelDbo
+TaskDbo  }o-left- GroupTaskRelDbo
+
+@enduml

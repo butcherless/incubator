@@ -6,9 +6,7 @@ import org.scalatest.OptionValues
 import java.time.LocalDate
 import scala.concurrent.{Await, Future}
 
-abstract class AirlineRepositorySpec(path: String)
-    extends BaseRepositorySpec(path)
-    with OptionValues {
+abstract class AirlineRepositorySpec(path: String) extends BaseRepositorySpec(path) with OptionValues {
 
   val norway: Country = Country(noCountry._1, noCountry._2)
   //val iberia = Airline(ibkAirline._1, ibkAirline._2, )
@@ -62,9 +60,9 @@ abstract class AirlineRepositorySpec(path: String)
       count    <- dal.airlineRepo.count()
     } yield (aid, deleted, count)
 
-    result map { tuple =>
-      assert(tuple._1 == tuple._2)
-      assert(tuple._3 == 0)
+    result map { case (aid, deleted, count) =>
+      assert(aid == deleted)
+      assert(count == 0)
     }
   }
 

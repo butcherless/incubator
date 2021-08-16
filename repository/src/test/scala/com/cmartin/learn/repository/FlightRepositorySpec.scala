@@ -5,9 +5,7 @@ import org.scalatest.OptionValues
 
 import scala.concurrent.Await
 
-abstract class FlightRepositorySpec(path: String)
-    extends BaseRepositorySpec(path)
-    with OptionValues {
+abstract class FlightRepositorySpec(path: String) extends BaseRepositorySpec(path) with OptionValues {
 
   val dal = new DatabaseLayer(config) {
     import profile.api._
@@ -94,9 +92,9 @@ abstract class FlightRepositorySpec(path: String)
       count   <- dal.flightRepo.count()
     } yield (id, deleted, count)
 
-    result map { tuple =>
-      assert(tuple._1 == tuple._2)
-      assert(tuple._3 == 0)
+    result map { case (id, deleted, count) =>
+      assert(id == deleted)
+      assert(count == 0)
     }
   }
 
