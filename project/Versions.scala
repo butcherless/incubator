@@ -16,8 +16,8 @@ object Versions {
   val slick        = "3.3.3"
   val utest        = "0.6.6"
   val zio          = "1.0.8"
-  //TODO val zioPrelude   = "1.0.0-RC6"
-  val zioPrelude   = "1.0.0-RC6+3-b6e0b371-SNAPSHOT"
+  val zioPrelude   = "1.0.0-RC5"
+  //val zioPrelude   = "1.0.0-RC6+3-b6e0b371-SNAPSHOT"
 
   val scalaVersion = "2.13.6"
 }
