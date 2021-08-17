@@ -338,7 +338,7 @@ object Implementations {
       val program = for {
         dbos <- runIO(findByCountryCodeQuery(code))
         airports <- IO.successful(
-          dbos.map(tuple => AirportDbo.toModel(tuple._1, tuple._2))
+          dbos.map { case (a, c) => AirportDbo.toModel(a, c) }
         )
       } yield airports
 
@@ -347,8 +347,7 @@ object Implementations {
 
   }
 
-  class CommonPostgresRepository(configPrefix: String)
-      extends PostgresAsyncContext[Literal](Literal, configPrefix) {
+  class CommonPostgresRepository(configPrefix: String) extends PostgresAsyncContext[Literal](Literal, configPrefix) {
     def checkHeadElement[T](seq: Seq[T], error: String) = {
       seq.headOption
         .fold(

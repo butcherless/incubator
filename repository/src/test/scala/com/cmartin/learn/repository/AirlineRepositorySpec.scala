@@ -33,8 +33,9 @@ abstract class AirlineRepositorySpec(path: String) extends BaseRepositorySpec(pa
   it should "insert an airline into the database" in {
     val result = insertCountryAirline()
 
-    result map { tuple =>
-      assert(tuple._1 > 0)
+    result map { case (cid, aid) =>
+      assert(cid > 0)
+      assert(aid > 0)
     }
   }
 
