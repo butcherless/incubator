@@ -1,0 +1,77 @@
+@startuml
+header Aviation elements and relationships
+title Entity Relationship Diagram
+
+hide footbox
+
+entity CountryDbo {
+ * id: Long <<pk>>
+ --
+ * code <<idx>>
+ * name: String
+}
+
+entity AirportDbo {
+ * id: Long <<pk>>
+ --
+ * countryId: Long <<fk>>
+ * name: String
+ * iataCode: String
+ * icaoCode: String
+}
+
+entity AirlineDbo {
+ * id: Long <<pk>>
+ --
+ * countryId: Long <<fk>>
+ * name: String  <<idx>>
+ * foundationDate: Date
+}
+
+entity AircraftDbo {
+ * id: Long <<pk>>
+ --
+ * airlineId: Long <<fk>>
+ * typeCode: String
+ * registration: String (regex)
+}
+
+entity JourneyDbo {
+ * id: Long <<pk>>
+ --
+ * aircraftId: Long <<fk>>
+ * flightId: Long <<fk>>
+ * departureDate: Date
+ * arrivalDate: Date
+}
+
+entity FlightDbo {
+ * id: Long <<pk>>
+ --
+ * airlineId: Long <<fk>>
+ * routeId: Long <<fk>>
+ * code: String <<idx>>
+ * alias: String
+ * scheduledDeparture: Date
+ * scheduledArrival: Date
+}
+
+entity RouteDbo {
+ * id: Long <<pk>>
+ --
+ * originId: Long <<fk>>
+ * destinationId: Long <<fk>>
+ * distance: Double
+}
+
+AirlineDbo  ||--     CountryDbo : belongs
+AirportDbo  ||-up-   CountryDbo : belongs
+AircraftDbo ||--     AirlineDbo: belongs
+JourneyDbo  ||-left- AircraftDbo: has
+JourneyDbo  ||--     FlightDbo: has
+FlightDbo   ||-left- AirlineDbo
+FlightDbo   ||--     RouteDbo: through
+RouteDbo    ||-left- AirportDbo: origin
+RouteDbo    ||-left- AirportDbo: destination
+
+@enduml
