@@ -7,44 +7,45 @@ title Create Airport Use Case
 hide footbox
 actor HttpClient as user << User >>
 
-box "Primary Adapter" #FBFBFB
-participant "RestApi" as api << API >>
-participant "AirportValidator" as validator << RequestValidator >>
-participant "AirportView" as view << Converter >>
+box "REST Application" #FBFBFB
+ participant "RestApi" as api << API >>
+ participant "AirportValidator" as validator << RequestValidator >>
+ participant "AirportView" as view << Converter >>
 end box
-box "Domain" #FBFBFB
-participant "Airport" as airport << Model >>
-participant "AirportService" as service << Service >>
-participant "CountryRepository" as countryRepo << Repository >>
-participant "AirportRepository" as airportRepo << Repository >>
+box "Domain / Application" #FBFBFB
+ participant "Airport" as airport << Model >>
+ participant "AirportService" as service << Service >>
 end box
-box "Secondary Adapter" #FBFBFB
-participant "AirportDbo" as dbo << Converter >>
-participant "SlickDriver" as db << DatabaseDriver >>
+box "Infrastructure" #FBFBFB
+ participant "CountryRepository" as countryRepo << Repository >>
+ participant "AirportRepository" as airportRepo << Repository >>
+ participant "AirportDbo" as dbo << Converter >>
+ participant "SlickDriver" as db << DatabaseDriver >>
 end box
 
 database PostgreSQL as pgdb
 
 autonumber
 user -> api: Post[AirportRequest]
-api -> validator : from(TupleN[AirportRequest])
-validator -> airport ** : validate(TupleN)
-validator --> api: Airport
+api -> validator : validate(TupleN[AirportRequest])
+validator -> airport ** : smart-new
+validator --> api: IO[Airport]
 api -> service: create(Airport)
 service -> countryRepo : findByCode(airport.country.code)
 countryRepo -> db: findByCode(code)
 db -> pgdb : sql-select
-db --> countryRepo: CountryDbo
-countryRepo --> service: CountryDbo
+db --> countryRepo: IO[CountryDbo]
+countryRepo --> service: IO[CountryDbo]
 service -> dbo: from(Airport, countryCode)
-dbo --> service: AirportDbo
-service -> airportRepo: insert(airportDbo)
-airportRepo -> db : add(CountryDbo)
+dbo --> service: IO[AirportDbo]
+service -> airportRepo: insert(AirportDbo)
+airportRepo -> db : insert(AirportDbo)
 db -> pgdb : sql-insert
-db --> airportRepo : Future[Id]
-airportRepo --> service : Future[Airport]
-service --> api : Future[Airport]
+db --> airportRepo : IO[Id]
+airportRepo --> service : IO[Airport]
+service --> api : IO[Airport]
 api -> view : from(Airport)
-view --> api : Future[AirportView]
-api --> user : AirportView
+view --> api : IO[AirportView]
+api -> api: buildContentLocation
+api --> user : (Content-Location,AirportView)
 @enduml

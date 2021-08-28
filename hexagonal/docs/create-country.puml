@@ -7,38 +7,39 @@ title Create Country Use Case
 hide footbox
 actor HttpClient as user << User >>
 
-box "Primary Adapter" #FBFBFB
-participant "RestApi" as api << API >>
-participant "CountryValidator" as validator << RequestValidator >>
-participant "CountryView" as view << Converter >>
+box "REST Application" #FBFBFB
+ participant "RestApi" as api << API >>
+ participant "CountryValidator" as validator << RequestValidator >>
+ participant "CountryView" as view << Converter >>
 end box
-box "Domain" #FBFBFB
-participant "Country" as country << Model >>
-participant "CountryService" as service << Service >>
-participant "CountryRepository" as repository << Repository >>
+box "Domain / Application" #FBFBFB
+ participant "Country" as country << Model >>
+ participant "CountryService" as service << Service >>
 end box
-box "Secondary Adapter" #FBFBFB
-participant "CountryDbo" as dbo << Converter >>
-participant "SlickDriver" as db << DatabaseDriver >>
+box "Infrastructure" #FBFBFB
+ participant "CountryRepository" as repository << Repository >>
+ participant "CountryDbo" as dbo << Converter >>
+ participant "SlickDriver" as db << DatabaseDriver >>
 end box
 
 database PostgreSQL as pgdb
 
 autonumber
 user -> api: Post[CountryRequest]
-api -> validator : from(TupleN[CountryRequest])
-validator -> country ** : validate(TupleN)
-validator --> api: Country
+api -> validator : validate(TupleN[CountryRequest])
+validator --> country **: smart-new
+validator --> api: IO[Country]
 api -> service: create(Country)
 service -> dbo: from(Country)
-dbo --> service: CountryDbo
+dbo --> service: IO[CountryDbo]
 service -> repository: insert(CountryDbo)
-repository -> db : add(CountryDbo)
+repository -> db : insert(CountryDbo)
 db -> pgdb : sql-insert
-db --> repository : Future[Id]
-repository --> service : Future[Country]
-service --> api : Future[Country]
+db --> repository : IO[Id]
+repository --> service : IO[Country]
+service --> api : IO[Country]
 api -> view : from(Country)
-view --> api : Future[CountryView]
-api --> user : CountryView
+view --> api : IO[CountryView]
+api -> api: buildContentLocation
+api --> user : (Content-Location,CountryView)
 @enduml
