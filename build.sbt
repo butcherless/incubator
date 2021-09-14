@@ -108,11 +108,13 @@ addCommandAlias("xstop", "reStop;clean")
 addCommandAlias("xupdate", "clean;update")
 addCommandAlias("xdup", "dependencyUpdates")
 
+// clear screen and banner
 lazy val cls = taskKey[Unit]("Prints a separator")
 cls := {
-  val brs = "\n".repeat(4)
-  val chars = "*".repeat(37)
+  val brs = "\n".repeat(2)
+  val message = "* B U I L D   B E G I N S   H E R E *"
+  val chars = "*".repeat(message.length())
   println(s"$brs$chars")
-  println("* B U I L D   S T A R T S   H E R E *")
+  println("* B U I L D   B E G I N S   H E R E *")
   println(s"$chars$brs ")
 }
