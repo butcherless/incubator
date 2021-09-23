@@ -96,7 +96,7 @@
     <dependency>
       <groupId>com.openpojo</groupId>
       <artifactId>openpojo</artifactId>
-      <version>0.8.12</version>
+      <version>0.9.1</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
