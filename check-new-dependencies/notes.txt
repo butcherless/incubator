@@ -1,2 +1,0 @@
-mvn-du -s /usr/local/Cellar/maven/3.6.0/libexec/conf/settings.xml
-find . -type f -name *.sbt | xargs grep -rnI "akkaVersion"
