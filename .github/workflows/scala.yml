@@ -33,7 +33,7 @@ jobs:
       uses: olafurpg/setup-scala@v13
       with:
         distribution: 'temurin'
-        java-version: 17
+        java-version: '17'
     - name: java version
       run: java -version
     - name: compile main
