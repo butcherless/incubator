@@ -17,8 +17,7 @@ object Versions {
   val utest        = "0.6.6"
   //val zio          = "1.0.8"
   val zio          = "2.0.0-M2"
-  val zioPrelude   = "1.0.0-RC6"
-  //val zioPrelude   = "1.0.0-RC6+3-b6e0b371-SNAPSHOT"
+  val zioPrelude   = "1.0.0-RC7"
 
   val scalaVersion = "2.13.6"
 }
