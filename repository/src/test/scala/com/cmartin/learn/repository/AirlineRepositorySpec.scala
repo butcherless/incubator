@@ -9,7 +9,7 @@ import scala.concurrent.{Await, Future}
 abstract class AirlineRepositorySpec(path: String) extends BaseRepositorySpec(path) with OptionValues {
 
   val norway: Country = Country(noCountry._1, noCountry._2)
-  //val iberia = Airline(ibkAirline._1, ibkAirline._2, )
+  // val iberia = Airline(ibkAirline._1, ibkAirline._2, )
 
   val dal = new DatabaseLayer(config) {
     import profile.api._
@@ -42,7 +42,7 @@ abstract class AirlineRepositorySpec(path: String) extends BaseRepositorySpec(pa
   it should "update an airline from the database" in {
     val updatedString = "UPDATED"
     val now           = LocalDate.now()
-    val result = for {
+    val result        = for {
       (cid, aid) <- insertCountryAirline()
       _          <- dal.airlineRepo.update(Airline(updatedString, now, cid, Option(aid)))
       updated    <- dal.airlineRepo.findById(aid)
@@ -83,7 +83,7 @@ abstract class AirlineRepositorySpec(path: String) extends BaseRepositorySpec(pa
 
   it should "retrieve an airline list from a country code" in {
     val expectedCount = 2
-    val result = for {
+    val result        = for {
       cid   <- dal.countryRepo.insert(spainCountry)
       _     <- dal.airlineRepo.insert(Airline(ibsAirline._1, ibsAirline._2, cid))
       _     <- dal.airlineRepo.insert(Airline(aeaAirline._1, aeaAirline._2, cid))

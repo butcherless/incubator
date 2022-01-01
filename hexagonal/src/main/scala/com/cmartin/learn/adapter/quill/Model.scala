@@ -49,7 +49,7 @@ object Model {
         icaoCode = airport.icaoCode,
         countryId = countryId
       )
-    def toModel(dbo: AirportDbo, c: CountryDbo): Airport =
+    def toModel(dbo: AirportDbo, c: CountryDbo): Airport    =
       Airport(
         name = dbo.name,
         iataCode = dbo.iataCode,

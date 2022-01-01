@@ -25,7 +25,7 @@ class CountryQuillRepository(configPrefix: String)(implicit ec: ExecutionContext
   }
 
   def insert(country: Country): Future[Country] = {
-    val dbo = CountryDbo.fromCountry(country)
+    val dbo     = CountryDbo.fromCountry(country)
     val program =
       for {
         _ <- runIO(insertQuery(dbo))

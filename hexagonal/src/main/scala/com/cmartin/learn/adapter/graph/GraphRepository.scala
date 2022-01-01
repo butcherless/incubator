@@ -24,7 +24,8 @@ object GraphRepository {
     trait RelationDbo extends IdentifiedDbo[LongTuple]
 
     /** Base dbo for task nodes
-      * @param id task node identifier
+      * @param id
+      *   task node identifier
       */
     final case class TaskNodeDbo(
         id: Option[Long] = None
@@ -201,9 +202,9 @@ object GraphRepository {
     import Model._
     import api._
 
-    lazy val taskNodes = TableQuery[TaskNodesTable]
-    lazy val tasks     = TableQuery[TasksTable]
-    //lazy val namedTasks      = TableQuery[NamedTasksTable]
+    lazy val taskNodes       = TableQuery[TaskNodesTable]
+    lazy val tasks           = TableQuery[TasksTable]
+    // lazy val namedTasks      = TableQuery[NamedTasksTable]
     lazy val taskReferences  = TableQuery[TaskReferencesTable]
     lazy val taskGroups      = TableQuery[TaskGroupsTable]
     lazy val groupTaskRel    = TableQuery[GroupTaskRelationTable]
@@ -344,7 +345,7 @@ object GraphRepository {
       // foreign keys
       def startFk: ForeignKeyQuery[VertexesTable, VertexDbo] =
         foreignKey("FK_START_VERTEX_EDGE", start, vertexes)(v => v.id)
-      def endFk: ForeignKeyQuery[VertexesTable, VertexDbo] =
+      def endFk: ForeignKeyQuery[VertexesTable, VertexDbo]   =
         foreignKey("FK_END_VERTEX_EDGE", end, vertexes)(v => v.id)
     }
 
@@ -452,7 +453,7 @@ object GraphRepository {
       }
 
       def findTaskNodes(startId: String, endId: String) = {
-        //: DBIO[Seq[TaskNode]]
+        // : DBIO[Seq[TaskNode]]
 
         val qj1 =
           entities
@@ -470,8 +471,8 @@ object GraphRepository {
             .on { case (((_, tn), _), t) => tn.id === t.id }
             .joinLeft(taskReferences)
             .on { case ((((_, tn), _), _), tr) => tn.id === tr.id }
-        //.joinLeft(namedTasks)
-        //.on { case (((((_, tn), _), t), _),nt) => tn.id === nt.id &&  }
+        // .joinLeft(namedTasks)
+        // .on { case (((((_, tn), _), t), _),nt) => tn.id === nt.id &&  }
 
         val qf1 = qj1.filter { case (((((((edge, sVx), eVx), rel), tn), tg), t), tr) =>
           sVx.businessId === startId && eVx.businessId === endId
@@ -492,7 +493,7 @@ object GraphRepository {
           task                 <- tasks if node.id === task.id
         } yield (group, ref, task)
 
-        //qj2.result
+        // qj2.result
         qf1.result
       }
     }
@@ -520,7 +521,7 @@ object GraphRepository {
     val taskRepository            = new TaskRepository
     val taskReferenceRepository   = new TaskReferenceRepository
     val groupTaskRelRepository    = new GroupTaskRelRepository
-    //val namedTaskRepository       = new NamedTaskRepository
+    // val namedTaskRepository       = new NamedTaskRepository
   }
 
 }

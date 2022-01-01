@@ -30,9 +30,9 @@ abstract class AircraftRepositorySpec(path: String) extends BaseRepositorySpec(p
   it should "insert an aircraft into the database" in {
     val result = for {
       airlineId <- insertCountryAirline()
-      aircraft <- dal.aircraftRepo.insert(
-        Aircraft(TypeCodes.BOEING_787_800, registrationMIG, airlineId)
-      )
+      aircraft  <- dal.aircraftRepo.insert(
+                     Aircraft(TypeCodes.BOEING_787_800, registrationMIG, airlineId)
+                   )
     } yield aircraft
 
     result map { id =>

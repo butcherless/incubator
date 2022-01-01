@@ -38,5 +38,4 @@ class CommonOpsMacro(val c: MacroContext) {
      """
   }
 
-
 }

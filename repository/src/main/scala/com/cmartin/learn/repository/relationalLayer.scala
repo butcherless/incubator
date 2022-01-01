@@ -287,9 +287,7 @@ trait Repositories extends RelationalInfrastructure {
     }
   }
 
-  final class RouteRepository
-      extends AbstractRelationalRepository[Route, Routes]
-      with RouteRelationalRepository[DBIO] {
+  final class RouteRepository extends AbstractRelationalRepository[Route, Routes] with RouteRelationalRepository[DBIO] {
     override lazy val entities = routes
 
     override def findByIataDestination(iataCode: String): DBIO[Seq[Route]] = {

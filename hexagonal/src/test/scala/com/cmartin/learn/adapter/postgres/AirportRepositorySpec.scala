@@ -27,12 +27,12 @@ abstract class AirportRepositorySpec(path: String) /*                           
     recoverToSucceededIf[java.sql.SQLException] {
       for {
         countryId <- dbl.countryRepo.insert(esCountryDbo)
-        _ <- dbl.airportRepo.insert(
-          Seq(
-            barajasAirportDbo.copy(countryId = countryId),
-            barajasAirportDbo.copy(countryId = countryId)
-          )
-        )
+        _         <- dbl.airportRepo.insert(
+                       Seq(
+                         barajasAirportDbo.copy(countryId = countryId),
+                         barajasAirportDbo.copy(countryId = countryId)
+                       )
+                     )
       } yield ()
     }
   }
@@ -41,8 +41,8 @@ abstract class AirportRepositorySpec(path: String) /*                           
     recoverToSucceededIf[java.sql.SQLException] {
       for {
         _ <- dbl.airportRepo.insert(
-          barajasAirportDbo.copy(countryId = 0L)
-        )
+               barajasAirportDbo.copy(countryId = 0L)
+             )
       } yield ()
     }
   }
@@ -115,8 +115,8 @@ abstract class AirportRepositorySpec(path: String) /*                           
   private def insertAirport() = for {
     countryId <- dbl.countryRepo.insert(esCountryDbo)
     airportId <- dbl.airportRepo.insert(
-      barajasAirportDbo.copy(countryId = countryId)
-    )
+                   barajasAirportDbo.copy(countryId = countryId)
+                 )
   } yield (airportId, countryId)
 
   override def beforeEach(): Unit = {

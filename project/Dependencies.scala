@@ -31,13 +31,13 @@ object Dependencies {
   lazy val slickPool =
     "com.typesafe.slick" %% "slick-hikaricp" % Versions.slick exclude ("org.slf4j", "slf4j-api")
   // quill
-  lazy val quillJdbc = "io.getquill" %% "quill-jdbc"           % Versions.quill
+  lazy val quillJdbc     = "io.getquill" %% "quill-jdbc"           % Versions.quill
   lazy val quillPostgres = "io.getquill" %% "quill-async-postgres" % Versions.quill
 
   lazy val zio        = "dev.zio" %% "zio"         % Versions.zio
   lazy val zioPrelude = "dev.zio" %% "zio-prelude" % Versions.zioPrelude
 
-  lazy val scalaReflect  = "org.scala-lang" % "scala-reflect" % Versions.scalaVersion
+  lazy val scalaReflect  = "org.scala-lang" % "scala-reflect"  % Versions.scalaVersion
   lazy val scalaCompiler = "org.scala-lang" % "scala-compiler" % Versions.scalaVersion
 
   // testing code

@@ -6,8 +6,10 @@ object Model {
 
   /** Database entity based on a type and an identifier
     *
-    * @tparam T type for the entity
-    * @tparam I identifier for the entity
+    * @tparam T
+    *   type for the entity
+    * @tparam I
+    *   identifier for the entity
     */
   trait Entity[T, I] {
     val id: I
@@ -26,13 +28,13 @@ object Model {
   ) extends LongEntity(id)
 
   object CountryDboConverter {
-    def fromCountry(country: Country): CountryDbo = {
+    def fromCountry(country: Country): CountryDbo                 = {
       CountryDbo(
         name = country.name,
         code = country.code
       )
     }
-    def toModel(dbo: CountryDbo): Country = {
+    def toModel(dbo: CountryDbo): Country                         = {
       Country(
         name = dbo.name,
         code = dbo.code

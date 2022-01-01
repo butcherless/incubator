@@ -62,15 +62,13 @@ object SlickRepository {
     import Model._
     import api._
 
-    abstract class LongBasedTable[T <: LongDbo](tag: Tag, tableName: String)
-        extends Table[T](tag, tableName) {
+    abstract class LongBasedTable[T <: LongDbo](tag: Tag, tableName: String) extends Table[T](tag, tableName) {
       /* primary key column */
       def id: Rep[Long] =
         column[Long]("ID", O.PrimaryKey, O.AutoInc)
     }
 
-    abstract class RelationBasedTable[T <: RelationDbo](tag: Tag, tableName: String)
-        extends Table[T](tag, tableName) {
+    abstract class RelationBasedTable[T <: RelationDbo](tag: Tag, tableName: String) extends Table[T](tag, tableName) {
       /* primary key columns */
       def left: Rep[Long]  = column[Long]("LEFT")
       def right: Rep[Long] = column[Long]("RIGHT")
@@ -156,8 +154,7 @@ object SlickRepository {
 
     /* C O U N T R Y
      */
-    final class CountryTable(tag: Tag)
-        extends LongBasedTable[CountryDbo](tag, TableNames.countries) {
+    final class CountryTable(tag: Tag) extends LongBasedTable[CountryDbo](tag, TableNames.countries) {
       // property columns:
       def name: Rep[String] = column[String]("NAME")
 
@@ -177,8 +174,7 @@ object SlickRepository {
 
     /* A I R P O R T S
      */
-    final class AirportTable(tag: Tag)
-        extends LongBasedTable[AirportDbo](tag, TableNames.airports) {
+    final class AirportTable(tag: Tag) extends LongBasedTable[AirportDbo](tag, TableNames.airports) {
       // property columns:
       def name: Rep[String] = column[String]("NAME")
 
@@ -216,11 +212,10 @@ object SlickRepository {
         (date, (left, right)).<>(AircraftJourneyRelDbo.tupled, AircraftJourneyRelDbo.unapply)
     }
 
-    class AircraftJourneyRepository
-        extends AbstractRelationRepository[AircraftJourneyRelDbo, AircraftJourneyTable] {
+    class AircraftJourneyRepository extends AbstractRelationRepository[AircraftJourneyRelDbo, AircraftJourneyTable] {
       override val entities: TableQuery[AircraftJourneyTable] = aircraftJourneys
 
-      def findByAircraft(id: Long):DBIO[Seq[AircraftJourneyRelDbo]] = {
+      def findByAircraft(id: Long): DBIO[Seq[AircraftJourneyRelDbo]] = {
         val query = for {
           aj <- entities if aj.right === id
         } yield aj
@@ -228,9 +223,9 @@ object SlickRepository {
         query.result
       }
 
-      def findByAircraftAndDate(id: Long, date: LocalDate):DBIO[Seq[AircraftJourneyRelDbo]] = {
+      def findByAircraftAndDate(id: Long, date: LocalDate): DBIO[Seq[AircraftJourneyRelDbo]] = {
         val query = for {
-          aj <- entities if aj.right === id && aj.date=== date
+          aj <- entities if aj.right === id && aj.date === date
         } yield aj
 
         query.result

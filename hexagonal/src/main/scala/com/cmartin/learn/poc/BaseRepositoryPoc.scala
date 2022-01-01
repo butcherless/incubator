@@ -68,7 +68,7 @@ object Model {
         icaoCode = airport.icaoCode,
         countryId = countryId
       )
-    def toModel(dbo: AirportDbo, c: CountryDbo): Airport =
+    def toModel(dbo: AirportDbo, c: CountryDbo): Airport    =
       Airport(
         name = dbo.name,
         iataCode = dbo.iataCode,
@@ -160,7 +160,7 @@ object AlternativeImplementation {
     override def findByCode(code: String): Future[Country] = ???
 
     def insert(country: Country): Future[Country] = {
-      val dbo = CountryDbo.fromCountry(country)
+      val dbo     = CountryDbo.fromCountry(country)
       val program =
         for {
           _ <- runIO(insertQuery(dbo))
@@ -241,10 +241,10 @@ object AlternativeImplementation {
     override def findByCountryCode(code: String): Future[Seq[Airport]] = {
       val program = for {
         tupleDbos <- runIO(findAirportByCountryCodeQuery(code))
-        airports <- IO.successful(
-          tupleDbos
-            .map(airport_country => AirportDbo.toModel(airport_country._1, airport_country._2))
-        )
+        airports  <- IO.successful(
+                       tupleDbos
+                         .map(airport_country => AirportDbo.toModel(airport_country._1, airport_country._2))
+                     )
       } yield airports
 
       performIO(program)
@@ -304,10 +304,10 @@ object Implementations {
     def findByCountryCodeQuery(code: String) =
       quote {
         for {
-          country <- query[CountryDbo]
-            .filter(c => c.code == lift(code))
+          country  <- query[CountryDbo]
+                        .filter(c => c.code == lift(code))
           airports <- query[AirportDbo]
-            .join(airport => airport.countryId == country.id)
+                        .join(airport => airport.countryId == country.id)
 
         } yield (airports, country)
       }
@@ -336,10 +336,10 @@ object Implementations {
 
     override def findByCountryCode(code: String): Future[Seq[Airport]] = {
       val program = for {
-        dbos <- runIO(findByCountryCodeQuery(code))
+        dbos     <- runIO(findByCountryCodeQuery(code))
         airports <- IO.successful(
-          dbos.map { case (a, c) => AirportDbo.toModel(a, c) }
-        )
+                      dbos.map { case (a, c) => AirportDbo.toModel(a, c) }
+                    )
       } yield airports
 
       performIO(program)
@@ -365,7 +365,7 @@ object Implementations {
       with CountryRepository {
 
     override def insert(country: Country): Future[Country] = {
-      val dbo = CountryDbo.fromCountry(country)
+      val dbo     = CountryDbo.fromCountry(country)
       val program =
         for {
           _ <- runIO(insertQuery(dbo))

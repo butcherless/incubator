@@ -137,7 +137,7 @@ object SlickRepositories {
   trait DAL extends Profile with SlickRepositories {
     import profile.api._
 
-    //val config: DatabaseConfig[JdbcProfile]
+    // val config: DatabaseConfig[JdbcProfile]
     val countryRepo = new CountrySlickRepository
     val airportRepo = new AirportSlickRepository
 
@@ -148,7 +148,7 @@ object SlickRepositories {
 
   class Database2Layer(configPath: String) extends DAL {
 
-    //TODO make config private, create database layer for testing
+    // TODO make config private, create database layer for testing
     val config: DatabaseConfig[JdbcProfile] =
       DatabaseConfig.forConfig[JdbcProfile](configPath)
 

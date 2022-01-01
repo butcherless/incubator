@@ -5,9 +5,7 @@ import org.scalatest.OptionValues
 
 import scala.concurrent.{Await, Future}
 
-abstract class AirportRepositorySpec(path: String)
-    extends BaseRepositorySpec(path)
-    with OptionValues {
+abstract class AirportRepositorySpec(path: String) extends BaseRepositorySpec(path) with OptionValues {
 
   val dal = new DatabaseLayer(config) {
     import profile.api._

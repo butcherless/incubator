@@ -203,7 +203,7 @@ object GraphRepositorySpec {
   val deviceOneId   = UUID.randomUUID().toString
   val deviceTwoId   = UUID.randomUUID().toString
   val emptyMetadata = "{}"
-  val metadataOne =
+  val metadataOne   =
     """
       |{ "version" : "1.0" }
       |""".stripMargin

@@ -8,7 +8,7 @@ import scala.concurrent.Future
 
 object DatabaseUtils {
   val h2Config = DatabaseConfig.forConfig[JdbcProfile]("h2_dc")
-  val h2Dal = new DatabaseLayer(h2Config) {
+  val h2Dal    = new DatabaseLayer(h2Config) {
     import profile.api._
 
     val countryRepo = new CountrySlickRepository
@@ -18,7 +18,7 @@ object DatabaseUtils {
         countries.schema.create
       )
     }
-    def dropSchema(): Future[Unit] = {
+    def dropSchema(): Future[Unit]   = {
       config.db.run(
         countries.schema.drop
       )

@@ -34,7 +34,7 @@ object QuillRepositoryCommons {
       quote {
         for {
           c  <- query[CountryDbo] if (c.code == lift(code))
-          as <- query[AirportDbo] if (  c.id.contains( as.countryId ))
+          as <- query[AirportDbo] if (c.id.contains(as.countryId))
         } yield (as, c)
       }
 

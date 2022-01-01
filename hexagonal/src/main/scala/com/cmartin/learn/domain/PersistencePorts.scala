@@ -30,7 +30,4 @@ object PersistencePorts {
     def findByCountryCode(code: String): Future[Seq[Airport]]
   }
 
-
-
-
 }

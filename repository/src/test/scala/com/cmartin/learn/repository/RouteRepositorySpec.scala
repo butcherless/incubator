@@ -47,12 +47,12 @@ abstract class RouteRepositorySpec(path: String)
   it should "insert a route sequence into the database" in {
     val result = for {
       (oAirportId, dAirportId) <- insertCountryAirport()
-      routeSeq <- dal.routeRepo.insert(
-        Seq(
-          Route(madTotfnDistance, oAirportId, dAirportId),
-          Route(madTotfnDistance, dAirportId, oAirportId)
-        )
-      )
+      routeSeq                 <- dal.routeRepo.insert(
+                                    Seq(
+                                      Route(madTotfnDistance, oAirportId, dAirportId),
+                                      Route(madTotfnDistance, dAirportId, oAirportId)
+                                    )
+                                  )
     } yield routeSeq
 
     result map { seq =>
@@ -64,12 +64,12 @@ abstract class RouteRepositorySpec(path: String)
     recoverToSucceededIf[java.sql.SQLException] {
       for {
         (oAirportId, dAirportId) <- insertCountryAirport()
-        _ <- dal.routeRepo.insert(
-          Seq(
-            Route(madTotfnDistance, oAirportId, dAirportId), // same route
-            Route(madTotfnDistance, oAirportId, dAirportId)
-          )
-        )
+        _                        <- dal.routeRepo.insert(
+                                      Seq(
+                                        Route(madTotfnDistance, oAirportId, dAirportId), // same route
+                                        Route(madTotfnDistance, oAirportId, dAirportId)
+                                      )
+                                    )
       } yield ()
     }
   }

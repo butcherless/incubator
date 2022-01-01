@@ -36,7 +36,7 @@ class AirportCrudService(dal: DAL) extends AirportService {
   }
 
   /* H E L P E R   F U N C T I O N S */
-  //TODO move to common use cases class
+  // TODO move to common use cases class
   private def findCountryByCode(code: String) = {
     for {
       countryOption <- countryRepo.findByCode(code)

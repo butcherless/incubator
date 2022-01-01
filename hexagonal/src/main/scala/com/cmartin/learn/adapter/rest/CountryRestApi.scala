@@ -15,11 +15,10 @@ class CountryRestApi(countryService: CountryService) {
     val countryValidation: Validation[RestValidationError, Country] =
       CountryValidator.validate(name, code)
 
-    //TODO
+    // TODO
     countryValidation.toEither
       .fold[Future[Country]](
-        nec =>
-          Future.failed(new RuntimeException(s"StatusCode: 500 - ${nec.mkString("[", ",", "]")}")),
+        nec => Future.failed(new RuntimeException(s"StatusCode: 500 - ${nec.mkString("[", ",", "]")}")),
         country => countryService.create(country)
       )
   }

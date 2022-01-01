@@ -26,7 +26,7 @@ lazy val common = (project in file("common"))
   .settings(
     commonSettings,
     Defaults.itSettings,
-    //Defaults.itSettings,
+    // Defaults.itSettings,
     name := "common"
   )
 
@@ -111,9 +111,9 @@ addCommandAlias("xdup", "dependencyUpdates")
 // clear screen and banner
 lazy val cls = taskKey[Unit]("Prints a separator")
 cls := {
-  val brs = "\n".repeat(2)
+  val brs     = "\n".repeat(2)
   val message = "* B U I L D   B E G I N S   H E R E *"
-  val chars = "*".repeat(message.length())
+  val chars   = "*".repeat(message.length())
   println(s"$brs$chars")
   println("* B U I L D   B E G I N S   H E R E *")
   println(s"$chars$brs ")

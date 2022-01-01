@@ -36,16 +36,19 @@ object AviationData {
     val ecMigAircraft: (String, String) = (TypeCodes.BOEING_787_800, Constants.registrationMIG)
     val ecLvlAircraft: (String, String) = (TypeCodes.AIRBUS_330_200, Constants.registrationLVL)
 
-    val flightUx9059: (String, String, LocalTime, LocalTime) = ("ux9059", "aea9059", LocalTime.of(7, 5), LocalTime.of(8, 55))
-    val flightD85756: (String, String, LocalTime, LocalTime) = ("d85756", "ibk6ty", LocalTime.of(8, 0), LocalTime.of(10, 25))
-    val flightI23942: (String, String, LocalTime, LocalTime) = ("i23942", "ibs3942", LocalTime.of(8, 40), LocalTime.of(10, 30))
+    val flightUx9059: (String, String, LocalTime, LocalTime) =
+      ("ux9059", "aea9059", LocalTime.of(7, 5), LocalTime.of(8, 55))
+    val flightD85756: (String, String, LocalTime, LocalTime) =
+      ("d85756", "ibk6ty", LocalTime.of(8, 0), LocalTime.of(10, 25))
+    val flightI23942: (String, String, LocalTime, LocalTime) =
+      ("i23942", "ibs3942", LocalTime.of(8, 40), LocalTime.of(10, 30))
 
     val journeyTime: (LocalTime, LocalTime) = (LocalTime.of(7, 19), LocalTime.of(8, 41))
 
     val madTotfnDistance: Double = 957.0
   }
 
-  //TODO refactor to common
+  // TODO refactor to common
   object TypeCodes {
     val AIRBUS_320     = "A320"
     val AIRBUS_330_200 = "A332"

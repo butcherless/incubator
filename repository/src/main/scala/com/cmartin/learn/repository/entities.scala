@@ -4,8 +4,10 @@ import java.time.{LocalDate, LocalDateTime, LocalTime}
 
 /** Database entity based on a type and an identifier
   *
-  * @tparam T type for the entity
-  * @tparam I identifier for the entity
+  * @tparam T
+  *   type for the entity
+  * @tparam I
+  *   identifier for the entity
   */
 trait Entity[T, I] {
   val id: Option[I]
@@ -13,8 +15,7 @@ trait Entity[T, I] {
 
 final case class AssetSeedId(tenantId: Long, assetId: Long)
 
-final case class Asset(businessId: AssetSeedId, predicates: String, id: Option[Long] = None)
-    extends Entity[Asset, Long]
+final case class Asset(businessId: AssetSeedId, predicates: String, id: Option[Long] = None) extends Entity[Asset, Long]
 
 /*
     C O U T R Y
