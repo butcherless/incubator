@@ -3,8 +3,8 @@ import sbt._
 object Dependencies {
 
   // production code
-  lazy val akkaHttp = "com.typesafe.akka" %% "akka-http"            % Versions.akkaHttp
-  lazy val akkaJson = "com.typesafe.akka" %% "akka-http-spray-json" % Versions.akkaHttp
+  lazy val akkaHttp  = "com.typesafe.akka" %% "akka-http"            % Versions.akkaHttp
+  lazy val akkaJson  = "com.typesafe.akka" %% "akka-http-spray-json" % Versions.akkaHttp
   lazy val akkaActor =
     "com.typesafe.akka" %% "akka-actor" % Versions.akka exclude ("com.typesafe", "config")
   lazy val akkaTypedActor =
@@ -16,7 +16,7 @@ object Dependencies {
   lazy val typesafeConfig = "com.typesafe"   % "config"        % Versions.config
   lazy val json4sNative   = "org.json4s"    %% "json4s-native" % Versions.json4s
   // P O S T G R E S
-  lazy val postgresDB = "org.postgresql" % "postgresql" % Versions.postgres
+  lazy val postgresDB     = "org.postgresql" % "postgresql"    % Versions.postgres
 
   lazy val logback =
     "ch.qos.logback" % "logback-classic" % Versions.logback exclude ("org.slf4j", "slf4j-api")
@@ -26,7 +26,7 @@ object Dependencies {
     "com.typesafe.scala-logging" %% "scala-logging" % Versions.scalaLogging exclude ("org.slf4j", "slf4j-api")
   lazy val scalaz = "org.scalaz" %% "scalaz-core" % Versions.scalaz
   lazy val slf4j  = "org.slf4j"   % "slf4j-api"   % Versions.slf4j
-  lazy val slick =
+  lazy val slick  =
     "com.typesafe.slick" %% "slick" % Versions.slick exclude ("org.slf4j", "slf4j-api") exclude ("com.typesafe", "config")
   lazy val slickPool =
     "com.typesafe.slick" %% "slick-hikaricp" % Versions.slick exclude ("org.slf4j", "slf4j-api")
