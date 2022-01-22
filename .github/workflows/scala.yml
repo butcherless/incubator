@@ -32,8 +32,7 @@ jobs:
     - name: Set up JDK 17
       uses: olafurpg/setup-scala@v13
       with:
-        distribution: 'temurin'
-        java-version: '11'
+        java-version: zulu@1.17 
     - name: java version
       run: java -version
     - name: compile main
