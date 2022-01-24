@@ -11,7 +11,7 @@ object Versions {
   val quill        = "3.7.1"
   val scalaLogging = "3.9.3"
   val scalaz       = "7.2.27"
-  val scalatest    = "3.2.10"
+  val scalatest    = "3.2.11"
   val slf4j        = "1.7.33"
   val slick        = "3.3.3"
   val utest        = "0.6.6"
