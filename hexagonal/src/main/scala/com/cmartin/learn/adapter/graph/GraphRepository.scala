@@ -277,8 +277,6 @@ object GraphRepository {
       def taskNodeFk: ForeignKeyQuery[TaskNodesTable, TaskNodeDbo] =
         foreignKey("FK_TASK_NODE_TASK_REFERENCE", id, taskNodes)(_.id)
 
-      def taskFk: ForeignKeyQuery[TasksTable, TaskDbo] =
-        foreignKey("FK_TASK_TASK_REFERENCE", taskId, tasks)(_.id)
     }
 
     /* TASK GROUP

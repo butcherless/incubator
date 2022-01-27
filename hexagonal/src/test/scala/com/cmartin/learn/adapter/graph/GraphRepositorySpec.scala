@@ -10,7 +10,10 @@ import java.util.UUID
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
-class GraphRepositorySpec extends AsyncFlatSpec with Matchers with BeforeAndAfterEach {
+class GraphRepositorySpec
+    extends AsyncFlatSpec
+    with Matchers
+    with BeforeAndAfterEach {
 
   import GraphRepository.Model._
   import GraphRepositorySpec._
