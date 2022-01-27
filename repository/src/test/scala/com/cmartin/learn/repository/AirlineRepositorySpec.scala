@@ -4,9 +4,11 @@ import com.cmartin.learn.test.AviationData.Constants._
 import org.scalatest.OptionValues
 
 import java.time.LocalDate
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Await
+import scala.concurrent.Future
 
-abstract class AirlineRepositorySpec(path: String) extends BaseRepositorySpec(path) with OptionValues {
+abstract class AirlineRepositorySpec(path: String)
+    extends BaseRepositorySpec(path) with OptionValues {
 
   val norway: Country = Country(noCountry._1, noCountry._2)
   // val iberia = Airline(ibkAirline._1, ibkAirline._2, )

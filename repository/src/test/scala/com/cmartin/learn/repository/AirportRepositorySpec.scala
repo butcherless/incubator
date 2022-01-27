@@ -3,9 +3,11 @@ package com.cmartin.learn.repository
 import com.cmartin.learn.test.AviationData.Constants._
 import org.scalatest.OptionValues
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Await
+import scala.concurrent.Future
 
-abstract class AirportRepositorySpec(path: String) extends BaseRepositorySpec(path) with OptionValues {
+abstract class AirportRepositorySpec(path: String)
+    extends BaseRepositorySpec(path) with OptionValues {
 
   val dal = new DatabaseLayer(config) {
     import profile.api._

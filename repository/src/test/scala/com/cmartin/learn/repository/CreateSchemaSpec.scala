@@ -2,7 +2,8 @@ package com.cmartin.learn.repository
 
 /** Spec helper for development
   */
-class CreateSchemaSpec(path: String) extends BaseRepositorySpec(path) {
+class CreateSchemaSpec(path: String)
+    extends BaseRepositorySpec(path) {
 
   val dal = new DatabaseLayer(config) {
     import profile.api._

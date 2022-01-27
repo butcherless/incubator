@@ -1,7 +1,8 @@
 package com.cmartin.learn.repository
 
 import com.cmartin.learn.test.AviationData.Constants._
-import org.scalatest.{BeforeAndAfterAll, OptionValues}
+import org.scalatest.BeforeAndAfterAll
+import org.scalatest.OptionValues
 
 import scala.concurrent.Await
 

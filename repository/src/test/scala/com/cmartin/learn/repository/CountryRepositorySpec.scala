@@ -3,9 +3,11 @@ package com.cmartin.learn.repository
 import com.cmartin.learn.test.AviationData.Constants._
 import org.scalatest.OptionValues
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Await
+import scala.concurrent.Future
 
-abstract class CountryRepositorySpec(path: String) extends BaseRepositorySpec(path) with OptionValues {
+abstract class CountryRepositorySpec(path: String)
+    extends BaseRepositorySpec(path) with OptionValues {
 
   val spainUpperCase: Country       = Country(esCountry._1.toUpperCase, esCountry._2.toUpperCase)
   val unitedKingdom: Country        = Country(ukCountry._1, ukCountry._2)
