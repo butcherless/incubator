@@ -32,7 +32,7 @@ object Dependencies {
     "com.typesafe.slick" %% "slick-hikaricp" % Versions.slick exclude ("org.slf4j", "slf4j-api")
   // quill
   lazy val quillJdbc     = "io.getquill" %% "quill-jdbc"           % Versions.quill
-  lazy val quillPostgres = "io.getquill" %% "quill-async-postgres" % Versions.quill
+  lazy val quillPostgres = "io.getquill" %% "quill-async-postgres" % Versions.quillPostgres
 
   lazy val zio        = "dev.zio" %% "zio"         % Versions.zio
   lazy val zioPrelude = "dev.zio" %% "zio-prelude" % Versions.zioPrelude
