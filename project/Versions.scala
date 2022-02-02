@@ -2,7 +2,7 @@ object Versions {
   val akkaHttp      = "10.2.3"
   val akka          = "2.6.11"
   val cats          = "2.0.0"
-  val config        = "1.4.1"
+  val config        = "1.4.2"
   val h2            = "2.1.210"
   val postgres      = "42.3.1"
   val json4s        = "3.6.11"
