@@ -65,3 +65,7 @@ jobs:
         min_quality_score: '50'
         project_name: 'scala/incubator'
         max_timeout_sec: '600'
+        max_defects_rate: '0.5'
+        max_complex_functions_rate: '0.5'
+        max_long_functions_rate: '0.5'
+        project_name: ''
