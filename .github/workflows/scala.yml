@@ -68,4 +68,3 @@ jobs:
         max_defects_rate: '0.5'
         max_complex_functions_rate: '0.5'
         max_long_functions_rate: '0.5'
-        project_name: ''
