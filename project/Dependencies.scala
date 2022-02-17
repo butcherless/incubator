@@ -15,6 +15,7 @@ object Dependencies {
   lazy val catsFree       = "org.typelevel" %% "cats-free"     % Versions.cats
   lazy val typesafeConfig = "com.typesafe"   % "config"        % Versions.config
   lazy val json4sNative   = "org.json4s"    %% "json4s-native" % Versions.json4s
+
   // P O S T G R E S
   lazy val postgresDB     = "org.postgresql" % "postgresql"    % Versions.postgres
 
