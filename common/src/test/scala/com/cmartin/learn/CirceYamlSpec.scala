@@ -30,14 +30,14 @@ class CirceYamlSpec
   """.stripMargin
 
   it should "parse a yaml string" in {
-    val yamlOneEither: Either[ParsingFailure,Json] = parser.parse(yamlOne)
+    val yamlOneEither: Either[ParsingFailure, Json] = parser.parse(yamlOne)
 
     yamlOneEither.isRight shouldBe true
     yamlOneEither map { y =>
       info(s"yamlOne: $y")
     }
 
-    val yamlTwoEither: Either[ParsingFailure,Json] = parser.parse(yamlTwo)
+    val yamlTwoEither: Either[ParsingFailure, Json] = parser.parse(yamlTwo)
 
     yamlTwoEither.isRight shouldBe true
     yamlTwoEither map { y =>

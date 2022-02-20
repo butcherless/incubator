@@ -28,7 +28,7 @@ lazy val common = (project in file("common"))
     libraryDependencies += "io.circe" %% "circe-yaml" % "0.14.1",
     Defaults.itSettings,
     // Defaults.itSettings,
-    name := "common"
+    name                              := "common"
   )
 
 lazy val repository = (project in file("repository"))
