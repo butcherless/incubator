@@ -6,4 +6,4 @@ addSbtPlugin("org.scoverage"  % "sbt-scoverage"          % "1.9.3")
 //addSbtPlugin("net.vonbuchholtz" % "sbt-dependency-check" % "2.1.0")
 addSbtPlugin("io.spray"       % "sbt-revolver"           % "0.9.1")
 //https://search.maven.org/artifact/ch.epfl.scala/sbt-bloop
-addSbtPlugin("ch.epfl.scala"  % "sbt-bloop"              % "1.4.13-16-15c71fe5")
+addSbtPlugin("ch.epfl.scala"  % "sbt-bloop"              % "1.4.13-18-3cc4983b")
