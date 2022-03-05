@@ -68,6 +68,20 @@ lazy val quillMacros = project
     assemblyStrategy
   )
 
+lazy val neo4jRepository = project
+  .in(file("neo4j-repository"))
+  .configs(IntegrationTest)
+  .settings(
+    commonSettings,
+    Defaults.itSettings,
+    name := "neo4j-repository",
+    libraryDependencies ++= Seq(
+      zio,
+      neo4j
+    ),
+    parallelExecution := false
+  )
+
 lazy val hexagonal = (project in file("hexagonal"))
   .configs(IntegrationTest extend Test)
   .settings(

@@ -17,7 +17,8 @@ object Dependencies {
   lazy val json4sNative   = "org.json4s"    %% "json4s-native" % Versions.json4s
 
   // P O S T G R E S
-  lazy val postgresDB = "org.postgresql" % "postgresql" % Versions.postgres
+  lazy val postgresDB = "org.postgresql" % "postgresql"        % Versions.postgres
+  lazy val neo4j      = "org.neo4j.driver"      % "neo4j-java-driver" % Versions.neo4j
 
   lazy val logback =
     "ch.qos.logback" % "logback-classic" % Versions.logback exclude ("org.slf4j", "slf4j-api")
