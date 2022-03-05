@@ -3,6 +3,7 @@ package com.cmartin.learn
 import org.neo4j.driver._
 import org.neo4j.driver.async.AsyncSession
 import org.neo4j.driver.async.ResultCursor
+import zio.Runtime.{default => runtime}
 import zio._
 
 import java.security.Provider.Service
@@ -83,6 +84,8 @@ object Touchdown {
   val managedSession: TaskManaged[Session] =
     ZManaged.acquireReleaseAttemptWith(acquireSession(driver1))(closeSession)
 
+  val l1 = ZLayer.fromManaged(managedDriver)
+
   sealed trait DatabaseError
   case class FieldMappingError(message: String)    extends DatabaseError
   case class DefaultDatabaseError(message: String) extends DatabaseError
@@ -98,12 +101,9 @@ object Touchdown {
 
     override def findByCode(code: String): IO[DatabaseError, Country] = {
       managedSession.use { session =>
-        val x = for {
-          record <- Task.attempt(session.run(readPersonByNameQuery).single())
-          tuple  <- extractCountryProps(record)
-        } yield Country(tuple._1, tuple._2)
-
-        x.mapError(e => manageError(e, s"findByCode($code)"))
+        Task.attempt(session.run(readPersonByNameQuery).single())
+          .flatMap(extractCountry)
+          .mapError(e => manageError(e, s"findByCode($code)"))
       }
     }
 
@@ -116,11 +116,42 @@ object Touchdown {
         Task.attempt(record.get("name").asString()))
     }
 
-    // TODO pattern matching for details
-    def manageError(th: Throwable, message: String) = {
-      DefaultDatabaseError(s"$message - ${th.getMessage()}")
-    }
+  }
 
+  object Neo4jCountryRepository {
+    val live = (Neo4jCountryRepository(_)).toLayer
+  }
+
+  // TODO pattern matching for error details
+  def manageError(th: Throwable, message: String) = {
+    DefaultDatabaseError(s"$message - ${th.getMessage()}")
+  }
+
+  def extractCountry(record: Record): Task[Country] = {
+    (Task.attempt(record.get("code").asString()) <&>
+      Task.attempt(record.get("name").asString()))
+      .map(Country.tupled)
+  }
+
+  object Main {
+
+    val driverLayer: TaskLayer[Driver] =
+      ZLayer.fromManaged(managedDriver)
+
+    val dbEnv: TaskLayer[CountryRepository with Driver] =
+      ZLayer.make[CountryRepository with Driver](
+        Neo4jCountryRepository.live,
+        driverLayer
+      )
+
+    val dbProgram = for {
+      repo <- ZIO.service[CountryRepository]
+      c    <- repo.findByCode("es")
+    } yield c
+
+    val dbResult: Country = runtime.unsafeRun(
+      dbProgram.provide(dbEnv)
+    )
   }
 
 }

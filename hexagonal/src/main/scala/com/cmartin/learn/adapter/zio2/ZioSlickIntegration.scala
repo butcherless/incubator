@@ -2,6 +2,7 @@ package com.cmartin.learn.adapter.zio2
 
 import slick.basic.DatabaseConfig
 import slick.jdbc._
+import zio.Runtime.{default => runtime}
 import zio._
 
 object ZioSlickIntegration {
@@ -116,7 +117,7 @@ object ZioSlickIntegration {
       r    <- repo.add("Chikito")
     } yield r
 
-    val res: Long = zio.Runtime.default.unsafeRun(
+    val res: Long = runtime.unsafeRun(
       dbProgram.provide(dbEnv)
     )
 
@@ -132,7 +133,7 @@ object ZioSlickIntegration {
       count <- srv.count()
     } yield count
 
-    val srvResut: Int = zio.Runtime.default.unsafeRun(
+    val srvResut: Int = runtime.unsafeRun(
       serviceProgram.provide(srvEnv)
     )
   }
