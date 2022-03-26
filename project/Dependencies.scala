@@ -45,7 +45,6 @@ object Dependencies {
   // testing code
   lazy val akkaHttpTest = "com.typesafe.akka" %% "akka-http-testkit" % Versions.akkaHttp  % "test"
   lazy val scalaTest    = "org.scalatest"     %% "scalatest"         % Versions.scalatest % "test,it"
-  lazy val uTest        = "com.lihaoyi"       %% "utest"             % Versions.utest     % "test"
 
   lazy val zioTest    = "dev.zio" %% "zio-test"     % Versions.zio % "test"
   lazy val zioTestSbt = "dev.zio" %% "zio-test-sbt" % Versions.zio % "test"
