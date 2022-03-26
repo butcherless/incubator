@@ -3,6 +3,7 @@ package com.cmartin.learn
 import org.neo4j.driver._
 import org.neo4j.driver.async.{AsyncSession, ResultCursor}
 import zio.Runtime.{default => runtime}
+import zio.ZLayer.Debug
 import zio._
 
 object Touchdown {
@@ -19,43 +20,47 @@ object Touchdown {
       code: String
   )
 
-  val uri       = "my-uri"
-  val user      = "my-user"
-  val pass      = "my-pass"
-  val authToken = AuthTokens.basic(user, pass)
+  case class DatabaseInput(uri: String, authTokens: AuthToken)
+  val uri        = "my-uri"
+  val user       = "my-user"
+  val pass       = "my-pass"
+  val authTokens = AuthTokens.basic(user, pass)
+  val dbInput    = DatabaseInput(uri, authTokens)
 
-  def acquire(uri: String)(authTokens: AuthToken): Task[Driver] =
-    Task.attempt(GraphDatabase.driver(uri, authTokens))
+  def acquire(input: DatabaseInput): Task[Driver] =
+    Task.attempt(GraphDatabase.driver(input.uri, input.authTokens))
 
   def release(driver: Driver): UIO[Unit] =
     Task.succeed(driver.close())
 
-  val readPersonByNameQuery: String =
-    """MATCH (p:Person)
+  object Queries {
+    val readPersonByNameQuery: String =
+      """MATCH (p:Person)
         WHERE p.name = $person_name
         RETURN p.name AS name"""
-  val params                        = Map("person_name" -> "personName")
+  }
+  val params = Map("person_name" -> "personName")
 
   val scopedDriver: RIO[Scope, Driver] =
-    ZIO.acquireRelease(acquire(uri)(authToken))(release)
+    ZIO.acquireRelease(acquire(dbInput))(release)
 
   val s1: Session      = ???
-  val r1               = s1.run(readPersonByNameQuery)
+  val r1               = s1.run(Queries.readPersonByNameQuery)
   val s2: AsyncSession = ???
-  val r2               = s2.runAsync(readPersonByNameQuery)
+  val r2               = s2.runAsync(Queries.readPersonByNameQuery)
 
   val rec1  = r1.single()
   val data1 = rec1.get("name").asString()
 
   val driver1: Driver          = ???
-  val fut1                     = driver1.asyncSession().runAsync(readPersonByNameQuery).toCompletableFuture
+  val fut1                     = driver1.asyncSession().runAsync(Queries.readPersonByNameQuery).toCompletableFuture
   val zio1: Task[ResultCursor] = ZIO.fromCompletableFuture(fut1)
 
   val zio2 = ZIO.scoped {
     scopedDriver.flatMap { driver =>
       ZIO.fromCompletableFuture(
         driver.asyncSession()
-          .runAsync(readPersonByNameQuery)
+          .runAsync(Queries.readPersonByNameQuery)
           .toCompletableFuture
       )
     }
@@ -67,7 +72,7 @@ object Touchdown {
     results <- ZIO.scoped(scopedDriver.flatMap { driver =>
                  ZIO.fromCompletableFuture(
                    driver.asyncSession()
-                     .runAsync(readPersonByNameQuery)
+                     .runAsync(Queries.readPersonByNameQuery)
                      .toCompletableFuture
                  )
                })
@@ -95,13 +100,13 @@ object Touchdown {
 
   case class Neo4jCountryRepository(driver: Driver) extends CountryRepository {
     val scopedSession: ZIO[Scope, DefaultDatabaseError, Session] =
-      ZIO.acquireRelease(acquireSession(driver1))(closeSession)
+      ZIO.acquireRelease(acquireSession(driver))(closeSession)
         .mapError(e => DefaultDatabaseError(e.getMessage))
 
     override def findByCode(code: String): IO[DatabaseError, Country] =
       ZIO.scoped {
         scopedSession.flatMap { session =>
-          Task.attempt(session.run(readPersonByNameQuery).single())
+          Task.attempt(session.run(Queries.readPersonByNameQuery).single())
             .flatMap(extractCountry)
             .mapError(e => manageError(e, s"findByCode($code)"))
         }
@@ -112,19 +117,19 @@ object Touchdown {
         - Country database field names
      */
     def extractCountryProps(record: Record): Task[(String, String)] = {
-      (Task.attempt(record.get("code").asString()) <&>
-        Task.attempt(record.get("name").asString()))
+      Task.attempt(record.get("code").asString()) <&>
+        Task.attempt(record.get("name").asString())
     }
-
   }
 
   object Neo4jCountryRepository {
-    val live = (Neo4jCountryRepository(_)).toLayer
+    val live: URLayer[Driver, Neo4jCountryRepository] =
+      (Neo4jCountryRepository(_)).toLayer
   }
 
   // TODO pattern matching for error details
-  def manageError(th: Throwable, message: String) = {
-    DefaultDatabaseError(s"$message - ${th.getMessage()}")
+  def manageError(th: Throwable, message: String): DatabaseError = {
+    DefaultDatabaseError(s"$message - ${th.getMessage}")
   }
 
   def extractCountry(record: Record): Task[Country] = {
@@ -136,12 +141,13 @@ object Touchdown {
   object Main {
 
     val driverLayer: TaskLayer[Driver] =
-      ZLayer.scoped(scopedDriver)
+      ZLayer.scoped(ZIO.acquireRelease(acquire(dbInput))(release))
 
-    val dbEnv: TaskLayer[CountryRepository with Driver] =
+    val dbLayer: TaskLayer[CountryRepository with Driver] =
       ZLayer.make[CountryRepository with Driver](
         Neo4jCountryRepository.live,
-        driverLayer
+        driverLayer,
+        Debug.mermaid
       )
 
     val dbProgram = for {
@@ -150,7 +156,7 @@ object Touchdown {
     } yield c
 
     val dbResult: Country = runtime.unsafeRun(
-      dbProgram.provide(dbEnv)
+      dbProgram.provide(dbLayer)
     )
   }
 
