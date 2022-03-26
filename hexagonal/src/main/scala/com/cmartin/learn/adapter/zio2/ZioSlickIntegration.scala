@@ -3,6 +3,7 @@ package com.cmartin.learn.adapter.zio2
 import slick.basic.DatabaseConfig
 import slick.jdbc._
 import zio.Runtime.{default => runtime}
+import zio.ZLayer.Debug
 import zio._
 
 object ZioSlickIntegration {
@@ -13,7 +14,7 @@ object ZioSlickIntegration {
   // Table definition
   object ItemTableDef
       extends JdbcProfile {
-    import this.api._
+    import api._
 
     class Items(tag: Tag) extends Table[Item](tag, "ITEMS") {
       def id   = column[Long]("ID", O.PrimaryKey, O.AutoInc)
@@ -27,7 +28,7 @@ object ZioSlickIntegration {
   // Slick <-> ZIO integration and syntax
   object SlickToZioSyntax
       extends JdbcProfile {
-    import this.api._
+    import api._
 
     def fromDBIO[R](dbio: => DBIO[R]): RIO[JdbcBackend#DatabaseDef, R] = for {
       db <- ZIO.service[JdbcBackend#DatabaseDef]
@@ -37,7 +38,9 @@ object ZioSlickIntegration {
 
   object ItemRepositoryDef
       extends JdbcProfile {
-    import this.api._, SlickToZioSyntax._, ItemTableDef.items
+    import ItemTableDef.items
+    import api._
+    import SlickToZioSyntax._
 
     trait ItemRepository {
       def add(name: String): Task[Long]
@@ -45,7 +48,7 @@ object ZioSlickIntegration {
       def count(): Task[Int]
     }
 
-    case class SlickItemRepository(val db: JdbcBackend#DatabaseDef)
+    case class SlickItemRepository(db: JdbcBackend#DatabaseDef)
         extends ItemRepository {
 
       override def count(): Task[Int] =
@@ -59,14 +62,15 @@ object ZioSlickIntegration {
           .provideService(db)
       }
 
-      override def add(name: String) =
+      override def add(name: String): Task[Long] =
         fromDBIO((items returning items.map(_.id)) += Item(0L, name))
           .provideService(db)
 
     }
 
     object SlickItemRepository {
-      val live = (SlickItemRepository(_)).toLayer
+      val live: URLayer[JdbcBackend#DatabaseDef, SlickItemRepository] =
+        (SlickItemRepository(_)).toLayer
     }
   }
 
@@ -86,7 +90,8 @@ object ZioSlickIntegration {
     }
 
     object LiveItemService {
-      val live = (LiveItemService(_)).toLayer
+      val live: URLayer[ItemRepository, LiveItemService] =
+        (LiveItemService(_)).toLayer
     }
   }
 
@@ -97,22 +102,26 @@ object ZioSlickIntegration {
     // read config for underlying infrastructure, i.e. PostgreSQL
     val dc = DatabaseConfig.forConfig[JdbcProfile]("h2_dc")
 
-    val zm: TaskLayer[JdbcProfile] = ZManaged.fromZIO(
-      Task.attempt(DatabaseConfig.forConfig[JdbcProfile]("h2_dc"))
-        .map(_.profile)
-    ).toLayer
+    val zm: TaskLayer[JdbcProfile] =
+      ZLayer.scoped(
+        Task.attempt(DatabaseConfig.forConfig[JdbcProfile]("h2_dc"))
+          .map(_.profile)
+      )
 
-    val dbLayer: TaskLayer[JdbcBackend#DatabaseDef] = ZManaged.fromZIO(
-      Task.attempt(DatabaseConfig.forConfig[JdbcProfile]("h2_dc"))
-        .map(_.db)
-    ).toLayer
+    val dbLayer: TaskLayer[JdbcBackend#DatabaseDef] =
+      ZLayer.scoped(
+        Task.attempt(DatabaseConfig.forConfig[JdbcProfile]("h2_dc"))
+          .map(_.db)
+      )
 
-    val dbEnv = ZLayer.make[ItemRepository with JdbcBackend#DatabaseDef](
-      SlickItemRepository.live,
-      dbLayer
-    )
+    val dbEnv: TaskLayer[ItemRepository with JdbcBackend#DatabaseDef] =
+      ZLayer.make[ItemRepository with JdbcBackend#DatabaseDef](
+        SlickItemRepository.live,
+        dbLayer,
+        Debug.mermaid
+      )
 
-    val dbProgram: ZIO[ItemRepository, Throwable, Long] = for {
+    val dbProgram: RIO[ItemRepository, Long] = for {
       repo <- ZIO.service[ItemRepository]
       r    <- repo.add("Chikito")
     } yield r

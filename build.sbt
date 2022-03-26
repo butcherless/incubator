@@ -96,6 +96,7 @@ lazy val hexagonal = (project in file("hexagonal"))
       slick,
       slickPool,
       typesafeConfig,
+      zio,
       zioPrelude,
       h2Database,
       scalaTest
