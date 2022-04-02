@@ -74,7 +74,7 @@ lazy val neo4jRepository = project
   .settings(
     commonSettings,
     Defaults.itSettings,
-    name := "neo4j-repository",
+    name              := "neo4j-repository",
     libraryDependencies ++= Seq(
       zio,
       neo4j
