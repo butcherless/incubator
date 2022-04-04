@@ -123,20 +123,25 @@ object Touchdown {
   }
 
   object Neo4jCountryRepository {
-    val live: URLayer[Driver, Neo4jCountryRepository] =
-      (Neo4jCountryRepository(_)).toLayer
+
+    val live: URLayer[Driver, CountryRepository] =
+      ZLayer.fromFunction(driverEnv =>
+        Neo4jCountryRepository(driverEnv.get)
+      )
+
+    val s: URLayer[Driver, CountryRepository] =
+      ZIO.service[Driver].map(Neo4jCountryRepository(_)).toLayer
+
   }
 
-  // TODO pattern matching for error details
-  def manageError(th: Throwable, message: String): DatabaseError = {
+  // add pattern matching for error details if needed
+  def manageError(th: Throwable, message: String): DatabaseError =
     DefaultDatabaseError(s"$message - ${th.getMessage}")
-  }
 
-  def extractCountry(record: Record): Task[Country] = {
+  def extractCountry(record: Record): Task[Country] =
     (Task.attempt(record.get("code").asString()) <&>
       Task.attempt(record.get("name").asString()))
       .map(Country.tupled)
-  }
 
   object Main {
 
@@ -145,15 +150,15 @@ object Touchdown {
 
     val dbLayer: TaskLayer[CountryRepository with Driver] =
       ZLayer.make[CountryRepository with Driver](
-        Neo4jCountryRepository.live,
         driverLayer,
+        Neo4jCountryRepository.live,
         Debug.mermaid
       )
 
-    val dbProgram = for {
-      repo <- ZIO.service[CountryRepository]
-      c    <- repo.findByCode("es")
-    } yield c
+    val dbProgram: ZIO[CountryRepository, DatabaseError, Country] = for {
+      repo    <- ZIO.service[CountryRepository]
+      country <- repo.findByCode("es")
+    } yield country
 
     val dbResult: Country = runtime.unsafeRun(
       dbProgram.provide(dbLayer)
