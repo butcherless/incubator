@@ -39,7 +39,7 @@ object Main extends ZIOAppDefault {
     scopedDb.flatMap(_.query(q))
   }
 
-  override def run: RIO[ZEnv with ZIOAppArgs with Scope, Unit] =
+  override def run: ZIO[ZIOAppArgs with Scope, Throwable, Unit] =
     for {
       _       <- ZIO.log("main app")
       results <- query("select from countries")
