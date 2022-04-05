@@ -1,7 +1,8 @@
 package com.cmartin.learn
 
 import org.neo4j.driver._
-import org.neo4j.driver.async.{AsyncSession, ResultCursor}
+import org.neo4j.driver.async.AsyncSession
+import org.neo4j.driver.async.ResultCursor
 import zio.Runtime.{default => runtime}
 import zio.ZLayer.Debug
 import zio._
@@ -124,7 +125,7 @@ object Touchdown {
 
   object Neo4jCountryRepository {
     val live: URLayer[Driver, CountryRepository] =
-      ZLayer(ZIO.service[Driver].map(Neo4jCountryRepository(_)))
+      ZLayer(ZIO.serviceWith[Driver](Neo4jCountryRepository(_)))
   }
 
   // add pattern matching for error details if needed
