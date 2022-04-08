@@ -7,7 +7,8 @@ https://github.com/tedyoung/kid-bank
 https://www.youtube.com/watch?v=ujb_O6myknY
 https://www.youtube.com/watch?v=MY6K4FP3Lxg
 https://www.youtube.com/watch?v=u-0PfHpKwT4
-
+codesai: https://github.com/butcherless/incubator/blob/d19533039fd5445519e8b15bbd8632c57eec02f3/hexagonal/docs/notes.txt
+Luis Fernández UPM: https://www.youtube.com/watch?v=glQlG-MeX4w&t
 
 #
 # quill macros example generic crud ops
