@@ -8,6 +8,7 @@ https://www.youtube.com/watch?v=ujb_O6myknY
 https://www.youtube.com/watch?v=MY6K4FP3Lxg
 https://www.youtube.com/watch?v=u-0PfHpKwT4
 codesai: https://github.com/butcherless/incubator/blob/d19533039fd5445519e8b15bbd8632c57eec02f3/hexagonal/docs/notes.txt
+codesai: https://docs.google.com/presentation/d/186JEuJai6H6vgmiX_PA25fH3qaz684Wu-8iJ563AnUo/edit#slide=id.p
 Luis Fernández UPM: https://www.youtube.com/watch?v=glQlG-MeX4w&t
 
 #
