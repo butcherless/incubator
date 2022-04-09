@@ -22,6 +22,7 @@ object Touchdown {
   )
 
   case class DatabaseInput(uri: String, authTokens: AuthToken)
+
   val uri        = "my-uri"
   val user       = "my-user"
   val pass       = "my-pass"
@@ -84,10 +85,10 @@ object Touchdown {
   def closeSession(session: Session): UIO[Unit]     =
     Task.succeed(session.close())
 
-  val scopedSession =
+  val scopedSession: RIO[Scope, Session] =
     ZIO.acquireRelease(acquireSession(driver1))(closeSession)
 
-  val l1 = ZLayer.fromAcquireRelease(acquireSession(driver1))(closeSession)
+  val l1 = ZLayer(ZIO.acquireRelease(acquireSession(driver1))(closeSession))
   val l3 = ZLayer.scoped(scopedSession)
   val l2 = ZLayer.fromZIO(scopedSession)
 
@@ -125,7 +126,7 @@ object Touchdown {
 
   object Neo4jCountryRepository {
     val live: URLayer[Driver, CountryRepository] =
-      ZLayer(ZIO.serviceWith[Driver](Neo4jCountryRepository(_)))
+      ZLayer.fromFunction(d => Neo4jCountryRepository(d))
   }
 
   // add pattern matching for error details if needed

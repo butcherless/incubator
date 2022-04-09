@@ -70,7 +70,7 @@ object ZioSlickIntegration {
 
     object SlickItemRepository {
       val live: URLayer[JdbcBackend#DatabaseDef, ItemRepository] =
-        ZLayer(ZIO.serviceWith[JdbcBackend#DatabaseDef](SlickItemRepository(_)))
+        ZLayer.fromFunction(db => SlickItemRepository(db))
     }
   }
 
@@ -91,7 +91,7 @@ object ZioSlickIntegration {
 
     object LiveItemService {
       val live: URLayer[ItemRepository, ItemService] =
-        ZLayer(ZIO.serviceWith[ItemRepository](LiveItemService(_)))
+        ZLayer.fromFunction(r => LiveItemService(r))
     }
   }
 
