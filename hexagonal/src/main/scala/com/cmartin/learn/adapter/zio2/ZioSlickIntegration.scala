@@ -2,6 +2,10 @@ package com.cmartin.learn.adapter.zio2
 
 import slick.basic.DatabaseConfig
 import slick.jdbc._
+import slick.lifted.ForeignKeyQuery
+import slick.lifted.Index
+import slick.lifted.PrimaryKey
+import slick.lifted.ProvenShape
 import zio.Runtime.{default => runtime}
 import zio.ZLayer.Debug
 import zio._
@@ -25,7 +29,7 @@ object ZioSlickIntegration {
     val items = TableQuery[Items]
   }
 
-  // Slick <-> ZIO integration and syntax
+// Slick <-> ZIO integration and syntax
   object SlickToZioSyntax
       extends JdbcProfile {
     import api._
@@ -38,8 +42,8 @@ object ZioSlickIntegration {
 
   object ItemRepositoryDef
       extends JdbcProfile {
-    import ItemTableDef.items
     import api._
+    import ItemTableDef.items
     import SlickToZioSyntax._
 
     trait ItemRepository {
