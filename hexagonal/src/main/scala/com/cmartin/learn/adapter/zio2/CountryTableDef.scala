@@ -1,6 +1,6 @@
 package com.cmartin.learn.adapter.zio2
 
-import slick.jdbc._
+import slick.jdbc.JdbcProfile
 import slick.lifted.Index
 import slick.lifted.ProvenShape
 
