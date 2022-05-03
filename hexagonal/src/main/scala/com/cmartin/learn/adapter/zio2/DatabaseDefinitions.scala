@@ -2,6 +2,7 @@ package com.cmartin.learn.adapter.zio2
 
 import slick.jdbc._
 import zio.Task
+import zio.ZLayer
 
 object DatabaseDefinitions {
 
@@ -41,7 +42,7 @@ object DatabaseDefinitions {
         val x = entities.filter(_.id === id).result.headOption
 
         fromDBIO(x)
-          .provideService(db)
+          .provide(ZLayer.succeed(db))
       }
     }
 

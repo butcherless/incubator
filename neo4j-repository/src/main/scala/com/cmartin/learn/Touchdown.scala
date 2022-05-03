@@ -30,10 +30,10 @@ object Touchdown {
   val dbInput    = DatabaseInput(uri, authTokens)
 
   def acquire(input: DatabaseInput): Task[Driver] =
-    Task.attempt(GraphDatabase.driver(input.uri, input.authTokens))
+    ZIO.attempt(GraphDatabase.driver(input.uri, input.authTokens))
 
   def release(driver: Driver): UIO[Unit] =
-    Task.succeed(driver.close())
+    ZIO.succeed(driver.close())
 
   object Queries {
     val readPersonByNameQuery: String =
@@ -70,7 +70,7 @@ object Touchdown {
 
   val query: RIO[Driver, ResultCursor] = for {
     driver  <- ZIO.service[Driver]
-    session <- UIO.succeed(driver.session())
+    session <- ZIO.succeed(driver.session())
     results <- ZIO.scoped(scopedDriver.flatMap { driver =>
                  ZIO.fromCompletableFuture(
                    driver.asyncSession()
@@ -81,9 +81,9 @@ object Touchdown {
   } yield results
 
   def acquireSession(driver: Driver): Task[Session] =
-    Task.attempt(driver.session())
+    ZIO.attempt(driver.session())
   def closeSession(session: Session): UIO[Unit]     =
-    Task.succeed(session.close())
+    ZIO.succeed(session.close())
 
   val scopedSession: RIO[Scope, Session] =
     ZIO.acquireRelease(acquireSession(driver1))(closeSession)
@@ -108,7 +108,7 @@ object Touchdown {
     override def findByCode(code: String): IO[DatabaseError, Country] =
       ZIO.scoped {
         scopedSession.flatMap { session =>
-          Task.attempt(session.run(Queries.readPersonByNameQuery).single())
+          ZIO.attempt(session.run(Queries.readPersonByNameQuery).single())
             .flatMap(extractCountry)
             .mapError(e => manageError(e, s"findByCode($code)"))
         }
@@ -119,8 +119,8 @@ object Touchdown {
         - Country database field names
      */
     def extractCountryProps(record: Record): Task[(String, String)] = {
-      Task.attempt(record.get("code").asString()) <&>
-        Task.attempt(record.get("name").asString())
+      ZIO.attempt(record.get("code").asString()) <&>
+        ZIO.attempt(record.get("name").asString())
     }
   }
 
@@ -134,8 +134,8 @@ object Touchdown {
     DefaultDatabaseError(s"$message - ${th.getMessage}")
 
   def extractCountry(record: Record): Task[Country] =
-    (Task.attempt(record.get("code").asString()) <&>
-      Task.attempt(record.get("name").asString()))
+    (ZIO.attempt(record.get("code").asString()) <&>
+      ZIO.attempt(record.get("name").asString()))
       .map(Country.tupled)
 
   object Main {

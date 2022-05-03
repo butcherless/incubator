@@ -55,20 +55,22 @@ object ZioSlickIntegration {
     case class SlickItemRepository(db: JdbcBackend#DatabaseDef)
         extends ItemRepository {
 
+      private val dbLayer = ZLayer.succeed(db)
+
       override def count(): Task[Int] =
         fromDBIO(items.size.result)
-          .provideService(db)
+          .provide(dbLayer)
 
       override def getById(id: Long): Task[Option[Item]] = {
         val query = items.filter(_.id === id).result
         fromDBIO(query)
           .map(_.headOption)
-          .provideService(db)
+          .provide(dbLayer)
       }
 
       override def add(name: String): Task[Long] =
         fromDBIO((items returning items.map(_.id)) += Item(0L, name))
-          .provideService(db)
+          .provide(dbLayer)
 
     }
 
@@ -108,13 +110,13 @@ object ZioSlickIntegration {
 
     val zm: TaskLayer[JdbcProfile] =
       ZLayer.scoped(
-        Task.attempt(DatabaseConfig.forConfig[JdbcProfile]("h2_dc"))
+        ZIO.attempt(DatabaseConfig.forConfig[JdbcProfile]("h2_dc"))
           .map(_.profile)
       )
 
     val dbLayer: TaskLayer[JdbcBackend#DatabaseDef] =
       ZLayer.scoped(
-        Task.attempt(DatabaseConfig.forConfig[JdbcProfile]("h2_dc"))
+        ZIO.attempt(DatabaseConfig.forConfig[JdbcProfile]("h2_dc"))
           .map(_.db)
       )
 

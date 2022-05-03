@@ -1,6 +1,13 @@
 package com.cmartin.learn
 
-import zio.{RIO, Scope, Task, UIO, ZEnv, ZIO, ZIOAppArgs, ZIOAppDefault}
+import zio.RIO
+import zio.Scope
+import zio.Task
+import zio.UIO
+import zio.ZEnv
+import zio.ZIO
+import zio.ZIOAppArgs
+import zio.ZIOAppDefault
 
 /* ZIO.scoped use example
  */
@@ -9,7 +16,7 @@ object Main extends ZIOAppDefault {
   case class DbSession(session: String) {
     def query(q: String): Task[String] = for {
       _       <- ZIO.log(s"query: $q")
-      results <- Task.succeed(s"[dummy, results, for, query, '$q']")
+      results <- ZIO.succeed(s"[dummy, results, for, query, '$q']")
     } yield results
 
     def close(): UIO[Unit] = for {
@@ -24,7 +31,7 @@ object Main extends ZIOAppDefault {
   case class MyDummyDatabase() extends MyDatabase {
     override def openSession(): Task[DbSession] = for {
       _       <- ZIO.log("acquiring db connection")
-      session <- UIO.succeed(DbSession("dummy-session"))
+      session <- ZIO.succeed(DbSession("dummy-session"))
     } yield session
   }
 
