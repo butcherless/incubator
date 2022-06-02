@@ -4,7 +4,7 @@ object Versions {
   val cats          = "2.0.0"
   val config        = "1.4.2"
   val h2            = "2.1.212"
-  val postgres      = "42.3.5"
+  val postgres      = "42.3.6"
   val neo4j         = "4.4.5"
   val json4s        = "3.6.11"
   val logback       = "1.2.11"
