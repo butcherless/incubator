@@ -155,9 +155,11 @@ object Touchdown {
       country <- repo.findByCode("es")
     } yield country
 
-    val dbResult: Country = runtime.unsafeRun(
-      dbProgram.provide(dbLayer)
-    )
+    val dbResult: Country = Unsafe.unsafe { implicit u =>
+      runtime.unsafe.run(
+        dbProgram.provide(dbLayer)
+      ).getOrThrowFiberFailure()
+    }
   }
 
 }

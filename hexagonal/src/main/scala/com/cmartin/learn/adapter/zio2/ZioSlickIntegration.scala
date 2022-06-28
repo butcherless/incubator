@@ -132,9 +132,11 @@ object ZioSlickIntegration {
       r    <- repo.add("Chikito")
     } yield r
 
-    val res: Long = runtime.unsafeRun(
-      dbProgram.provide(dbEnv)
-    )
+    val res: Long = Unsafe.unsafe { implicit u =>
+      runtime.unsafe.run(
+        dbProgram.provide(dbEnv)
+      ).getOrThrowFiberFailure()
+    }
 
     val srvEnv: TaskLayer[ItemService with ItemRepository with JdbcBackend#DatabaseDef] =
       ZLayer.make[ItemService with ItemRepository with JdbcBackend#DatabaseDef](
@@ -148,9 +150,11 @@ object ZioSlickIntegration {
       count <- srv.count()
     } yield count
 
-    val srvResut: Int = runtime.unsafeRun(
-      serviceProgram.provide(srvEnv)
-    )
-  }
+    val srvResut: Int = Unsafe.unsafe { implicit u =>
+      runtime.unsafe.run(
+        serviceProgram.provide(srvEnv)
+      ).getOrThrowFiberFailure()
+    }
 
+  }
 }

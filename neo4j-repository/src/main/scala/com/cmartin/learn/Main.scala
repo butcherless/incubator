@@ -4,7 +4,6 @@ import zio.RIO
 import zio.Scope
 import zio.Task
 import zio.UIO
-import zio.ZEnv
 import zio.ZIO
 import zio.ZIOAppArgs
 import zio.ZIOAppDefault
