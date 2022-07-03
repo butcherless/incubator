@@ -4,7 +4,7 @@ ThisBuild / scalaVersion := "2.13.8"
 ThisBuild / organization := "com.cmartin.learn"
 
 lazy val commonSettings = Seq(
-  resolvers += Resolver.sonatypeRepo("snapshot"),
+  // resolvers += Resolver.sonatypeRepo("snapshot"),
   libraryDependencies ++= Seq(scalaTest),
   scalacOptions ++= Seq(     // some of the Rob Norris tpolecat options
     "-deprecation",          // Emit warning and location for usages of deprecated APIs.
