@@ -15,8 +15,10 @@ object Dependencies {
   lazy val catsFree       = "org.typelevel" %% "cats-free"     % Versions.cats
   lazy val typesafeConfig = "com.typesafe"   % "config"        % Versions.config
   lazy val json4sNative   = "org.json4s"    %% "json4s-native" % Versions.json4s
+
   // P O S T G R E S
-  lazy val postgresDB     = "org.postgresql" % "postgresql"    % Versions.postgres
+  lazy val postgresDB = "org.postgresql"   % "postgresql"        % Versions.postgres
+  lazy val neo4j      = "org.neo4j.driver" % "neo4j-java-driver" % Versions.neo4j
 
   lazy val logback =
     "ch.qos.logback" % "logback-classic" % Versions.logback exclude ("org.slf4j", "slf4j-api")
@@ -43,7 +45,6 @@ object Dependencies {
   // testing code
   lazy val akkaHttpTest = "com.typesafe.akka" %% "akka-http-testkit" % Versions.akkaHttp  % "test"
   lazy val scalaTest    = "org.scalatest"     %% "scalatest"         % Versions.scalatest % "test,it"
-  lazy val uTest        = "com.lihaoyi"       %% "utest"             % Versions.utest     % "test"
 
   lazy val zioTest    = "dev.zio" %% "zio-test"     % Versions.zio % "test"
   lazy val zioTestSbt = "dev.zio" %% "zio-test-sbt" % Versions.zio % "test"

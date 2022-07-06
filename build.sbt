@@ -4,7 +4,7 @@ ThisBuild / scalaVersion := "2.13.8"
 ThisBuild / organization := "com.cmartin.learn"
 
 lazy val commonSettings = Seq(
-  resolvers += Resolver.sonatypeRepo("snapshot"),
+  // resolvers += Resolver.sonatypeRepo("snapshot"),
   libraryDependencies ++= Seq(scalaTest),
   scalacOptions ++= Seq(     // some of the Rob Norris tpolecat options
     "-deprecation",          // Emit warning and location for usages of deprecated APIs.
@@ -25,9 +25,10 @@ lazy val common = (project in file("common"))
   .configs(IntegrationTest)
   .settings(
     commonSettings,
+    libraryDependencies += "io.circe" %% "circe-yaml" % "0.14.1",
     Defaults.itSettings,
     // Defaults.itSettings,
-    name := "common"
+    name                              := "common"
   )
 
 lazy val repository = (project in file("repository"))
@@ -67,6 +68,21 @@ lazy val quillMacros = project
     assemblyStrategy
   )
 
+lazy val neo4jRepository = project
+  .in(file("neo4j-repository"))
+  .configs(IntegrationTest)
+  .settings(
+    commonSettings,
+    Defaults.itSettings,
+    name                 := "neo4j-repository",
+    libraryDependencies ++= Seq(
+      zio,
+      neo4j
+    ),
+    parallelExecution    := false,
+    Compile / run / fork := true
+  )
+
 lazy val hexagonal = (project in file("hexagonal"))
   .configs(IntegrationTest extend Test)
   .settings(
@@ -81,6 +97,7 @@ lazy val hexagonal = (project in file("hexagonal"))
       slick,
       slickPool,
       typesafeConfig,
+      zio,
       zioPrelude,
       h2Database,
       scalaTest
