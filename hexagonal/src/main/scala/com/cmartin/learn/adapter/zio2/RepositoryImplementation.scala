@@ -1,8 +1,7 @@
 package com.cmartin.learn.adapter.zio2
 
 import slick.jdbc._
-import zio.Task
-import zio.ZLayer
+import zio.{Task, ZLayer}
 
 object RepositoryImplementation
     extends JdbcProfile {

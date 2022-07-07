@@ -2,10 +2,7 @@ package com.cmartin.learn.adapter.zio2
 
 import slick.basic.DatabaseConfig
 import slick.jdbc._
-import slick.lifted.ForeignKeyQuery
-import slick.lifted.Index
-import slick.lifted.PrimaryKey
-import slick.lifted.ProvenShape
+import slick.lifted.{ForeignKeyQuery, Index, PrimaryKey, ProvenShape}
 import zio.Runtime.{default => runtime}
 import zio.ZLayer.Debug
 import zio._
