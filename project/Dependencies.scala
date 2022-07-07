@@ -3,18 +3,12 @@ import sbt._
 object Dependencies {
 
   // production code
-  lazy val akkaHttp  = "com.typesafe.akka" %% "akka-http"            % Versions.akkaHttp
-  lazy val akkaJson  = "com.typesafe.akka" %% "akka-http-spray-json" % Versions.akkaHttp
-  lazy val akkaActor =
-    "com.typesafe.akka" %% "akka-actor" % Versions.akka exclude ("com.typesafe", "config")
-  lazy val akkaTypedActor =
-    "com.typesafe.akka" %% "akka-actor-typed" % Versions.akka exclude ("com.typesafe", "config")
-  lazy val akkaStream =
-    "com.typesafe.akka" %% "akka-stream" % Versions.akka exclude ("com.typesafe", "config")
-  lazy val cats           = "org.typelevel" %% "cats-core"     % Versions.cats
-  lazy val catsFree       = "org.typelevel" %% "cats-free"     % Versions.cats
-  lazy val typesafeConfig = "com.typesafe"   % "config"        % Versions.config
-  lazy val json4sNative   = "org.json4s"    %% "json4s-native" % Versions.json4s
+  lazy val akkaHttp       = "com.typesafe.akka" %% "akka-http"            % Versions.akkaHttp
+  lazy val akkaJson       = "com.typesafe.akka" %% "akka-http-spray-json" % Versions.akkaHttp
+  lazy val cats           = "org.typelevel"     %% "cats-core"            % Versions.cats
+  lazy val catsFree       = "org.typelevel"     %% "cats-free"            % Versions.cats
+  lazy val typesafeConfig = "com.typesafe"       % "config"               % Versions.config
+  lazy val json4sNative   = "org.json4s"        %% "json4s-native"        % Versions.json4s
 
   // P O S T G R E S
   lazy val postgresDB = "org.postgresql"   % "postgresql"        % Versions.postgres
