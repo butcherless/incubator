@@ -248,9 +248,3 @@ Finders:
 * https://github.com/knoldus/neo4j-scala-starter
 * https://dzone.com/articles/getting-started-neo4j-with-scala-annbspintroductio
 * https://github.com/spring-guides/gs-accessing-neo4j-data-rest
-
-== Experimental
-
-Build with seed & bloop server
-
- docker run -it  --mount type=bind,source="$(pwd),target=/root" tindzk/seed:0.1.6  /bin/sh
