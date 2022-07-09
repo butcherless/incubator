@@ -2,7 +2,6 @@ package com.cmartin.learn.adapter.zio2
 
 import slick.basic.DatabaseConfig
 import slick.jdbc._
-import slick.lifted.{ForeignKeyQuery, Index, PrimaryKey, ProvenShape}
 import zio.Runtime.{default => runtime}
 import zio.ZLayer.Debug
 import zio._
@@ -20,7 +19,7 @@ object ZioSlickIntegration {
     class Items(tag: Tag) extends Table[Item](tag, "ITEMS") {
       def id   = column[Long]("ID", O.PrimaryKey, O.AutoInc)
       def name = column[String]("NAME")
-      def *    = (id, name) <> ((Item.apply _).tupled, Item.unapply _)
+      def *    = (id, name) <> ((Item.apply _).tupled, Item.unapply)
     }
 
     val items = TableQuery[Items]
@@ -39,8 +38,8 @@ object ZioSlickIntegration {
 
   object ItemRepositoryDef
       extends JdbcProfile {
-    import api._
     import ItemTableDef.items
+    import api._
     import SlickToZioSyntax._
 
     trait ItemRepository {

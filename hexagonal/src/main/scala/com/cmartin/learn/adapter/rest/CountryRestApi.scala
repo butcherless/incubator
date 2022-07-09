@@ -1,12 +1,11 @@
 package com.cmartin.learn.adapter.rest
 
+import com.cmartin.learn.adapter.rest.CountryValidator.RestValidationError
 import com.cmartin.learn.domain.ApplicationPorts.CountryService
 import com.cmartin.learn.domain.Model.Country
 import zio.prelude.Validation
 
 import scala.concurrent.Future
-
-import CountryValidator.RestValidationError
 
 class CountryRestApi(countryService: CountryService) {
 

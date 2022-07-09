@@ -1,11 +1,10 @@
 package com.cmartin.learn.adapter.quill
 
-import scala.concurrent.ExecutionContext
-import scala.concurrent.Future
-
 import com.cmartin.learn.adapter.quill.QuillRepositoryCommons.AbstractDboRepository
 import com.cmartin.learn.domain.Model._
 import com.cmartin.learn.domain.PersistencePorts._
+
+import scala.concurrent.{ExecutionContext, Future}
 
 class CountryQuillRepository(configPrefix: String)(implicit ec: ExecutionContext)
     extends AbstractDboRepository(configPrefix)

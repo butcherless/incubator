@@ -1,8 +1,8 @@
 package com.cmartin.learn.domain
 
-import scala.concurrent.Future
-
 import com.cmartin.learn.domain.Model.{Airport, Country}
+
+import scala.concurrent.Future
 
 object ApplicationPorts {
 
