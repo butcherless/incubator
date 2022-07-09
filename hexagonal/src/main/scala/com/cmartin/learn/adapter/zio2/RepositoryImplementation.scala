@@ -1,18 +1,17 @@
 package com.cmartin.learn.adapter.zio2
 
 import slick.jdbc._
-import zio.Task
-import zio.ZLayer
+import zio.{Task, ZLayer}
 
 object RepositoryImplementation
     extends JdbcProfile {
 
-  import api._
   import Helpers.SlickToZioSyntax.fromDBIO
   import PersistenceModel._
+  import api._
   import CountryTableDef._
-  import RepositoryDef._
   import DatabaseDefinitions.AbstracRepository._
+  import RepositoryDef._
 
   lazy val countries = TableQuery[CountryTable]
 
