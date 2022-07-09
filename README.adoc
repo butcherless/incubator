@@ -14,14 +14,6 @@ NOTE: Research project through small concept tests
 | https://circleci.com/gh/butcherless/incubator[Build CircleCI]
 | image:https://circleci.com/gh/butcherless/incubator.svg?style=svg[CircleCI build]
 
-| SemaphoreCI
-| https://semaphoreci.com/butcherless/incubator[Build SemaphoreCI]
-| image:https://semaphoreci.com/api/v1/butcherless/incubator/branches/master/badge.svg[SemaphoreCI build]
-
-| ShippableCI
-| https://app.shippable.com/github/butcherless/incubator[Build ShippableCI]
-| image:https://api.shippable.com/projects/5b68c6d57dafeb0700d706c0/badge?branch=master[ShippableCI build]
-
 | Codecov
 | https://codecov.io/gh/butcherless/incubator[Codecov coverage]
 | image:https://codecov.io/gh/butcherless/incubator/branch/master/graph/badge.svg[Codecov coverage]
@@ -32,7 +24,7 @@ NOTE: Research project through small concept tests
 
 .start database:
 
- docker run --name neo4j -d --rm --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data:/data \--volume=$HOME/neo4j/logs:/logs neo4j:3.3.0
+ docker run --name neo4j -d --rm --publish=7474:7474 --publish=7687:7687 --volume=$HOME/neo4j/data:/data \--volume=$HOME/neo4j/logs:/logs neo4j:latest
 
 .stop database:
 
@@ -48,7 +40,7 @@ NOTE: Research project through small concept tests
 
 .Build command
 
- sbt -batch clean assembly
+ sbt clean assembly
 
 .Run oneOnly (name includes substring)
 
@@ -62,13 +54,13 @@ http://www.scalatest.org/user_guide/using_the_runner#selectingSuitesAndTests
 
 .Debug command
 
- sbt -batch clean test --debug
+ sbt clean test --debug
 
 .Coverage report
 
- sbt ";clean;coverage;test;coverageReport"
+ sbt xcoverage
 
-report:: target/scala-2.12/scoverage-report/index.html
+report:: target/{module}/scala-2.13/scoverage-report/index.html
 
 
 == Subprojects
@@ -243,6 +235,7 @@ Finders:
 * Slick configuration: Logging http://slick.lightbend.com/doc/3.3.1/config.html
 * https://github.com/gonmarques/slick-repo (*amazing solution*)
 * https://techblog.agrimap.com/slick-3-data-access-patterns-788472e3c77
+* Scala neo4j Neotypes: https://github.com/neotypes/neotypes 
 * Spring data neo4j: https://docs.spring.io/spring-data/neo4j/docs/5.0.5.RELEASE/reference/html/
 * Example: https://github.com/bijukunjummen/spring-boot-scala-web
 * The great Josh Long: https://github.com/spring-tips/scala/blob/master/src/main/scala/tweets/tweets.scala
@@ -255,11 +248,3 @@ Finders:
 * https://github.com/knoldus/neo4j-scala-starter
 * https://dzone.com/articles/getting-started-neo4j-with-scala-annbspintroductio
 * https://github.com/spring-guides/gs-accessing-neo4j-data-rest
-* https://github.com/spring-tips/scala/blob/master/pom.xml
-* https://github.com/dnvriend/spring-boot-with-scala/blob/master/src/main/scala/com/github/dnvriend/repository/BookRepository.scala
-
-== Experimental
-
-Build with seed & bloop server
-
- docker run -it  --mount type=bind,source="$(pwd),target=/root" tindzk/seed:0.1.6  /bin/sh

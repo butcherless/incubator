@@ -1,8 +1,8 @@
 package com.cmartin.learn.poc
 
-import io.getquill.{Insert, NamingStrategy}
 import io.getquill.context.Context
 import io.getquill.idiom.Idiom
+import io.getquill.{Insert, NamingStrategy}
 
 import scala.language.experimental.macros
 

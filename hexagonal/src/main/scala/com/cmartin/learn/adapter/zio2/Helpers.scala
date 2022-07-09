@@ -1,7 +1,7 @@
 package com.cmartin.learn.adapter.zio2
+
 import slick.jdbc._
-import zio.RIO
-import zio.ZIO
+import zio.{RIO, ZIO}
 
 object Helpers extends JdbcProfile {
 

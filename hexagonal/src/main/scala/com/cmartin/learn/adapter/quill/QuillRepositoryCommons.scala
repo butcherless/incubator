@@ -1,4 +1,5 @@
 package com.cmartin.learn.adapter.quill
+
 import com.cmartin.learn.poc.CommonOpsMacro
 import io.getquill._
 import io.getquill.context.Context
