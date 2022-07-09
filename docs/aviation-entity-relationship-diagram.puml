@@ -7,7 +7,7 @@ hide footbox
 entity CountryDbo {
  * id: Long <<pk>>
  --
- * code <<idx>>
+ * code String <<idx>>
  * name: String
 }
 
@@ -26,6 +26,8 @@ entity AirlineDbo {
  * countryId: Long <<fk>>
  * name: String  <<idx>>
  * foundationDate: Date
+ * iataCode: String
+ * icaoCode: String
 }
 
 entity AircraftDbo {

@@ -1,8 +1,7 @@
 package com.cmartin.learn.adapter.zio2
 
 import slick.jdbc._
-import zio.Task
-import zio.ZLayer
+import zio.{Task, ZLayer}
 
 object DatabaseDefinitions {
 
@@ -18,8 +17,8 @@ object DatabaseDefinitions {
   }
 
   object AbstractTable extends JdbcProfile {
-    import api._
     import PersistenceModel.LongDbo
+    import api._
 
     abstract class LongBasedTable[T <: LongDbo](tag: Tag, tableName: String)
         extends Table[T](tag, tableName) {

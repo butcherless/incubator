@@ -1,6 +1,6 @@
 package com.cmartin.learn.adapter.graph
 
-import com.cmartin.learn.adapter.graph.GraphRepository.Model.{EdgeDbo, TaskGroupDbo, VertexDbo}
+import com.cmartin.learn.adapter.graph.GraphRepository.Model.{TaskGroupDbo, VertexDbo}
 import com.cmartin.learn.adapter.graph.GraphRepository.RepositoryLayer
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.flatspec.AsyncFlatSpec
@@ -17,7 +17,6 @@ class GraphRepositorySpec
 
   import GraphRepository.Model._
   import GraphRepositorySpec._
-
   import repoLayer.executeFromDb
 
   behavior of "Country Repository"
