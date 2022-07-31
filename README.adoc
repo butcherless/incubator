@@ -248,3 +248,4 @@ Finders:
 * https://github.com/knoldus/neo4j-scala-starter
 * https://dzone.com/articles/getting-started-neo4j-with-scala-annbspintroductio
 * https://github.com/spring-guides/gs-accessing-neo4j-data-rest
+* Business ideas: https://www.infoq.com/presentations/functional-programming-aviation/?utm_source=infoqemail&utm_medium=development&utm_campaign=newsletter&utm_content=05082018
