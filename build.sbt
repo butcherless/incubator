@@ -88,7 +88,7 @@ lazy val hexagonal = (project in file("hexagonal"))
   .settings(
     commonSettings,
     Defaults.itSettings,
-    name              := "hexagonal",
+    name                 := "hexagonal",
     libraryDependencies ++= Seq(
       logback,
       quillJdbc,
@@ -102,7 +102,8 @@ lazy val hexagonal = (project in file("hexagonal"))
       h2Database,
       scalaTest
     ),
-    parallelExecution := false,
+    parallelExecution    := false,
+    Compile / run / fork := true,
     assemblyStrategy
   )
   .dependsOn(quillMacros, testUtils)

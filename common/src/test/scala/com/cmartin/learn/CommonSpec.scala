@@ -5,7 +5,9 @@ import com.cmartin.learn.common.sayHello
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-class CommonSpec extends AnyFlatSpec with Matchers {
+class CommonSpec
+    extends AnyFlatSpec
+    with Matchers {
 
   "Tuple enhancements" should "access to the tuple elements via alias" in {
     val text   = "scala"
