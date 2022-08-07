@@ -34,9 +34,15 @@ object Dependencies {
   lazy val akkaHttpTest = "com.typesafe.akka" %% "akka-http-testkit" % Versions.akkaHttp  % "test"
   lazy val scalaTest    = "org.scalatest"     %% "scalatest"         % Versions.scalatest % "test,it"
 
-  lazy val zioTest    = "dev.zio" %% "zio-test"     % Versions.zio % "test"
   lazy val zioTestSbt = "dev.zio" %% "zio-test-sbt" % Versions.zio % "test"
 
   lazy val h2Database = "com.h2database" % "h2" % Versions.h2 % "test"
+
+  //lazy val zioTest    = "dev.zio" %% "zio-test"     % Versions.zio % "test"
+  lazy val zioTest = Seq(
+    "dev.zio" %% "zio-test"          % Versions.zio % "test",
+    "dev.zio" %% "zio-test-sbt"      % Versions.zio % "test",
+    "dev.zio" %% "zio-test-magnolia" % Versions.zio % "test" // optional
+  )
 
 }
