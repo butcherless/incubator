@@ -78,6 +78,8 @@ lazy val neo4jRepository = project
     name                 := "neo4j-repository",
     libraryDependencies ++= Seq(
       zio,
+      zioLogging,
+      logback,
       neo4j
     ),
     parallelExecution    := false,

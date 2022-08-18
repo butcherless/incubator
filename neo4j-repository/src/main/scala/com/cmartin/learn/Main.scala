@@ -1,12 +1,8 @@
 package com.cmartin.learn
 
-import zio.RIO
-import zio.Scope
-import zio.Task
-import zio.UIO
-import zio.ZIO
-import zio.ZIOAppArgs
-import zio.ZIOAppDefault
+import zio.{LogLevel, RIO, Runtime, Scope, Task, UIO, ZIO, ZIOAppArgs, ZIOAppDefault, ZIOAspect}
+import zio.logging.{console, LogAnnotation, LogFormat}
+import zio.logging.backend.SLF4J
 
 /* ZIO.scoped use example
  */
@@ -45,11 +41,20 @@ object Main extends ZIOAppDefault {
     scopedDb.flatMap(_.query(q))
   }
 
-  override def run: ZIO[ZIOAppArgs with Scope, Throwable, Unit] =
-    for {
-      _       <- ZIO.log("main app")
+  val logger = Runtime.addLogger(
+    SLF4J.slf4jLogger(SLF4J.logFormatDefault, SLF4J.getLoggerName())
+  )
+
+  val loggerLayer = zio.Runtime.removeDefaultLoggers >>> logger
+
+  override def run =
+    (for {
+      _       <- ZIO.log("default log")
+      _       <- ZIO.logDebug("debug log")
+      _       <- ZIO.logInfo("info log")
+      _       <- ZIO.logError("error log")
       results <- query("select from countries")
       _       <- ZIO.log(s"results: $results")
-    } yield ()
+    } yield ()).provide(loggerLayer)
 
 }
