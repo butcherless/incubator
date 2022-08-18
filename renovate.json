@@ -7,6 +7,12 @@
   ],
   "extends": [
     "config:base"
-  ],
-  "ignoreDeps": ["sbt-scoverage"]
+  ],  
+"packageRules": [
+    {
+      "matchPackageNames": ["org.scoverage.sbt-scoverage"],
+      "allowedVersions": "<=2.0.0"
+    }
+  ]
+  
 }
