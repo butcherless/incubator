@@ -7,5 +7,6 @@
   ],
   "extends": [
     "config:base"
-  ]
+  ],
+  "ignoreDeps": ["sbt-scoverage"]
 }
