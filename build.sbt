@@ -5,12 +5,11 @@ ThisBuild / organization := "com.cmartin.learn"
 
 lazy val commonSettings = Seq(
   // resolvers += Resolver.sonatypeRepo("snapshot"),
-  libraryDependencies ++= Seq(scalaTest),
+  // libraryDependencies ++= Seq(scalaTest),
   scalacOptions ++= Seq(     // some of the Rob Norris tpolecat options
     "-deprecation",          // Emit warning and location for usages of deprecated APIs.
     "-encoding",
     "utf-8",                 // Specify character encoding used by source files.
-    "-explaintypes",         // Explain type errors in more detail.
     "-explaintypes",         // Explain type errors in more detail.
     "-unchecked",            // Enable additional warnings where generated code depends on assumptions.
     "-feature",              // Emit warning and location for usages of features that should be imported explicitly.
@@ -25,10 +24,11 @@ lazy val common = (project in file("common"))
   .configs(IntegrationTest)
   .settings(
     commonSettings,
-    libraryDependencies += "io.circe" %% "circe-yaml" % "0.14.1",
+    libraryDependencies ++= Seq("io.circe" %% "circe-yaml" % "0.14.1", scalaTest) ++ zioTest,
     Defaults.itSettings,
     // Defaults.itSettings,
-    name                              := "common"
+    name := "common",
+    testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
   )
 
 lazy val repository = (project in file("repository"))
@@ -44,7 +44,8 @@ lazy val repository = (project in file("repository"))
       logback,
       slf4j,
       h2Database,
-      postgresDB
+      postgresDB,
+      scalaTest
     ),
     parallelExecution := false
   )
@@ -77,6 +78,8 @@ lazy val neo4jRepository = project
     name                 := "neo4j-repository",
     libraryDependencies ++= Seq(
       zio,
+      zioLogging,
+      logback,
       neo4j
     ),
     parallelExecution    := false,
