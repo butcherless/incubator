@@ -5,7 +5,7 @@ object Versions {
   val logback       = "1.2.11"
   val neo4j         = "4.4.9"
   val playJson      = "2.9.2"
-  val postgres      = "42.4.2"
+  val postgres      = "42.5.0"
   val quill         = "3.10.0"
   val quillPostgres = "3.10.0"
   val scalatest     = "3.3.0-SNAP2"
