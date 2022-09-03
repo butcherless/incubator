@@ -8,6 +8,10 @@
 
 ![Create Country Use Case Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/butcherless/incubator/master/hexagonal/docs/create-country.puml)
 
+## Create Country Async Use Case
+
+![Create Country Async Use Case Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/butcherless/incubator/master/hexagonal/docs/create-country-async.puml)
+
 ## Create Airport Use Case
 
 ![Create Airport Use Case Diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/butcherless/incubator/master/hexagonal/docs/create-airport.puml)
