@@ -10,7 +10,7 @@ object Versions {
   val quillPostgres = "3.10.0"
   val scalatest     = "3.3.0-SNAP2"
   val slf4j         = "2.0.0"
-  val slick         = "3.4.0"
+  val slick         = "3.4.1"
   val zio           = "2.0.2"
   val zioLogging    = "2.1.1"
   val zioPrelude    = "1.0.0-RC15"
