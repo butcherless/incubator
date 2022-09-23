@@ -13,8 +13,8 @@
       "matchPackagePatterns": [
         "org.scoverage"
       ],
-      "excludePackageNames": [
-        "sbt-scoverage"
+      "excludePackagePatterns": [
+        "^sbt-scoverage"
       ]
     }
   ],
