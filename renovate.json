@@ -8,10 +8,14 @@
   "extends": [
     "config:base"
   ],
-  "ignoreDeps": [
-    "org.scoverage.sbt-scoverage",
-    "org.jmotor.sbt.sbt-dependency-updates"
-  ],
+  {
+  "packageRules": [
+    {
+      "matchPackagePatterns": ["org.scoverage"],
+      "excludePackageNames": ["sbt-scoverage"]
+    }
+  ]
+},
   "sbt": {
     "enabled": true
   }
