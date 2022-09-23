@@ -8,14 +8,16 @@
   "extends": [
     "config:base"
   ],
-  {
   "packageRules": [
     {
-      "matchPackagePatterns": ["org.scoverage"],
-      "excludePackageNames": ["sbt-scoverage"]
+      "matchPackagePatterns": [
+        "org.scoverage"
+      ],
+      "excludePackageNames": [
+        "sbt-scoverage"
+      ]
     }
-  ]
-},
+  ],
   "sbt": {
     "enabled": true
   }
