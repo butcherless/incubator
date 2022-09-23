@@ -10,11 +10,11 @@
   ],
   "packageRules": [
     {
-      "matchPackagePatterns": [
-        "org.scoverage"
+      "matchPackageNames": [
+        "org.scoverage:sbt-scoverage"
       ],
-      "excludePackagePatterns": [
-        "^sbt-scoverage"
+      "allowedVersions": [
+        "2.0.0"
       ]
     }
   ],
