@@ -13,6 +13,6 @@
     "org.jmotor.sbt.sbt-dependency-updates"
   ],
   "sbt": {
-    "enabled": false
+    "enabled": true
   }
 }
