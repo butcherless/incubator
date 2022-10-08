@@ -1,6 +1,6 @@
 import Dependencies._
 
-ThisBuild / scalaVersion := "2.13.9"
+ThisBuild / scalaVersion := "2.13.10"
 ThisBuild / organization := "com.cmartin.learn"
 
 lazy val commonSettings = Seq(
