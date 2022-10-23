@@ -1,6 +1,6 @@
 import Dependencies._
 
-ThisBuild / scalaVersion := "2.13.8"
+ThisBuild / scalaVersion := "2.13.10"
 ThisBuild / organization := "com.cmartin.learn"
 
 lazy val commonSettings = Seq(
@@ -41,7 +41,7 @@ lazy val repository = (project in file("repository"))
       slick,
       slickPool,
       typesafeConfig,
-      logback,
+      // logback,
       slf4j,
       h2Database,
       postgresDB,
@@ -79,7 +79,7 @@ lazy val neo4jRepository = project
     libraryDependencies ++= Seq(
       zio,
       zioLogging,
-      logback,
+      // logback,
       neo4j
     ),
     parallelExecution    := false,
@@ -93,7 +93,7 @@ lazy val hexagonal = (project in file("hexagonal"))
     Defaults.itSettings,
     name                 := "hexagonal",
     libraryDependencies ++= Seq(
-      logback,
+      // logback,
       quillJdbc,
       quillPostgres,
       postgresDB,

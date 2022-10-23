@@ -8,5 +8,25 @@
   "extends": [
     "config:base"
   ],
-  "ignoreDeps": ["org.scoverage.sbt-scoverage", "org.jmotor.sbt.sbt-dependency-updates"]  
+  "packageRules": [
+    {
+      "matchPackageNames": [
+        "org.scoverage:sbt-scoverage"
+      ],
+      "allowedVersions": [
+        "2.0.0"
+      ]
+    },
+    {
+      "matchPackageNames": [
+        "org.jmotor.sbt:sbt-dependency-updates"
+      ],
+      "allowedVersions": [
+        "1.2.2"
+      ]
+    }
+  ],
+  "sbt": {
+    "enabled": true
+  }
 }
