@@ -25,21 +25,22 @@ end box
 database PostgreSQL as pgdb
 
 autonumber
-user -> api: Post[CountryRequest]
-api -> validator : validate(TupleN[CountryRequest])
+user ->(5) api: Post[CountryRequest]
+api -> validator : validate(CountryRequest)
 validator --> country **: smart-new
 validator --> api: IO[Country]
 api -> service: create(Country)
 service -> dbo: from(Country)
 dbo --> service: IO[CountryDbo]
+
 service -> repository: insert(CountryDbo)
 repository -> db : insert(CountryDbo)
-db -> pgdb : sql-insert
+db ->(10) pgdb : sql-insert
 db --> repository : IO[Id]
 repository --> service : IO[Country]
 service --> api : IO[Country]
 api -> view : from(Country)
 view --> api : IO[CountryView]
 api -> api: buildContentLocation
-api --> user : (Content-Location,CountryView)
+api --> user : (Content-Location)
 @enduml

@@ -1,0 +1,31 @@
+@startuml
+skinparam monochrome true
+skinparam BoxPadding 5
+header Ports and Adapter POC
+title Create Country Async Use Case
+
+hide footbox
+actor HttpClient as user << User >>
+
+box "REST Application" #FBFBFB
+ participant "RestApi" as api << API >>
+ participant "CountryValidator" as validator << RequestValidator >>
+ participant "CountryView" as view << Converter >>
+end box
+box "Domain / Application" #FBFBFB
+ participant "Country" as country << Model >>
+ participant "CountryService" as service << Service >>
+end box
+
+autonumber
+user ->(3) api: Post[CountryRequest]
+api ->(3) validator : validate(CountryRequest)
+validator --> country **: smart-new
+validator --> api: IO[Country]
+api ->(3) service: create(Country)
+service --> api : IO[CountryId]
+api -> api: buildContentLocation
+api --> user : (Content-Location)
+note right: Created
+
+@enduml
