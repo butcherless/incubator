@@ -24,7 +24,7 @@ lazy val common = (project in file("common"))
   .configs(IntegrationTest)
   .settings(
     commonSettings,
-    libraryDependencies ++= Seq("io.circe" %% "circe-yaml" % "0.14.1", scalaTest) ++ zioTest,
+    libraryDependencies ++= Seq("io.circe" %% "circe-yaml" % "0.14.2", scalaTest) ++ zioTest,
     Defaults.itSettings,
     // Defaults.itSettings,
     name := "common",
