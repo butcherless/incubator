@@ -2,7 +2,6 @@ object Versions {
   val akkaHttp      = "10.2.9"
   val config        = "1.4.2"
   val h2            = "2.1.214"
-  // val logback       = "1.4.0"
   val neo4j         = "5.3.1"
   val playJson      = "2.9.2"
   val postgres      = "42.5.1"
@@ -12,7 +11,7 @@ object Versions {
   val slf4j         = "2.0.6"
   val slick         = "3.4.1"
   val zio           = "2.0.5"
-  val zioLogging    = "2.1.5"
+  val zioLogging    = "2.1.6"
   val zioPrelude    = "1.0.0-RC16"
 
   val scalaVersion = "2.13.10"
