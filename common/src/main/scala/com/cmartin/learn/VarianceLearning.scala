@@ -2,6 +2,9 @@ package com.cmartin.learn
 
 import java.text.Normalizer
 
+/*
+
+ */
 object VarianceLearning {
   abstract class Vehicle
 
