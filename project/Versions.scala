@@ -7,7 +7,7 @@ object Versions {
   val postgres      = "42.5.1"
   val quill         = "3.10.0"
   val quillPostgres = "3.10.0"
-  val scalatest     = "3.2.14"
+  val scalatest     = "3.2.15"
   val slf4j         = "2.0.6"
   val slick         = "3.4.1"
   val zio           = "2.0.5"
