@@ -128,6 +128,14 @@ lazy val specification = (project in file("specification"))
     name := "specification"
   )
 
+lazy val bluezone = (project in file("bluezone"))
+  .configs(IntegrationTest)
+  .settings(
+    commonSettings,
+    Defaults.itSettings,
+    name := "bluezone"
+  )
+
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
 addCommandAlias("xcoverage", "clean;coverage;test;coverageReport")
