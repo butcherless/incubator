@@ -32,5 +32,8 @@ object Model {
   )
 
   // ERRORS
+  trait DomainError {
+    val message: String
+  }
   case class PayErrorException(message: String)
 }

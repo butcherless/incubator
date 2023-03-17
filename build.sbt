@@ -133,7 +133,11 @@ lazy val bluezone = (project in file("bluezone"))
   .settings(
     commonSettings,
     Defaults.itSettings,
-    name := "bluezone"
+    name := "bluezone",
+    libraryDependencies ++= Seq(
+      zio,
+      zioLogging
+    )
   )
 
 Global / onChangedBuildSource := ReloadOnSourceChanges

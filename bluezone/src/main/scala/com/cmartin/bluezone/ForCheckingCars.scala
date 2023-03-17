@@ -1,6 +1,8 @@
 package com.cmartin.bluezone
 
 import java.time.Clock
+import zio.IO
+import Model.DomainError
 
 trait ForCheckingCars {
 
@@ -19,5 +21,5 @@ trait ForCheckingCars {
     *   "true" if the car has no valid ticket for the rate at current date-time,
     *   "false" otherwise.
     */
-  def illegallyParkedCar(clock: Clock, carPlate: String, rateName: String): Boolean
+  def illegallyParkedCar(clock: Clock, carPlate: String, rateName: String): IO[DomainError, Boolean]
 }
