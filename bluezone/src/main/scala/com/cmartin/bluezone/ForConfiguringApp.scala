@@ -1,17 +1,17 @@
 package com.cmartin.bluezone
 
-import com.cmartin.bluezone.Model.{PayRequest, Rate, Ticket}
-
+import com.cmartin.bluezone.Model.{ DomainError, PayRequest, Rate, Ticket }
+import zio.IO
 trait ForConfiguringApp {
-  def createRates(rates: List[Rate]): Unit
+  def createRates(rates: List[Rate]): IO[DomainError, Unit]
 
-  def createTicket(ticket: Ticket): Unit
+  def createTicket(ticket: Ticket): IO[DomainError, Unit]
 
-  def eraseTicket(ticketCode: String): Unit
+  def eraseTicket(ticketCode: String): IO[DomainError, Unit]
 
-  def setNextTicketCodeToReturn(ticketCode: String): Unit
+  def setNextTicketCodeToReturn(ticketCode: String): IO[DomainError, Unit]
 
-  def getNextTicketCodeToReturn(): String
+  def getNextTicketCodeToReturn(): IO[DomainError, String]
 
-  def getLastPayRequestDone(): PayRequest
+  def getLastPayRequestDone(): IO[DomainError, PayRequest]
 }

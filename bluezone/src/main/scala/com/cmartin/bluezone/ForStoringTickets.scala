@@ -1,6 +1,6 @@
 package com.cmartin.bluezone
 
-import com.cmartin.bluezone.Model.{DomainError, Ticket}
+import com.cmartin.bluezone.Model.{ DomainError, Ticket }
 import zio.IO
 
 trait ForStoringTickets {
