@@ -1,11 +1,11 @@
 package com.cmartin.learn.adapter.postgres
 
-import com.cmartin.learn.adapter.postgres.SlickInfrastructure.{Profile, SlickRepository}
+import com.cmartin.learn.adapter.postgres.SlickInfrastructure.{ Profile, SlickRepository }
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 import slick.lifted.ProvenShape
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 trait SlickRepositories extends SlickRepository {
   self: Profile =>

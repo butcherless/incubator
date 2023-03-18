@@ -1,13 +1,13 @@
 package com.cmartin.learn.poc
 
-import com.cmartin.learn.domain.Model.{Airport, Country}
+import com.cmartin.learn.domain.Model.{ Airport, Country }
 import io.getquill._
 import io.getquill.context.Context
 import io.getquill.idiom.Idiom
 import io.getquill.monad.IOMonad
 
 import java.util.UUID
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.language.experimental.macros
 
 object Abstractions {

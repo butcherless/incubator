@@ -3,7 +3,7 @@ package com.cmartin.learn
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import io.circe.yaml.parser
-import io.circe.{Json, ParsingFailure}
+import io.circe.{ Json, ParsingFailure }
 
 class CirceYamlSpec
     extends AnyFlatSpec

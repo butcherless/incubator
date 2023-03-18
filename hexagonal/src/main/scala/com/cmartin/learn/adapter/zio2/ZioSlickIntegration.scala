@@ -2,7 +2,7 @@ package com.cmartin.learn.adapter.zio2
 
 import slick.basic.DatabaseConfig
 import slick.jdbc._
-import zio.Runtime.{default => runtime}
+import zio.Runtime.{ default => runtime }
 import zio.ZLayer.Debug
 import zio._
 
@@ -98,8 +98,8 @@ object ZioSlickIntegration {
   }
 
   object MainProgram {
-    import ItemRepositoryDef.{ItemRepository, SlickItemRepository}
-    import MyServiceDef.{ItemService, LiveItemService}
+    import ItemRepositoryDef.{ ItemRepository, SlickItemRepository }
+    import MyServiceDef.{ ItemService, LiveItemService }
 
     // read config for underlying infrastructure, i.e. PostgreSQL
     val dc = DatabaseConfig.forConfig[JdbcProfile]("h2_dc")

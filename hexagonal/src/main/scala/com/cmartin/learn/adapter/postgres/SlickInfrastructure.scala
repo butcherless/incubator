@@ -1,6 +1,6 @@
 package com.cmartin.learn.adapter.postgres
 
-import com.cmartin.learn.adapter.postgres.Model.{AirportDbo, CountryDbo, LongEntity}
+import com.cmartin.learn.adapter.postgres.Model.{ AirportDbo, CountryDbo, LongEntity }
 import slick.jdbc.JdbcProfile
 
 object SlickInfrastructure {

@@ -1,7 +1,7 @@
 package com.cmartin.learn.adapter.postgres
 
 import com.cmartin.learn.adapter.postgres.Model.AirportDbo
-import com.cmartin.learn.test.AviationData.Constants.{esCountry, waitTimeout}
+import com.cmartin.learn.test.AviationData.Constants.{ esCountry, waitTimeout }
 
 import scala.concurrent.Await
 

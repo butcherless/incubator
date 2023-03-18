@@ -1,10 +1,11 @@
 package com.cmartin.bluezone
 
-import Model.PayRequest
+import com.cmartin.bluezone.Model.{DomainError, PayRequest}
+import zio.IO
 
 trait ForPaying {
 
-  def pay(payRequest: PayRequest): Unit // TODO: IO throws PayErrorException
+  def pay(payRequest: PayRequest): IO[DomainError, Unit] // TODO: IO throws PayErrorException
 
-  def lastPayRequest(): PayRequest
+  def lastPayRequest(): IO[DomainError, PayRequest]
 }

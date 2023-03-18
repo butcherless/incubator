@@ -1,7 +1,7 @@
 package com.cmartin.learn.adapter.zio2
 
 import slick.jdbc._
-import zio.{Task, ZLayer}
+import zio.{ Task, ZLayer }
 
 object DatabaseDefinitions {
 

@@ -1,15 +1,16 @@
 package com.cmartin.bluezone
 
-import Model.Rate
+import com.cmartin.bluezone.Model.{DomainError, Rate}
+import zio.IO
 
 trait ForObtainingRates {
-  def findAll(): Set[Rate]
+  def findAll(): IO[DomainError, Set[Rate]]
 
-  def findByName(rateName: String): Rate
+  def findByName(rateName: String): IO[DomainError, Rate]
 
-  def addRate(rate: Rate): Unit
+  def addRate(rate: Rate): IO[DomainError, Unit]
 
-  def exists(rateName: String): Boolean
+  def exists(rateName: String): IO[DomainError, Boolean]
 
-  def empty(): Unit
+  def empty(): IO[DomainError, Unit]
 }

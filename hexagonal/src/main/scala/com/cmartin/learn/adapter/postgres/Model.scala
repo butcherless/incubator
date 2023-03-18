@@ -1,6 +1,6 @@
 package com.cmartin.learn.adapter.postgres
 
-import com.cmartin.learn.domain.Model.{Airport, Country}
+import com.cmartin.learn.domain.Model.{ Airport, Country }
 
 object Model {
 

@@ -1,6 +1,7 @@
 package com.cmartin.bluezone
 
-import Model.{PurchaseTicketRequest, Rate, Ticket}
+import com.cmartin.bluezone.Model.{DomainError, PurchaseTicketRequest, Rate, Ticket}
+import zio.IO
 
 trait ForParkingCars {
 
@@ -11,7 +12,7 @@ trait ForParkingCars {
     * @see
     *   Rate
     */
-  def getAllRatesByName(): Map[String, Rate]
+  def getAllRatesByName(): IO[DomainError, Map[String, Rate]]
 
   /** It pays for a parking ticket, which will be valid for the following period
     * of time:
@@ -35,7 +36,9 @@ trait ForParkingCars {
     * @see
     *   PayErrorException
     */
-  def purchaseTicket(purchaseTicketRequest: PurchaseTicketRequest): String // IO throws PayErrorException
+  def purchaseTicket(
+      purchaseTicketRequest: PurchaseTicketRequest
+  ): IO[DomainError, String] // IO throws PayErrorException
 
   /** Given the code of a previously purchased ticket, returns the whole data of
     * the ticket.
@@ -46,5 +49,5 @@ trait ForParkingCars {
     *   The ticket with the given ticket code, or null if it doesn't exist any
     *   ticket with such a code.
     */
-  def getTicket(ticketCode: String): Ticket
+  def getTicket(ticketCode: String): IO[DomainError, Ticket]
 }

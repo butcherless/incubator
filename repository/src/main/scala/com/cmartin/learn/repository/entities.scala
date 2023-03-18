@@ -1,6 +1,6 @@
 package com.cmartin.learn.repository
 
-import java.time.{LocalDate, LocalDateTime, LocalTime}
+import java.time.{ LocalDate, LocalDateTime, LocalTime }
 
 /** Database entity based on a type and an identifier
   *

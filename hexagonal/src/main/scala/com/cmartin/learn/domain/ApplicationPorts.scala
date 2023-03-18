@@ -1,6 +1,6 @@
 package com.cmartin.learn.domain
 
-import com.cmartin.learn.domain.Model.{Airport, Country}
+import com.cmartin.learn.domain.Model.{ Airport, Country }
 
 import scala.concurrent.Future
 

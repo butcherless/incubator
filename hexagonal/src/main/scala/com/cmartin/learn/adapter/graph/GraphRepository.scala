@@ -2,9 +2,9 @@ package com.cmartin.learn.adapter.graph
 
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
-import slick.lifted.{ForeignKeyQuery, Index, PrimaryKey, ProvenShape}
+import slick.lifted.{ ForeignKeyQuery, Index, PrimaryKey, ProvenShape }
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 object GraphRepository {
 

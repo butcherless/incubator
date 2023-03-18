@@ -3,7 +3,7 @@ package com.cmartin.learn
 import org.neo4j.driver._
 import org.neo4j.driver.async.AsyncSession
 import org.neo4j.driver.async.ResultCursor
-import zio.Runtime.{default => runtime}
+import zio.Runtime.{ default => runtime }
 import zio.ZLayer.Debug
 import zio._
 

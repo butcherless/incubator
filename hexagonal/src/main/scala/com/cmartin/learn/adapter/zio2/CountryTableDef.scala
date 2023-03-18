@@ -1,7 +1,7 @@
 package com.cmartin.learn.adapter.zio2
 
 import slick.jdbc.JdbcProfile
-import slick.lifted.{Index, ProvenShape}
+import slick.lifted.{ Index, ProvenShape }
 
 object CountryTableDef
     extends JdbcProfile {

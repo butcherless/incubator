@@ -1,6 +1,6 @@
 package com.cmartin.learn.test
 
-import java.time.{LocalDate, LocalTime}
+import java.time.{ LocalDate, LocalTime }
 import scala.concurrent.duration._
 
 object AviationData {

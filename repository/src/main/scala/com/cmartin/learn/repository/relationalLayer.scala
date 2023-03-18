@@ -1,9 +1,9 @@
 package com.cmartin.learn.repository
 
-import slick.basic.{DatabaseConfig, DatabasePublisher}
+import slick.basic.{ DatabaseConfig, DatabasePublisher }
 import slick.jdbc.JdbcProfile
 
-import java.time.{LocalDate, LocalTime}
+import java.time.{ LocalDate, LocalTime }
 import scala.concurrent.Future
 
 trait Repositories extends RelationalInfrastructure {

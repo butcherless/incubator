@@ -1,8 +1,9 @@
 package com.cmartin.bluezone
 
-import java.time.Clock
+import com.cmartin.bluezone.Model.DomainError
 import zio.IO
-import Model.DomainError
+
+import java.time.Clock
 
 trait ForCheckingCars {
 

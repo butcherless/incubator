@@ -1,6 +1,6 @@
 package com.cmartin.learn.adapter.graph
 
-import com.cmartin.learn.adapter.graph.GraphRepository.Model.{TaskGroupDbo, VertexDbo}
+import com.cmartin.learn.adapter.graph.GraphRepository.Model.{ TaskGroupDbo, VertexDbo }
 import com.cmartin.learn.adapter.graph.GraphRepository.RepositoryLayer
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.flatspec.AsyncFlatSpec
@@ -8,7 +8,7 @@ import org.scalatest.matchers.should.Matchers
 
 import java.util.UUID
 import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{ Await, Future }
 
 class GraphRepositorySpec
     extends AsyncFlatSpec

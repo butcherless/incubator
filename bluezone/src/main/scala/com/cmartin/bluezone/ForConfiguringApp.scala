@@ -1,6 +1,6 @@
 package com.cmartin.bluezone
 
-import Model.{PayRequest, Rate, Ticket}
+import com.cmartin.bluezone.Model.{PayRequest, Rate, Ticket}
 
 trait ForConfiguringApp {
   def createRates(rates: List[Rate]): Unit

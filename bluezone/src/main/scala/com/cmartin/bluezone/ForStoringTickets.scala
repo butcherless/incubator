@@ -1,21 +1,22 @@
 package com.cmartin.bluezone
 
-import Model.Ticket
+import com.cmartin.bluezone.Model.{DomainError, Ticket}
+import zio.IO
 
 trait ForStoringTickets {
-  def nextCode(): String
+  def nextCode(): IO[DomainError, String]
 
-  def findByCode(ticketCode: String): Ticket
+  def findByCode(ticketCode: String): IO[DomainError, Ticket]
 
-  def store(ticket: Ticket): Unit
+  def store(ticket: Ticket): IO[DomainError, Unit]
 
-  def findByCarRateOrderByEndingDateTimeDesc(carPlate: String, rateName: String): List[Ticket]
+  def findByCarRateOrderByEndingDateTimeDesc(carPlate: String, rateName: String): IO[DomainError, List[Ticket]]
 
-  def delete(ticketCode: String): Unit
+  def delete(ticketCode: String): IO[DomainError, Unit]
 
-  def exists(ticketCode: String): Boolean
+  def exists(ticketCode: String): IO[DomainError, Boolean]
 
-  def setNextCode(ticketCode: String): Unit
+  def setNextCode(ticketCode: String): IO[DomainError, Unit]
 
-  def nextAvailableCode(): String
+  def nextAvailableCode(): IO[DomainError, String]
 }

@@ -1,6 +1,6 @@
 package com.cmartin.learn.poc
 
-import scala.reflect.macros.whitebox.{Context => MacroContext}
+import scala.reflect.macros.whitebox.{ Context => MacroContext }
 
 class CommonOpsMacro(val c: MacroContext) {
 
