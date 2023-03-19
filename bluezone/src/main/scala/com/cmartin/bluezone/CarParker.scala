@@ -1,7 +1,7 @@
 package com.cmartin.bluezone
 
 import com.cmartin.bluezone.Model._
-import zio.{IO, UIO, ZIO}
+import zio.{ IO, UIO, ZIO }
 
 import java.time.LocalDateTime
 

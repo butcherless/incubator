@@ -1,11 +1,12 @@
 package com.cmartin.bluezone
 
 import com.cmartin.bluezone.Model.DomainError
-import zio.{IO, ZIO}
+import zio.{ IO, ZIO }
 
-import java.time.{Clock, LocalDateTime}
+import java.time.{ Clock, LocalDateTime }
 
-final case class CarChecker(ticketStore: ForStoringTickets) extends ForCheckingCars {
+final case class CarChecker(ticketStore: ForStoringTickets)
+    extends ForCheckingCars {
 
   override def illegallyParkedCar(clock: Clock, carPlate: String, rateName: String): IO[DomainError, Boolean] = {
     val currentDateTime = LocalDateTime.now(clock)

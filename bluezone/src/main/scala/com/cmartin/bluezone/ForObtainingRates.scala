@@ -1,6 +1,6 @@
 package com.cmartin.bluezone
 
-import com.cmartin.bluezone.Model.{DomainError, Rate}
+import com.cmartin.bluezone.Model.{ DomainError, Rate }
 import zio.IO
 
 trait ForObtainingRates {

@@ -1,6 +1,6 @@
 package com.cmartin.bluezone
 
-import java.time.{Clock, LocalDateTime}
+import java.time.{ Clock, LocalDateTime }
 
 object Model {
   case class Ticket(

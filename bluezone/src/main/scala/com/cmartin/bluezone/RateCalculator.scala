@@ -1,7 +1,7 @@
 package com.cmartin.bluezone
 
 import com.cmartin.bluezone.Model.Rate
-import zio.{UIO, ZIO}
+import zio.{ UIO, ZIO }
 
 import java.time.LocalDateTime
 
