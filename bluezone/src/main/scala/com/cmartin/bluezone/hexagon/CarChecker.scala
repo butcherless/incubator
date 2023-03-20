@@ -1,9 +1,9 @@
-package com.cmartin.bluezone
+package com.cmartin.bluezone.hexagon
 
-import com.cmartin.bluezone.Model.DomainError
-import zio.{ IO, ZIO }
+import com.cmartin.bluezone.hexagon.Model.DomainError
+import zio.{IO, ZIO}
 
-import java.time.{ Clock, LocalDateTime }
+import java.time.{Clock, LocalDateTime}
 
 final case class CarChecker(ticketStore: ForStoringTickets)
     extends ForCheckingCars {

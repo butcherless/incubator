@@ -1,7 +1,7 @@
-package com.cmartin.bluezone
+package com.cmartin.bluezone.hexagon
 
-import com.cmartin.bluezone.Model.{ DomainError, PayRequest, Rate, Ticket }
-import zio.{ IO, ZIO }
+import com.cmartin.bluezone.hexagon.Model.{DomainError, PayRequest, Rate, Ticket}
+import zio.{IO, ZIO}
 
 final case class AppConfigurator(
     rateProvider: ForObtainingRates,

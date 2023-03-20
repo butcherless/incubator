@@ -1,7 +1,8 @@
-package com.cmartin.bluezone
+package com.cmartin.bluezone.hexagon
 
-import com.cmartin.bluezone.Model.{ DomainError, Rate }
+import com.cmartin.bluezone.hexagon.Model.{ DomainError, Rate }
 import zio.IO
+
 
 trait ForObtainingRates {
   def findAll(): IO[DomainError, Set[Rate]]

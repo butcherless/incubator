@@ -1,6 +1,6 @@
-package com.cmartin.bluezone
+package com.cmartin.bluezone.hexagon
 
-import com.cmartin.bluezone.Model.{ DomainError, PayRequest }
+import com.cmartin.bluezone.hexagon.Model.{DomainError, PayRequest}
 import zio.IO
 
 trait ForPaying {

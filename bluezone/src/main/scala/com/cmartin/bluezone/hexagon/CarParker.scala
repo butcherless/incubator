@@ -1,6 +1,6 @@
-package com.cmartin.bluezone
+package com.cmartin.bluezone.hexagon
 
-import com.cmartin.bluezone.Model._
+import com.cmartin.bluezone.hexagon.Model._
 import zio.{ IO, UIO, ZIO }
 
 import java.time.LocalDateTime
@@ -11,7 +11,7 @@ final case class CarParker(
     paymentService: ForPaying
 ) extends ForParkingCars {
 
-  override def getAllRatesByName(): IO[Model.DomainError, Map[String, Rate]] =
+  override def getAllRatesByName(): IO[DomainError, Map[String, Rate]] =
     rateProvider
       .findAll()
       .flatMap(rateSetToMap)

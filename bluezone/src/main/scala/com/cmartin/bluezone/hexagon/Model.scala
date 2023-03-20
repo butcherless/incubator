@@ -1,4 +1,4 @@
-package com.cmartin.bluezone
+package com.cmartin.bluezone.hexagon
 
 import java.time.{ Clock, LocalDateTime }
 
@@ -31,8 +31,15 @@ object Model {
   )
 
   // ERRORS
-  trait DomainError {
+  trait DomainError  {
     val message: String
   }
-  case class PayErrorException(message: String)
+  object DomainError {
+    case class RateNotFound(message: String)       extends DomainError
+    case class MultipleRateFound(message: String)  extends DomainError
+    case class DuplicateRate(message: String)      extends DomainError
+    case class PayRequestNotFound(message: String) extends DomainError
+    case class PaymentError(message: String)       extends DomainError
+
+  }
 }

@@ -1,7 +1,8 @@
-package com.cmartin.bluezone
+package com.cmartin.bluezone.hexagon
 
-import com.cmartin.bluezone.Model.{ DomainError, PayRequest, Rate, Ticket }
+import com.cmartin.bluezone.hexagon.Model.{DomainError, PayRequest, Rate, Ticket}
 import zio.IO
+
 trait ForConfiguringApp {
   def createRates(rates: List[Rate]): IO[DomainError, Unit]
 

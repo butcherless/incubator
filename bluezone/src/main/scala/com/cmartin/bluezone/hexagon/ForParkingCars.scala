@@ -1,6 +1,6 @@
-package com.cmartin.bluezone
+package com.cmartin.bluezone.hexagon
 
-import com.cmartin.bluezone.Model.{ DomainError, PurchaseTicketRequest, Rate, Ticket }
+import com.cmartin.bluezone.hexagon.Model.{DomainError, PurchaseTicketRequest, Rate, Ticket}
 import zio.IO
 
 trait ForParkingCars {

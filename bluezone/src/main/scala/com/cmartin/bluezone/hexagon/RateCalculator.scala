@@ -1,7 +1,7 @@
-package com.cmartin.bluezone
+package com.cmartin.bluezone.hexagon
 
-import com.cmartin.bluezone.Model.Rate
-import zio.{ UIO, ZIO }
+import com.cmartin.bluezone.hexagon.Model.Rate
+import zio.{UIO, ZIO}
 
 import java.time.LocalDateTime
 

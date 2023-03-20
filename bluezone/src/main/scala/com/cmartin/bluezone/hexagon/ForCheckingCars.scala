@@ -1,6 +1,6 @@
-package com.cmartin.bluezone
+package com.cmartin.bluezone.hexagon
 
-import com.cmartin.bluezone.Model.DomainError
+import com.cmartin.bluezone.hexagon.Model.DomainError
 import zio.IO
 
 import java.time.Clock
