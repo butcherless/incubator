@@ -29,8 +29,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Set up JDK 17
-      uses: coursier/setup-action@v1.3.0
+    - uses: coursier/cache-action@v6
+    - name: Setup Scala and Java
+      uses: coursier/setup-action@v1
       with:
         jvm: zulu@17
     - name: java version

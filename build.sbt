@@ -120,6 +120,14 @@ lazy val assemblyStrategy = ThisBuild / assemblyMergeStrategy := {
     oldStrategy(x)
 }
 
+lazy val specification = (project in file("specification"))
+  .configs(IntegrationTest)
+  .settings(
+    commonSettings,
+    Defaults.itSettings,
+    name := "specification"
+  )
+
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
 addCommandAlias("xcoverage", "clean;coverage;test;coverageReport")
