@@ -5,7 +5,7 @@ addSbtPlugin("org.scoverage"    % "sbt-scoverage"          % "2.0.7")
 addSbtPlugin("ch.epfl.scala"    % "sbt-bloop"              % "1.5.6")
 addSbtPlugin("org.jmotor.sbt"   % "sbt-dependency-updates" % "1.2.7")
 addSbtPlugin("net.virtual-void" % "sbt-dependency-graph"   % "0.10.0-RC1")
-addSbtPlugin("io.spray"         % "sbt-revolver"           % "0.9.1")
+addSbtPlugin("io.spray"         % "sbt-revolver"           % "0.10.0")
 //https://search.maven.org/artifact/ch.epfl.scala/sbt-bloop
 //addDependencyTreePlugin
 //addSbtPlugin("net.vonbuchholtz" % "sbt-dependency-check" % "2.1.0")
