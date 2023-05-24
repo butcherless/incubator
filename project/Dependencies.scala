@@ -22,9 +22,11 @@ object Dependencies {
   lazy val quillJdbc     = "io.getquill"        %% "quill-jdbc"           % Versions.quill
   lazy val quillPostgres = "io.getquill"        %% "quill-async-postgres" % Versions.quillPostgres
 
-  lazy val zio        = "dev.zio" %% "zio"               % Versions.zio
-  lazy val zioLogging = "dev.zio" %% "zio-logging-slf4j" % Versions.zioLogging
-  lazy val zioPrelude = "dev.zio" %% "zio-prelude"       % Versions.zioPrelude
+  lazy val zio               = "dev.zio" %% "zio"                 % Versions.zio
+  lazy val zioLogging        = "dev.zio" %% "zio-logging-slf4j"   % Versions.zioLogging
+  lazy val zioPrelude        = "dev.zio" %% "zio-prelude"         % Versions.zioPrelude
+  lazy val zioConfigLib      = "dev.zio" %% "zio-config"          % Versions.zioConfig
+  lazy val zioConfigTypesafe = "dev.zio" %% "zio-config-typesafe" % Versions.zioConfig
 
   lazy val scalaReflect  = "org.scala-lang" % "scala-reflect"  % Versions.scalaVersion
   lazy val scalaCompiler = "org.scala-lang" % "scala-compiler" % Versions.scalaVersion

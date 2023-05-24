@@ -120,6 +120,27 @@ lazy val assemblyStrategy = ThisBuild / assemblyMergeStrategy := {
     oldStrategy(x)
 }
 
+lazy val specification = (project in file("specification"))
+  .configs(IntegrationTest)
+  .settings(
+    commonSettings,
+    Defaults.itSettings,
+    name := "specification"
+  )
+
+lazy val zioConfig = (project in file("zio-config"))
+  .configs(IntegrationTest)
+  .settings(
+    commonSettings,
+    Defaults.itSettings,
+    name := "zio config poc",
+    libraryDependencies ++= Seq(
+      zio,
+      zioConfigLib,
+      zioConfigTypesafe
+    )
+  )
+
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
 addCommandAlias("xcoverage", "clean;coverage;test;coverageReport")

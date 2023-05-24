@@ -29,8 +29,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Set up JDK 17
-      uses: coursier/setup-action@v1.3.0
+    - name: Setup Scala and Java
+      uses: coursier/setup-action@v1
       with:
         jvm: zulu@17
     - name: java version
@@ -49,22 +49,3 @@ jobs:
       run: sbt -v -Dfile.encoding=UTF-8 --client assembly
     - name: dependency updates report
       run: sbt -v -Dfile.encoding=UTF-8 --client dependencyUpdates
-
-  check-quality:
-    runs-on: ubuntu-latest
-    name: A job to check my code quality
-    steps:
-    - name: Check code meets quality standards
-      id: codiga
-      uses: codiga/github-action@master
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        codiga_api_token: ${{ secrets.CODIGA_API_TOKEN }}
-        force_ref: 'none'
-        min_quality_grade: 'WARNING'
-        min_quality_score: '50'
-        project_name: 'scala/incubator'
-        max_timeout_sec: '600'
-        max_defects_rate: '0.5'
-        max_complex_functions_rate: '0.5'
-        max_long_functions_rate: '0.5'
