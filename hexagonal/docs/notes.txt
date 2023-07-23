@@ -10,6 +10,7 @@ https://www.youtube.com/watch?v=u-0PfHpKwT4
 codesai: https://docs.google.com/presentation/d/186JEuJai6H6vgmiX_PA25fH3qaz684Wu-8iJ563AnUo/edit#slide=id.p
 Luis Fernández UPM: https://www.youtube.com/watch?v=glQlG-MeX4w&t
 https://vaadin.com/blog/ddd-part-1-strategic-domain-driven-design
+https://wkrzywiec.medium.com/ports-adapters-architecture-on-example-19cab9e93be7 Step by Step and many links
 
 #
 # quill macros example generic crud ops
