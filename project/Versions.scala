@@ -12,8 +12,8 @@ object Versions {
   val slick         = "3.4.1"
   val zio           = "2.0.15"
   val zioConfig     = "4.0.0-RC16"
-  val zioLogging    = "2.1.13"
-  val zioPrelude    = "1.0.0-RC19"
+  val zioLogging    = "2.1.14"
+  val zioPrelude    = "1.0.0-RC20"
 
   val scalaVersion = "2.13.11"
 }
