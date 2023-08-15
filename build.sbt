@@ -5,7 +5,6 @@ ThisBuild / organization := "com.cmartin.learn"
 
 lazy val commonSettings = Seq(
   // resolvers += Resolver.sonatypeRepo("snapshot"),
-  // libraryDependencies ++= Seq(scalaTest),
   scalacOptions ++= Seq(     // some of the Rob Norris tpolecat options
     "-deprecation",          // Emit warning and location for usages of deprecated APIs.
     "-encoding",
@@ -21,21 +20,15 @@ lazy val commonSettings = Seq(
 )
 
 lazy val common = (project in file("common"))
-  .configs(IntegrationTest)
   .settings(
-    commonSettings,
     libraryDependencies ++= Seq("io.circe" %% "circe-yaml" % "0.14.2", scalaTest) ++ zioTest,
-    Defaults.itSettings,
-    // Defaults.itSettings,
     name := "common",
     testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
   )
 
 lazy val repository = (project in file("repository"))
-  .configs(IntegrationTest extend Test)
   .settings(
     commonSettings,
-    Defaults.itSettings,
     name              := "repository",
     libraryDependencies ++= Seq(
       slick,
@@ -52,16 +45,13 @@ lazy val repository = (project in file("repository"))
   .dependsOn(common, testUtils)
 
 lazy val testUtils = (project in file("test"))
-  .configs(IntegrationTest)
   .settings(
     commonSettings,
-    Defaults.itSettings,
     name := "test-utils"
   )
 
 lazy val quillMacros = project
   .in(file("hexagonal/macro"))
-  .configs(IntegrationTest)
   .settings(
     commonSettings,
     name := "quillMacros",
@@ -71,10 +61,8 @@ lazy val quillMacros = project
 
 lazy val neo4jRepository = project
   .in(file("neo4j-repository"))
-  .configs(IntegrationTest)
   .settings(
     commonSettings,
-    Defaults.itSettings,
     name                 := "neo4j-repository",
     libraryDependencies ++= Seq(
       zio,
@@ -87,10 +75,8 @@ lazy val neo4jRepository = project
   )
 
 lazy val hexagonal = (project in file("hexagonal"))
-  .configs(IntegrationTest extend Test)
   .settings(
     commonSettings,
-    Defaults.itSettings,
     name                 := "hexagonal",
     libraryDependencies ++= Seq(
       // logback,
@@ -121,18 +107,14 @@ lazy val assemblyStrategy = ThisBuild / assemblyMergeStrategy := {
 }
 
 lazy val specification = (project in file("specification"))
-  .configs(IntegrationTest)
   .settings(
     commonSettings,
-    Defaults.itSettings,
     name := "specification"
   )
 
 lazy val zioConfig = (project in file("zio-config"))
-  .configs(IntegrationTest)
   .settings(
     commonSettings,
-    Defaults.itSettings,
     name := "zio config poc",
     libraryDependencies ++= Seq(
       zio,
