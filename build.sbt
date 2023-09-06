@@ -142,3 +142,6 @@ cls := {
   println("* B U I L D   B E G I N S   H E R E *")
   println(s"$chars$brs ")
 }
+
+enablePlugins(PrintModulesTask)
+
