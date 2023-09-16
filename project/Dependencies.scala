@@ -7,7 +7,7 @@ object Dependencies {
   lazy val akkaJson       = "com.typesafe.akka" %% "akka-http-spray-json" % Versions.akkaHttp
   lazy val typesafeConfig = "com.typesafe"       % "config"               % Versions.config
 
-  lazy val circeYaml  = "io.circe" %% "circe-yaml"  % Versions.circe
+  lazy val circeYaml = "io.circe" %% "circe-yaml" % Versions.circe
 
   // P O S T G R E S
   lazy val postgresDB = "org.postgresql"   % "postgresql"        % Versions.postgres
