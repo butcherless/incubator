@@ -1,7 +1,7 @@
 .DS_Store
 .bloop/
-.bsp
-.idea
+.bsp/
+.idea/
 .metals/
 .sbtopts
 .vscode/
