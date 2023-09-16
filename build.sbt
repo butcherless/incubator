@@ -3,6 +3,8 @@ import Dependencies._
 ThisBuild / scalaVersion := "2.13.12"
 ThisBuild / organization := "com.cmartin.learn"
 
+Global / onChangedBuildSource := ReloadOnSourceChanges
+
 lazy val commonSettings = Seq(
   // resolvers += Resolver.sonatypeRepo("snapshot"),
   scalacOptions ++= Seq(     // some of the Rob Norris tpolecat options
@@ -21,7 +23,7 @@ lazy val commonSettings = Seq(
 
 lazy val common = (project in file("common"))
   .settings(
-    libraryDependencies ++= Seq("io.circe" %% "circe-yaml" % "0.14.2", scalaTest) ++ zioTest,
+    libraryDependencies ++= Seq(circeYaml, scalaTest) ++ zioTest,
     name := "common",
     testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
   )
@@ -123,7 +125,6 @@ lazy val zioConfig = (project in file("zio-config"))
     )
   )
 
-Global / onChangedBuildSource := ReloadOnSourceChanges
 
 addCommandAlias("xcoverage", "clean;coverage;test;coverageReport")
 addCommandAlias("xreload", "clean;reload")

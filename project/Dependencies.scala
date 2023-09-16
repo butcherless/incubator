@@ -7,11 +7,12 @@ object Dependencies {
   lazy val akkaJson       = "com.typesafe.akka" %% "akka-http-spray-json" % Versions.akkaHttp
   lazy val typesafeConfig = "com.typesafe"       % "config"               % Versions.config
 
+  lazy val circeYaml  = "io.circe" %% "circe-yaml"  % Versions.circe
+
   // P O S T G R E S
   lazy val postgresDB = "org.postgresql"   % "postgresql"        % Versions.postgres
   lazy val neo4j      = "org.neo4j.driver" % "neo4j-java-driver" % Versions.neo4j
 
-  // lazy val logback  = "ch.qos.logback" % "logback-classic" % Versions.logback exclude ("org.slf4j", "slf4j-api")
   lazy val playJson =
     "com.typesafe.play" %% "play-json" % Versions.playJson exclude ("com.fasterxml.jackson.core", "jackson-annotations")
   lazy val slf4j = "org.slf4j" % "slf4j-api" % Versions.slf4j
