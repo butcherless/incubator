@@ -1,7 +1,7 @@
 object Versions {
   val akkaHttp      = "10.2.9"
   val config        = "1.4.3"
-  val circe         = "0.15.1"
+  val circe         = "1.15.0"
   val h2            = "2.2.224"
   val neo4j         = "5.14.0"
   val playJson      = "2.9.2"
