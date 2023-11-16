@@ -32,7 +32,7 @@ jobs:
     - name: Setup Scala and Java
       uses: coursier/setup-action@v1
       with:
-        jvm: zulu@17
+        jvm: zulu@21
     - name: java version
       run: java -version
     - name: compile main
