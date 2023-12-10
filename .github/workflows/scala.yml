@@ -1,6 +1,11 @@
 name: Scala CI
 
-on: [push]
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    types: [ opened ]
 
 jobs:
   build:
@@ -35,8 +40,6 @@ jobs:
         java-version: '21'
     - name: Cache scala dependencies
       uses: coursier/cache-action@v6
-    - name: java version
-      run: java -version
     - name: compile main
       run: sbt -v -Dfile.encoding=UTF-8 --client compile
     - name: compile unit tests
@@ -44,12 +47,18 @@ jobs:
     - name: compile integration tests
       #run: sbt -v -Dfile.encoding=UTF-8 --client IntegrationTest/compile
       run: echo "TODO"
-    - name: tests
-      run: sbt -v -Dfile.encoding=UTF-8 --client test
+    - name: tests with coverage
+      run: sbt --client xcoverage
+    - name: upload coverage reports to codecov
+      uses: codecov/codecov-action@v3
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+#    - name: tests
+#      run: sbt -v -Dfile.encoding=UTF-8 --client test
     - name: integration tests
       #run: sbt -v -Dfile.encoding=UTF-8 --client "hexagonal/IntegrationTest/test"
       run: echo "TODO"
     - name: assembly
-      run: sbt -v -Dfile.encoding=UTF-8 --client assembly
+      run: sbt -v --client assembly
     - name: dependency updates report
-      run: sbt -v -Dfile.encoding=UTF-8 --client dependencyUpdates
+      run: sbt -v --client dependencyUpdates
