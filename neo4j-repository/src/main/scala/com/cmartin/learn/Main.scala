@@ -1,7 +1,7 @@
 package com.cmartin.learn
 
 import zio.{LogLevel, RIO, Runtime, Scope, Task, UIO, ZIO, ZIOAppArgs, ZIOAppDefault, ZIOAspect}
-import zio.logging.{console, LogAnnotation, LogFormat}
+import zio.logging._
 import zio.logging.backend.SLF4J
 
 /* ZIO.scoped use example
