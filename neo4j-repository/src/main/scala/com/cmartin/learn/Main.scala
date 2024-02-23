@@ -1,8 +1,7 @@
 package com.cmartin.learn
 
-import zio.{LogLevel, RIO, Runtime, Scope, Task, UIO, ZIO, ZIOAppArgs, ZIOAppDefault, ZIOAspect}
-import zio.logging._
 import zio.logging.backend.SLF4J
+import zio.{RIO, Runtime, Scope, Task, UIO, ZIO, ZIOAppDefault}
 
 /* ZIO.scoped use example
  */
@@ -42,7 +41,11 @@ object Main extends ZIOAppDefault {
   }
 
   val logger = Runtime.addLogger(
-    SLF4J.slf4jLogger(SLF4J.logFormatDefault, SLF4J.getLoggerName())
+    SLF4J.slf4jLogger(
+      SLF4J.logFormatDefault,
+      SLF4J.getLoggerName(),
+      SLF4J.causeToThrowableDefault
+    )
   )
 
   val loggerLayer = zio.Runtime.removeDefaultLoggers >>> logger
