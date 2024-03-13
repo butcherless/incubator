@@ -16,7 +16,9 @@ object DatabaseDefinitions {
     val aircraftJourney = "AIRCRAFT_JOURNEY"
   }
 
-  object AbstractTable extends JdbcProfile with JdbcActionComponent.MultipleRowsPerStatementSupport {
+  object AbstractTable
+      extends JdbcProfile
+      with JdbcActionComponent.MultipleRowsPerStatementSupport {
     import PersistenceModel.LongDbo
     import api._
 
@@ -28,7 +30,9 @@ object DatabaseDefinitions {
     }
   }
 
-  object AbstracRepository extends JdbcProfile with JdbcActionComponent.MultipleRowsPerStatementSupport {
+  object AbstracRepository
+      extends JdbcProfile
+      with JdbcActionComponent.MultipleRowsPerStatementSupport {
     import api._
     import AbstractTable._
     import Helpers.SlickToZioSyntax.fromDBIO

@@ -13,7 +13,8 @@ object ZioSlickIntegration {
 
   // Table definition
   object ItemTableDef
-      extends JdbcProfile with JdbcActionComponent.MultipleRowsPerStatementSupport {
+      extends JdbcProfile
+      with JdbcActionComponent.MultipleRowsPerStatementSupport {
     import api._
 
     class Items(tag: Tag) extends Table[Item](tag, "ITEMS") {
@@ -27,7 +28,8 @@ object ZioSlickIntegration {
 
 // Slick <-> ZIO integration and syntax
   object SlickToZioSyntax
-      extends JdbcProfile with JdbcActionComponent.MultipleRowsPerStatementSupport {
+      extends JdbcProfile
+      with JdbcActionComponent.MultipleRowsPerStatementSupport {
     import api._
 
     def fromDBIO[R](dbio: => DBIO[R]): RIO[JdbcBackend#JdbcDatabaseDef, R] = for {
@@ -37,7 +39,8 @@ object ZioSlickIntegration {
   }
 
   object ItemRepositoryDef
-      extends JdbcProfile with JdbcActionComponent.MultipleRowsPerStatementSupport {
+      extends JdbcProfile
+      with JdbcActionComponent.MultipleRowsPerStatementSupport {
     import ItemTableDef.items
     import api._
     import SlickToZioSyntax._

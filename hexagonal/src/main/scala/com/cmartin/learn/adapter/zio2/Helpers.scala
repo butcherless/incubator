@@ -3,7 +3,9 @@ package com.cmartin.learn.adapter.zio2
 import slick.jdbc._
 import zio.{RIO, ZIO}
 
-object Helpers extends JdbcProfile with JdbcActionComponent.MultipleRowsPerStatementSupport {
+object Helpers
+    extends JdbcProfile
+    with JdbcActionComponent.MultipleRowsPerStatementSupport {
 
   object SlickToZioSyntax
       extends JdbcProfile

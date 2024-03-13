@@ -505,7 +505,9 @@ object GraphRepository {
     }
   }
 
-  class RepositoryLayer(configPath: String) extends JdbcProfile with JdbcActionComponent.MultipleRowsPerStatementSupport
+  class RepositoryLayer(configPath: String)
+      extends JdbcProfile
+      with JdbcActionComponent.MultipleRowsPerStatementSupport
       with GraphRepositories {
     val config = DatabaseConfig.forConfig[JdbcProfile](configPath)
 
