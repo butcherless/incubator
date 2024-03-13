@@ -1,4 +1,4 @@
-import Dependencies._
+import Dependencies.*
 
 ThisBuild / scalaVersion := "2.13.13"
 ThisBuild / organization := "com.cmartin.learn"

@@ -4,7 +4,8 @@ import slick.jdbc._
 import zio.{Task, ZLayer}
 
 object RepositoryImplementation
-    extends JdbcProfile {
+    extends JdbcProfile
+    with JdbcActionComponent.MultipleRowsPerStatementSupport {
 
   import Helpers.SlickToZioSyntax.fromDBIO
   import PersistenceModel._
@@ -15,7 +16,7 @@ object RepositoryImplementation
 
   lazy val countries = TableQuery[CountryTable]
 
-  case class SlickCountryRepository(db: JdbcBackend#DatabaseDef)
+  case class SlickCountryRepository(db: JdbcBackend#JdbcDatabaseDef)
       extends AbstractLongRepository[CountryDbo, CountryTable](db)
       with CountryRepository {
 
