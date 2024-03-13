@@ -1,7 +1,7 @@
 package com.cmartin.learn.adapter.graph
 
 import slick.basic.DatabaseConfig
-import slick.jdbc.JdbcProfile
+import slick.jdbc.{JdbcActionComponent, JdbcProfile}
 import slick.lifted.{ForeignKeyQuery, Index, PrimaryKey, ProvenShape}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -505,7 +505,8 @@ object GraphRepository {
     }
   }
 
-  class RepositoryLayer(configPath: String) extends JdbcProfile with GraphRepositories {
+  class RepositoryLayer(configPath: String) extends JdbcProfile with JdbcActionComponent.MultipleRowsPerStatementSupport
+      with GraphRepositories {
     val config = DatabaseConfig.forConfig[JdbcProfile](configPath)
 
     implicit def executeFromDb[A](action: api.DBIO[A]): Future[A] =

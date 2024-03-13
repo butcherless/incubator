@@ -1,7 +1,7 @@
 package com.cmartin.learn.adapter.postgres2
 
 import slick.basic.DatabaseConfig
-import slick.jdbc.JdbcProfile
+import slick.jdbc.{JdbcActionComponent, JdbcProfile}
 import slick.lifted.{ForeignKeyQuery, Index, PrimaryKey, ProvenShape}
 
 import java.time.LocalDate
@@ -234,7 +234,10 @@ object SlickRepository {
     }
   }
 
-  trait RepositoryBundle extends JdbcProfile with AviationRepositories {
+  trait RepositoryBundle
+      extends JdbcProfile
+      with JdbcActionComponent.MultipleRowsPerStatementSupport
+      with AviationRepositories {
 
     val countriesRepo       = new CountryRepository
     val airportsRepo        = new AirportRepository

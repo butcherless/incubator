@@ -16,7 +16,7 @@ object DatabaseDefinitions {
     val aircraftJourney = "AIRCRAFT_JOURNEY"
   }
 
-  object AbstractTable extends JdbcProfile {
+  object AbstractTable extends JdbcProfile with JdbcActionComponent.MultipleRowsPerStatementSupport {
     import PersistenceModel.LongDbo
     import api._
 
@@ -28,13 +28,13 @@ object DatabaseDefinitions {
     }
   }
 
-  object AbstracRepository extends JdbcProfile {
+  object AbstracRepository extends JdbcProfile with JdbcActionComponent.MultipleRowsPerStatementSupport {
     import api._
     import AbstractTable._
     import Helpers.SlickToZioSyntax.fromDBIO
     import PersistenceModel.LongDbo
 
-    abstract class AbstractLongRepository[E <: LongDbo, T <: LongBasedTable[E]](db: JdbcBackend#DatabaseDef) {
+    abstract class AbstractLongRepository[E <: LongDbo, T <: LongBasedTable[E]](db: JdbcBackend#JdbcDatabaseDef) {
       val entities: TableQuery[T]
 
       def findById(id: Option[Long]): Task[Option[E]] = {

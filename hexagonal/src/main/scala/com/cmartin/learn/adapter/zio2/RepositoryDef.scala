@@ -4,7 +4,8 @@ import slick.jdbc._
 import zio.Task
 
 object RepositoryDef
-    extends JdbcProfile {
+    extends JdbcProfile
+    with JdbcActionComponent.MultipleRowsPerStatementSupport {
 
   import PersistenceModel._
 

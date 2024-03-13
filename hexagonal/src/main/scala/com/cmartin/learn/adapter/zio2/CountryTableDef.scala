@@ -1,10 +1,11 @@
 package com.cmartin.learn.adapter.zio2
 
-import slick.jdbc.JdbcProfile
+import slick.jdbc.{JdbcActionComponent, JdbcProfile}
 import slick.lifted.{Index, ProvenShape}
 
 object CountryTableDef
-    extends JdbcProfile {
+    extends JdbcProfile
+    with JdbcActionComponent.MultipleRowsPerStatementSupport {
 
   import api._
   import DatabaseDefinitions.AbstractTable._

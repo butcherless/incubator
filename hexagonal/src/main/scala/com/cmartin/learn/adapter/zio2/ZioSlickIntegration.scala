@@ -13,7 +13,7 @@ object ZioSlickIntegration {
 
   // Table definition
   object ItemTableDef
-      extends JdbcProfile {
+      extends JdbcProfile with JdbcActionComponent.MultipleRowsPerStatementSupport {
     import api._
 
     class Items(tag: Tag) extends Table[Item](tag, "ITEMS") {
@@ -27,17 +27,17 @@ object ZioSlickIntegration {
 
 // Slick <-> ZIO integration and syntax
   object SlickToZioSyntax
-      extends JdbcProfile {
+      extends JdbcProfile with JdbcActionComponent.MultipleRowsPerStatementSupport {
     import api._
 
-    def fromDBIO[R](dbio: => DBIO[R]): RIO[JdbcBackend#DatabaseDef, R] = for {
-      db <- ZIO.service[JdbcBackend#DatabaseDef]
+    def fromDBIO[R](dbio: => DBIO[R]): RIO[JdbcBackend#JdbcDatabaseDef, R] = for {
+      db <- ZIO.service[JdbcBackend#JdbcDatabaseDef]
       r  <- ZIO.fromFuture(_ => db.run(dbio))
     } yield r
   }
 
   object ItemRepositoryDef
-      extends JdbcProfile {
+      extends JdbcProfile with JdbcActionComponent.MultipleRowsPerStatementSupport {
     import ItemTableDef.items
     import api._
     import SlickToZioSyntax._
@@ -48,7 +48,7 @@ object ZioSlickIntegration {
       def count(): Task[Int]
     }
 
-    case class SlickItemRepository(db: JdbcBackend#DatabaseDef)
+    case class SlickItemRepository(db: JdbcBackend#JdbcDatabaseDef)
         extends ItemRepository {
 
       private val dbLayer = ZLayer.succeed(db)
@@ -71,7 +71,7 @@ object ZioSlickIntegration {
     }
 
     object SlickItemRepository {
-      val live: URLayer[JdbcBackend#DatabaseDef, ItemRepository] =
+      val live: URLayer[JdbcBackend#JdbcDatabaseDef, ItemRepository] =
         ZLayer.fromFunction(db => SlickItemRepository(db))
     }
   }
@@ -110,14 +110,14 @@ object ZioSlickIntegration {
           .map(_.profile)
       )
 
-    val dbLayer: TaskLayer[JdbcBackend#DatabaseDef] =
+    val dbLayer: TaskLayer[JdbcBackend#JdbcDatabaseDef] =
       ZLayer.scoped(
         ZIO.attempt(DatabaseConfig.forConfig[JdbcProfile]("h2_dc"))
           .map(_.db)
       )
 
-    val dbEnv: TaskLayer[ItemRepository with JdbcBackend#DatabaseDef] =
-      ZLayer.make[ItemRepository with JdbcBackend#DatabaseDef](
+    val dbEnv: TaskLayer[ItemRepository with JdbcBackend#JdbcDatabaseDef] =
+      ZLayer.make[ItemRepository with JdbcBackend#JdbcDatabaseDef](
         SlickItemRepository.live,
         dbLayer,
         Debug.mermaid
@@ -134,8 +134,8 @@ object ZioSlickIntegration {
       ).getOrThrowFiberFailure()
     }
 
-    val srvEnv: TaskLayer[ItemService with ItemRepository with JdbcBackend#DatabaseDef] =
-      ZLayer.make[ItemService with ItemRepository with JdbcBackend#DatabaseDef](
+    val srvEnv: TaskLayer[ItemService with ItemRepository with JdbcBackend#JdbcDatabaseDef] =
+      ZLayer.make[ItemService with ItemRepository with JdbcBackend#JdbcDatabaseDef](
         SlickItemRepository.live,
         dbLayer,
         LiveItemService.live
