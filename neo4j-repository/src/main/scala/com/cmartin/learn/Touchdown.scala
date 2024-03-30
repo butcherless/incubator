@@ -6,6 +6,8 @@ import org.neo4j.driver.async.ResultCursor
 import zio.Runtime.{default => runtime}
 import zio.ZLayer.Debug
 import zio._
+import zio.stream.ZStream
+import scala.jdk.CollectionConverters._
 
 object Touchdown {
   // Create a scoped driver
@@ -46,6 +48,12 @@ object Touchdown {
   val scopedDriver: RIO[Scope, Driver] =
     ZIO.acquireRelease(acquire(dbInput))(release)
 
+  val scopedStreamDriver =
+    ZStream
+      .acquireReleaseWith(
+        acquire(dbInput)
+      )(release)
+
   val s1: Session      = ???
   val r1               = s1.run(Queries.readPersonByNameQuery)
   val s2: AsyncSession = ???
@@ -54,31 +62,39 @@ object Touchdown {
   val rec1  = r1.single()
   val data1 = rec1.get("name").asString()
 
-  val driver1: Driver          = ???
-  val fut1                     = driver1.asyncSession().runAsync(Queries.readPersonByNameQuery).toCompletableFuture
-  val zio1: Task[ResultCursor] = ZIO.fromCompletableFuture(fut1)
+  val driver1: Driver = ???
+  val resList         = driver1.session().run(Queries.readPersonByNameQuery).list().asScala.toList
 
-  val zio2 = ZIO.scoped {
-    scopedDriver.flatMap { driver =>
-      ZIO.fromCompletableFuture(
-        driver.asyncSession()
-          .runAsync(Queries.readPersonByNameQuery)
-          .toCompletableFuture
-      )
-    }
-  }
+  val list: ZIO[Scope, Throwable, List[Record]] =
+    scopedDriver
+      .flatMap { driver =>
+        ZIO.attempt(
+          driver1.session()
+            .run(Queries.readPersonByNameQuery)
+            .list()
+            .asScala.toList
+        )
+      }
 
-  val query: RIO[Driver, ResultCursor] = for {
-    driver  <- ZIO.service[Driver]
-    session <- ZIO.succeed(driver.session())
-    results <- ZIO.scoped(scopedDriver.flatMap { driver =>
-                 ZIO.fromCompletableFuture(
-                   driver.asyncSession()
-                     .runAsync(Queries.readPersonByNameQuery)
-                     .toCompletableFuture
-                 )
-               })
-  } yield results
+  val stream: ZStream[Any, Throwable, Record] =
+    scopedStreamDriver
+      .flatMap { driver =>
+        ZStream.fromJavaStream(
+          driver1.session()
+            .run(Queries.readPersonByNameQuery)
+            .stream()
+        )
+      }
+
+  val listQuery: ZIO[Driver, Throwable, List[Record]] =
+    for {
+      results <- ZIO.scoped(list)
+    } yield results
+
+  val streamQuery =
+    for {
+      results <- ZStream.from(stream)
+    } yield results
 
   def acquireSession(driver: Driver): Task[Session] =
     ZIO.attempt(driver.session())
