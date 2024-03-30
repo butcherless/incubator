@@ -10,9 +10,10 @@ NOTE: Research project through small concept tests
 |Link
 |Status
 
-| CircleCI
+
+| Github-Actions
 | https://circleci.com/gh/butcherless/incubator[Build CircleCI]
-| image:https://circleci.com/gh/butcherless/incubator.svg?style=svg[CircleCI build]
+| image:https://github.com/butcherless/tapir-learn/workflows/Scala%20CI/badge.svg[Scala CI]
 
 | Codecov
 | https://codecov.io/gh/butcherless/incubator[Codecov coverage]

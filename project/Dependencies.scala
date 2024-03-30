@@ -29,8 +29,8 @@ object Dependencies {
   lazy val zioConfigLib      = "dev.zio" %% "zio-config"          % Versions.zioConfig
   lazy val zioConfigTypesafe = "dev.zio" %% "zio-config-typesafe" % Versions.zioConfig
 
-  lazy val scalaReflect  = "org.scala-lang" % "scala-reflect"  % Versions.scalaVersion
-  lazy val scalaCompiler = "org.scala-lang" % "scala-compiler" % Versions.scalaVersion
+  lazy val scalaReflect  = "org.scala-lang" % "scala-reflect"  % Versions.scala
+  lazy val scalaCompiler = "org.scala-lang" % "scala-compiler" % Versions.scala
 
   // testing code
   lazy val akkaHttpTest = "com.typesafe.akka" %% "akka-http-testkit" % Versions.akkaHttp  % "test"
