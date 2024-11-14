@@ -3,7 +3,7 @@ object Versions {
   val config        = "1.4.3"
   val circe         = "1.15.0"
   val h2            = "2.3.232"
-  val neo4j         = "5.26.1"
+  val neo4j         = "5.26.3"
   val playJson      = "2.10.6"
   val postgres      = "42.7.4"
   val quill         = "3.10.0"
@@ -13,8 +13,8 @@ object Versions {
   val slick         = "3.5.1"
   val zio           = "2.1.12"
   val zioConfig     = "4.0.2"
-  val zioLogging    = "2.3.2"
-  val zioPrelude    = "1.0.0-RC31"
+  val zioLogging    = "2.4.20"
+  val zioPrelude    = "1.0.0-RC34"
 
   val scala = "2.13.15"
 }
