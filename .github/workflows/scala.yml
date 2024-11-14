@@ -52,7 +52,7 @@ jobs:
     - name: tests with coverage
       run: sbt --client xcoverage
     - name: upload coverage reports to codecov
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v5
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 #    - name: tests
