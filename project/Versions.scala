@@ -14,7 +14,7 @@ object Versions {
   val zio           = "2.1.15"
   val zioConfig     = "4.0.3"
   val zioLogging    = "2.4.0"
-  val zioPrelude    = "1.0.0-RC37"
+  val zioPrelude    = "1.0.0-RC38"
 
   val scala = "2.13.16"
 }
