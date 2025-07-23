@@ -102,6 +102,7 @@ lazy val hexagonal = (project in file("hexagonal"))
 lazy val assemblyStrategy = ThisBuild / assemblyMergeStrategy := {
   case "module-info.class"                                    => MergeStrategy.last
   case "META-INF/versions/9/module-info.class"                => MergeStrategy.last
+  case "META-INF/versions/11/module-info.class"                => MergeStrategy.last
   case "META-INF/io.netty.versions.properties"                => MergeStrategy.last
   case "META-INF/maven/org.webjars/swagger-ui/pom.properties" => MergeStrategy.first
   case x                                                      =>
