@@ -3,7 +3,7 @@ object Versions {
   val config        = "1.4.4"
   val circe         = "1.15.0"
   val h2            = "2.3.232"
-  val neo4j         = "5.28.9"
+  val neo4j         = "5.28.10"
   val playJson      = "2.10.6"
   val postgres      = "42.7.7"
   val quill         = "3.10.0"
