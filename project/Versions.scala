@@ -5,7 +5,7 @@ object Versions {
   val h2            = "2.4.240"
   val neo4j         = "6.0.2"
   val playJson      = "2.10.6"
-  val postgres      = "42.7.8"
+  val postgres      = "42.7.9"
   val quill         = "3.10.0"
   val quillPostgres = "3.10.0"
   val scalatest     = "3.2.19"
@@ -14,7 +14,6 @@ object Versions {
   val zioConfig     = "4.0.6"
   val zioLogging    = "2.5.3"
   val zio           = "2.1.24"
-  val zioLogging    = "2.5.2"
   val zioPrelude    = "1.0.0-RC45"
   val scala = "2.13.18"
 }
