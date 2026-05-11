@@ -17,8 +17,7 @@ object SimpleApp
   // environment
   val filename: Config[String]         = Config.string("DL_FILENAME")
   val exclusions: Config[List[String]] = Config.listOf(Config.string("DL_EXCLUSIONS"))
-  val config: Config[EnvConfig]        =
-    (filename ++ exclusions).map { case (f, es) => EnvConfig(f, es) }
+  val config: Config[EnvConfig]        = (filename ++ exclusions).map { case (f, es) => EnvConfig(f, es) }
 
   def readFromEnv(): IO[Config.Error, EnvConfig] =
     ConfigProvider
@@ -28,8 +27,7 @@ object SimpleApp
   // hocon file
   val hoconFilename: Config[String]         = Config.string("filename")
   val hoconExclusions: Config[List[String]] = Config.listOf(Config.string("exclusions"))
-  val hoconConfig: Config[FileConfig]       =
-    (hoconFilename ++ hoconExclusions).map { case (f, es) => FileConfig(f, es) }
+  val hoconConfig: Config[FileConfig]       = (hoconFilename ++ hoconExclusions).map { case (f, es) => FileConfig(f, es) }
 
   def readFromFile(filepath: String) =
     ConfigProvider
