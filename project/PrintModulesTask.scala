@@ -1,7 +1,7 @@
-import sbt.Keys._
-import sbt._
+import sbt.Keys.*
+import sbt.*
 import java.nio.file.{Files, Paths}
-import scala.jdk.CollectionConverters._
+import scala.jdk.CollectionConverters.*
 import scala.util.matching.Regex
 
 object PrintModulesTask
@@ -11,14 +11,14 @@ object PrintModulesTask
     val printModules = taskKey[String]("Prints the project module list")
   }
 
-  import autoImport._
+  import autoImport.*
 
   private val fileExtension      = ".scala"
   private val moduleRegex: Regex = raw"^\.{1,2}/(.*)/src/.*".r
 
-  override def projectSettings: Seq[Def.Setting[_]] =
+  override def projectSettings: Seq[Def.Setting[?]] =
     Seq(
-      printModules := {
+      printModules := Def.uncached {
         val path = Paths.get(".")
 
         val modules =

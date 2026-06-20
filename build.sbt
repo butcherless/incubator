@@ -127,16 +127,14 @@ lazy val zioConfig = (project in file("zio-config"))
     )
   )
 
-addCommandAlias("xcoverage", "clean;coverage;test;coverageReport")
+addCommandAlias("xcoverage", "clean;coverage;prepareCoverageDirectories;testFull;coverageReport;coverageOff")
 addCommandAlias("xreload", "clean;reload")
-addCommandAlias("xstart", "clean;reStart")
-addCommandAlias("xstop", "reStop;clean")
 addCommandAlias("xupdate", "clean;update")
 addCommandAlias("xdup", "dependencyUpdates")
 
 // clear screen and banner
 lazy val cls = taskKey[Unit]("Prints a separator")
-cls := {
+LocalRootProject / cls := Def.uncached {
   val downArrow     = "\u2193"
   val brs           = "\n".repeat(2)
   val message       = "BUILD BEGINS HERE"
@@ -145,6 +143,11 @@ cls := {
   println(s"$brs$chars")
   println(spacedMessage)
   println(s"$chars$brs ")
+}
+
+lazy val prepareCoverageDirectories = taskKey[Unit]("Creates scoverage data directories")
+LocalRootProject / prepareCoverageDirectories := Def.uncached {
+  IO.createDirectory(coverageDataDir.value / "scoverage-data")
 }
 
 enablePlugins(PrintModulesTask)
