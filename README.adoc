@@ -144,6 +144,9 @@ Country:: A nation with its own government, occupying a particular territory.
 |Name
 |Description
 
+|name
+|the international name of the _Country_, Spain
+
 |code
 |international two letters code, es, uk, de, us, etc.
 |===
