@@ -84,7 +84,7 @@ jobs:
       - name: check formatting
         run: sbt  scalafmtCheckAll
       - name: compile
-        run: sbt  compile
+        run: sbt "clean;compile"
       - name: test
         run: sbt  test
       - name: dependency updates report
