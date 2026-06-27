@@ -127,7 +127,11 @@ lazy val zioConfig = (project in file("zio-config"))
     )
   )
 
-addCommandAlias("xcoverage", "clean;coverage;prepareCoverageDirectories;testFull;coverageReport;coverageOff")
+addCommandAlias(
+  "xcoverage",
+  "coverage;prepareCoverageDirectories;testFull;coverageReport;coverageOff"
+)
+
 addCommandAlias("xreload", "clean;reload")
 addCommandAlias("xupdate", "clean;update")
 addCommandAlias("xdup", "dependencyUpdates")

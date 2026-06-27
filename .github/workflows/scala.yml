@@ -45,13 +45,13 @@ jobs:
     - name: compile main
       run: sbt -v -Dfile.encoding=UTF-8 --client compile
     - name: compile unit tests
-      run: sbt -v -Dfile.encoding=UTF-8 --client "Test / compile"
+      run: sbt -v -Dfile.encoding=UTF-8 --client test
     - name: compile integration tests
       run: echo "TODO"
-    - name: tests with coverage
-      run: sbt --client xcoverage
-    - name: upload coverage reports to codecov
-      uses: codecov/codecov-action@v7
+#    - name: tests with coverage
+#      run: sbt --client xcoverage
+#    - name: upload coverage reports to codecov
+#      uses: codecov/codecov-action@v7
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 #    - name: tests
