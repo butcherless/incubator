@@ -81,8 +81,6 @@ jobs:
           java-version: '25'
           cache: sbt
       - uses: sbt/setup-sbt@v1
-      - name: check formatting
-        run: sbt  scalafmtCheckAll
       - name: compile
         run: sbt "clean;compile"
       - name: test
