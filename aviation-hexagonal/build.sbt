@@ -138,5 +138,16 @@ lazy val bootstrap = project
       zioLogging,
       zioLoggingSlf4j,
       logback
-    )
+    ),
+    assembly / assemblyMergeStrategy := {
+      case PathList("module-info.class")                          => MergeStrategy.discard
+      case PathList("META-INF", "versions", _, "module-info.class") => MergeStrategy.discard
+      case PathList("META-INF", xs @ _*)                         => MergeStrategy.discard
+      case "deriving.conf"                                        => MergeStrategy.concat
+      case "reference.conf"                                       => MergeStrategy.concat
+      case x =>
+        val old = (assembly / assemblyMergeStrategy).value
+        old(x)
+    },
+    assembly / mainClass := Some("bootstrap.OpenApiGenerator")
   )

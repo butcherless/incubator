@@ -1,7 +1,7 @@
 package adapter.http.endpoint
 
 import adapter.http.dto.{CreateRouteRequest, RouteDto}
-import adapter.http.error.ErrorMapper
+import adapter.http.error.{ErrorMapper, HttpErrorResponse}
 import domain.port.in.{CreateRouteCommand, CreateRouteUseCase}
 import sttp.model.StatusCode
 import sttp.tapir.*
@@ -17,11 +17,32 @@ object RouteEndpoints {
 
   private val base = endpoint.in("api" / "v1" / "routes")
 
-  val create: PublicEndpoint[CreateRouteRequest, (StatusCode, String), RouteDto, Any] =
+  val create: PublicEndpoint[CreateRouteRequest, (StatusCode, HttpErrorResponse), RouteDto, Any] =
     base.post
+      .summary("Create route")
+      .description("Creates a new flight route between two airports operated by a given airline.")
+      .tag("Routes")
       .in(jsonBody[CreateRouteRequest])
-      .out(jsonBody[RouteDto].and(statusCode(StatusCode.Created)))
-      .errorOut(statusCode.and(stringBody))
+      .out(jsonBody[RouteDto].description("The created route.").and(statusCode(StatusCode.Created)))
+      .errorOut(
+        oneOf[(StatusCode, HttpErrorResponse)](
+          oneOfVariantValueMatcher(
+            StatusCode.NotFound,
+            statusCode.and(jsonBody[HttpErrorResponse].description("Airport or airline not found."))
+          ) { case (s, _) => s == StatusCode.NotFound },
+          oneOfVariantValueMatcher(
+            StatusCode.Conflict,
+            statusCode.and(
+              jsonBody[HttpErrorResponse].description("A route between these airports for this airline already exists.")
+            )
+          ) { case (s, _) => s == StatusCode.Conflict },
+          oneOfVariantValueMatcher(
+            StatusCode.BadRequest,
+            statusCode.and(jsonBody[HttpErrorResponse].description("Invalid route parameters."))
+          ) { case (s, _) => s == StatusCode.BadRequest },
+          oneOfDefaultVariant(statusCode.and(jsonBody[HttpErrorResponse].description("Unexpected error.")))
+        )
+      )
 
   def routes(useCase: CreateRouteUseCase): Routes[Any, Response] =
     ZioHttpInterpreter().toHttp(
@@ -29,7 +50,7 @@ object RouteEndpoints {
         useCase
           .create(CreateRouteCommand(req.originIata, req.destinationIata, req.airlineIcao, req.distanceKm))
           .map(RouteDto.fromDomain)
-          .mapError(e => (ErrorMapper.toApiError(e).statusCode, ErrorMapper.toMessage(e)))
+          .mapError(ErrorMapper.toHttpError)
       }
     )
 }

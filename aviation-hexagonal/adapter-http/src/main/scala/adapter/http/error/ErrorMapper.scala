@@ -6,6 +6,8 @@ import sttp.model.StatusCode
 
 case class ApiError(statusCode: StatusCode, message: String)
 
+case class HttpErrorResponse(message: String)
+
 object ErrorMapper {
 
   def toApiError(error: DomainError): ApiError = error match {
@@ -20,4 +22,9 @@ object ErrorMapper {
   }
 
   def toMessage(error: DomainError): String = toApiError(error).message
+
+  def toHttpError(error: DomainError): (StatusCode, HttpErrorResponse) = {
+    val e = toApiError(error)
+    (e.statusCode, HttpErrorResponse(e.message))
+  }
 }
