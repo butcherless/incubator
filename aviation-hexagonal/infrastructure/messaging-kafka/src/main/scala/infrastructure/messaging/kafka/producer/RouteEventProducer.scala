@@ -4,7 +4,7 @@ import domain.error.DomainError
 import domain.model.OutboxEvent
 import domain.port.out.EventPublisher
 import infrastructure.messaging.kafka.config.KafkaConfig
-import zio.*
+import zio.{IO, ZIO, ZLayer, URLayer, TaskLayer}
 import zio.kafka.producer.{Producer, ProducerSettings}
 
 final class RouteEventProducer(producer: Producer) extends EventPublisher {
