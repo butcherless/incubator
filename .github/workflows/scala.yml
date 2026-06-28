@@ -62,28 +62,3 @@ jobs:
         run: sbt assembly
       - name: dependency updates report
         run: sbt dependencyUpdates
-
-  build-aviation-hexagonal:
-
-    runs-on: ubuntu-24.04
-    timeout-minutes: 15
-
-    defaults:
-      run:
-        working-directory: aviation-hexagonal
-
-    steps:
-      - uses: actions/checkout@v7
-      - name: Setup JDK
-        uses: actions/setup-java@v5
-        with:
-          distribution: 'zulu'
-          java-version: '25'
-          cache: sbt
-      - uses: sbt/setup-sbt@v1
-      - name: compile
-        run: sbt "clean;compile"
-      - name: test
-        run: sbt  test
-      - name: dependency updates report
-        run: sbt  dependencyUpdates
