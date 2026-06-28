@@ -6,7 +6,7 @@ import domain.model.{Airport, IataCode}
 import domain.port.in.FindAirportUseCase
 import domain.port.out.AirportRepository
 import shared.Pagination
-import zio.*
+import zio.{IO, ZIO, URLayer, ZLayer}
 
 final class FindAirportService(repo: AirportRepository) extends FindAirportUseCase {
 

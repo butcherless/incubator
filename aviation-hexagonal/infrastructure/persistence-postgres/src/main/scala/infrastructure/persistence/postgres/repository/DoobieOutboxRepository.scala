@@ -6,7 +6,7 @@ import doobie.postgres.implicits.*
 import domain.error.DomainError
 import domain.model.{OutboxEvent, OutboxEventId}
 import domain.port.out.OutboxRepository
-import zio.*
+import zio.{IO, Task, URLayer, ZLayer}
 import zio.interop.catz.*
 
 import java.util.UUID

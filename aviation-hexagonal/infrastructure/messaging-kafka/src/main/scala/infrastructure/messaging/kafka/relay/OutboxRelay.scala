@@ -1,7 +1,7 @@
 package infrastructure.messaging.kafka.relay
 
 import domain.port.out.{EventPublisher, OutboxRepository}
-import zio.*
+import zio.{ZIO, Schedule, Duration}
 
 object OutboxRelay {
 
@@ -18,7 +18,7 @@ object OutboxRelay {
         }
       }
       .catchAll(err => ZIO.logError(s"Relay query failed: $err"))
-      .repeat(Schedule.fixed(5.seconds))
+      .repeat(Schedule.fixed(Duration.fromSeconds(5L)))
       .unit
       .forever
 }

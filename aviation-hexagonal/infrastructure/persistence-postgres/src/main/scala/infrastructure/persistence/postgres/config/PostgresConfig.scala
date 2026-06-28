@@ -1,7 +1,7 @@
 package infrastructure.persistence.postgres.config
 
 import doobie.util.transactor.Transactor
-import zio.*
+import zio.{Task, TaskLayer}
 
 case class PostgresConfig(
     url: String,
