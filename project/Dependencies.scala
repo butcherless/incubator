@@ -13,20 +13,17 @@ object Dependencies {
   lazy val postgresDB = "org.postgresql"   % "postgresql"        % Versions.postgres
   lazy val neo4j      = "org.neo4j.driver" % "neo4j-java-driver" % Versions.neo4j
 
-  lazy val playJson =
-    ("com.typesafe.play" %% "play-json" % Versions.playJson)
-      .exclude("com.fasterxml.jackson.core", "jackson-annotations")
-  lazy val slf4j = "org.slf4j" % "slf4j-api" % Versions.slf4j
-  lazy val slick =
-    ("com.typesafe.slick" %% "slick" % Versions.slick)
-      .exclude("org.slf4j", "slf4j-api")
-      .exclude("com.typesafe", "config")
-  lazy val slickPool =
-    ("com.typesafe.slick" %% "slick-hikaricp" % Versions.slick)
-      .exclude("org.slf4j", "slf4j-api")
+  lazy val playJson      = ("com.typesafe.play"  %% "play-json"            % Versions.playJson)
+    .exclude("com.fasterxml.jackson.core", "jackson-annotations")
+  lazy val slf4j         = "org.slf4j"            % "slf4j-api"            % Versions.slf4j
+  lazy val slick         = ("com.typesafe.slick" %% "slick"                % Versions.slick)
+    .exclude("org.slf4j", "slf4j-api")
+    .exclude("com.typesafe", "config")
+  lazy val slickPool     = ("com.typesafe.slick" %% "slick-hikaricp"       % Versions.slick)
+    .exclude("org.slf4j", "slf4j-api")
   // quill
-  lazy val quillJdbc     = "io.getquill"        %% "quill-jdbc"           % Versions.quill
-  lazy val quillPostgres = "io.getquill"        %% "quill-async-postgres" % Versions.quillPostgres
+  lazy val quillJdbc     = "io.getquill"         %% "quill-jdbc"           % Versions.quill
+  lazy val quillPostgres = "io.getquill"         %% "quill-async-postgres" % Versions.quillPostgres
 
   lazy val zio               = "dev.zio" %% "zio"                 % Versions.zio
   lazy val zioLogging        = "dev.zio" %% "zio-logging-slf4j"   % Versions.zioLogging
