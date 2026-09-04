@@ -6,8 +6,6 @@ object Versions {
   val neo4j         = "6.2.1"
   val playJson      = "2.10.6"
   val postgres      = "42.7.13"
-  val quill         = "3.10.0"
-  val quillPostgres = "3.10.0"
   val scalatest     = "3.2.20"
   val slf4j         = "2.0.19"
   val slick         = "3.6.1"

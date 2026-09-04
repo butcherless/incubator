@@ -52,15 +52,6 @@ lazy val testUtils = (project in file("test"))
     name := "test-utils"
   )
 
-lazy val quillMacros = project
-  .in(file("hexagonal/macro"))
-  .settings(
-    commonSettings,
-    name := "quillMacros",
-    libraryDependencies ++= Seq(quillJdbc, quillPostgres, scalaTest, scalaReflect, scalaCompiler),
-    assemblyStrategy
-  )
-
 lazy val neo4jRepository = project
   .in(file("neo4j-repository"))
   .settings(
@@ -82,11 +73,10 @@ lazy val hexagonal = (project in file("hexagonal"))
     name                 := "hexagonal",
     libraryDependencies ++= Seq(
       // logback,
-      quillJdbc,
-      quillPostgres,
       postgresDB,
       slick,
       slickPool,
+      slf4j,
       typesafeConfig,
       zio,
       zioPrelude,
@@ -97,7 +87,7 @@ lazy val hexagonal = (project in file("hexagonal"))
     Compile / run / fork := true,
     assemblyStrategy
   )
-  .dependsOn(quillMacros, testUtils)
+  .dependsOn(testUtils)
 
 lazy val assemblyStrategy = ThisBuild / assemblyMergeStrategy := {
   case "module-info.class"                                    => MergeStrategy.last

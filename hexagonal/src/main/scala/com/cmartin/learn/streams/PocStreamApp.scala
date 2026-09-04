@@ -3,7 +3,6 @@ package com.cmartin.learn.streams
 import zio._
 import zio.Console._
 import zio.Clock._
-import com.typesafe.scalalogging.CanLog
 
 object PocStreamApp
     extends zio.ZIOAppDefault {

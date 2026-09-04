@@ -24,18 +24,12 @@ object Dependencies {
   lazy val slickPool =
     ("com.typesafe.slick" %% "slick-hikaricp" % Versions.slick)
       .exclude("org.slf4j", "slf4j-api")
-  // quill
-  lazy val quillJdbc     = "io.getquill"        %% "quill-jdbc"           % Versions.quill
-  lazy val quillPostgres = "io.getquill"        %% "quill-async-postgres" % Versions.quillPostgres
 
   lazy val zio               = "dev.zio" %% "zio"                 % Versions.zio
   lazy val zioLogging        = "dev.zio" %% "zio-logging-slf4j"   % Versions.zioLogging
   lazy val zioPrelude        = "dev.zio" %% "zio-prelude"         % Versions.zioPrelude
   lazy val zioConfigLib      = "dev.zio" %% "zio-config"          % Versions.zioConfig
   lazy val zioConfigTypesafe = "dev.zio" %% "zio-config-typesafe" % Versions.zioConfig
-
-  lazy val scalaReflect  = "org.scala-lang" % "scala-reflect"  % Versions.scala
-  lazy val scalaCompiler = "org.scala-lang" % "scala-compiler" % Versions.scala
 
   // testing code
   lazy val akkaHttpTest = "com.typesafe.akka" %% "akka-http-testkit" % Versions.akkaHttp  % "test"
