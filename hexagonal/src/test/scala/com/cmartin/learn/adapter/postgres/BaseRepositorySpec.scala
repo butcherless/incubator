@@ -19,7 +19,7 @@ abstract class BaseRepositorySpec(path: String) extends AsyncFlatSpec with Match
   val countrySequence               = Seq(esCountryDbo, ukCountryDbo)
   val spainUpperCaseDbo: CountryDbo = CountryDbo(esCountry._1.toUpperCase, esCountry._2.toUpperCase)
 
-  val dbl = new DatabaseLayer(config) {
+  class Dbl extends DatabaseLayer(config) {
 
     import profile.api._
 
@@ -34,5 +34,7 @@ abstract class BaseRepositorySpec(path: String) extends AsyncFlatSpec with Match
     def dropSchema() =
       airports.schema.dropIfExists.zip(countries.schema.dropIfExists)
   }
+
+  val dbl = new Dbl
 
 }

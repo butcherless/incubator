@@ -161,7 +161,7 @@ object SlickRepository {
       def code: Rep[String] = column[String]("CODE")
 
       def * : ProvenShape[CountryDbo] =
-        (name, code, id.?).<>(CountryDbo.tupled, CountryDbo.unapply)
+        (name, code, id.?).<>(CountryDbo.apply.tupled, CountryDbo.unapply)
 
       // indexes
       def codeIndex: Index =
@@ -186,7 +186,7 @@ object SlickRepository {
       def countryId: Rep[Long] = column[Long]("COUNTRY_ID")
 
       def * : ProvenShape[AirportDbo] =
-        (name, iataCode, icaoCode, countryId, id.?).<>(AirportDbo.tupled, AirportDbo.unapply)
+        (name, iataCode, icaoCode, countryId, id.?).<>(AirportDbo.apply.tupled, AirportDbo.unapply)
 
       // foreign keys
       def country: ForeignKeyQuery[CountryTable, CountryDbo] =
@@ -209,7 +209,7 @@ object SlickRepository {
       def date: Rep[LocalDate] = column[LocalDate]("DATE")
 
       def * : ProvenShape[AircraftJourneyRelDbo] =
-        (date, (left, right)).<>(AircraftJourneyRelDbo.tupled, AircraftJourneyRelDbo.unapply)
+        (date, (left, right)).<>(AircraftJourneyRelDbo.apply.tupled, AircraftJourneyRelDbo.unapply)
     }
 
     class AircraftJourneyRepository extends AbstractRelationRepository[AircraftJourneyRelDbo, AircraftJourneyTable] {

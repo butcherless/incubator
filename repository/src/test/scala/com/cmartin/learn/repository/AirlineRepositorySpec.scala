@@ -13,7 +13,7 @@ abstract class AirlineRepositorySpec(path: String)
   val norway: Country = Country(noCountry._1, noCountry._2)
   // val iberia = Airline(ibkAirline._1, ibkAirline._2, )
 
-  val dal = new DatabaseLayer(config) {
+  class Dal extends DatabaseLayer(config) {
     import profile.api._
 
     val countryRepo = new CountryRepository
@@ -27,6 +27,8 @@ abstract class AirlineRepositorySpec(path: String)
       config.db.run((countries.schema ++ airlines.schema).drop)
     }
   }
+
+  val dal = new Dal
 
   import dal.executeFromDb
 

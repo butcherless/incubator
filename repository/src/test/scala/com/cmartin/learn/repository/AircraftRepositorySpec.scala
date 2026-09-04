@@ -9,7 +9,7 @@ import scala.concurrent.Future
 abstract class AircraftRepositorySpec(path: String)
     extends BaseRepositorySpec(path) with OptionValues {
 
-  val dal = new DatabaseLayer(config) {
+  class Dal extends DatabaseLayer(config) {
     import profile.api._
 
     val countryRepo  = new CountryRepository
@@ -24,6 +24,8 @@ abstract class AircraftRepositorySpec(path: String)
       config.db.run((countries.schema ++ airlines.schema ++ fleet.schema).drop)
     }
   }
+
+  val dal = new Dal
 
   import dal.executeFromDb
 

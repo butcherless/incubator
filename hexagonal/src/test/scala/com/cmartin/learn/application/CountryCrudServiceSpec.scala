@@ -19,7 +19,7 @@ class CountryCrudServiceSpec /*                                            */
 
   behavior of "CountryCrudService"
 
-  val dal = new Database2Layer("h2_dc") {
+  class Dal extends Database2Layer("h2_dc") {
     import profile.api._
 
     private val schema = airports.schema ++ countries.schema
@@ -31,6 +31,8 @@ class CountryCrudServiceSpec /*                                            */
       airports.schema.dropIfExists.zip(countries.schema.dropIfExists)
 
   }
+
+  val dal = new Dal
 
   val countryService: CountryService = new CountryCrudService(dal)
 

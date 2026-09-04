@@ -139,7 +139,7 @@ trait RelationalInfrastructure {
 
   abstract class AbstractRelationalRepository[E <: Entity[E, Long], T <: RelationalTable[E]]
       extends RelationalRepository[DBIO, E] {
-    val entities: TableQuery[T]
+    def entities: TableQuery[T]
 
     override def findAll(): DBIO[Seq[E]] = entities.result
 

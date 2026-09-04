@@ -5,7 +5,7 @@ package com.cmartin.learn.repository
 class CreateSchemaSpec(path: String)
     extends BaseRepositorySpec(path) {
 
-  val dal = new DatabaseLayer(config) {
+  class Dal extends DatabaseLayer(config) {
     import profile.api._
 
     val countryRepo = new CountryRepository
@@ -21,6 +21,8 @@ class CreateSchemaSpec(path: String)
       ).createStatements.mkString("\n")
     }
   }
+
+  val dal = new Dal
 
   "Schema" should "print the database schema for copy & paste" in {
     val keywords = Seq("create", "index", "table", "constraint", "foreign", "alter")

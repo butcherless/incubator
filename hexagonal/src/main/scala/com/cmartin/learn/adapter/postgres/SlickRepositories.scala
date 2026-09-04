@@ -43,7 +43,7 @@ trait SlickRepositories extends SlickRepository {
 
     def code: Rep[String] = column[String]("CODE")
 
-    def * : ProvenShape[CountryDbo] = (name, code, id.?).<>(CountryDbo.tupled, CountryDbo.unapply)
+    def * : ProvenShape[CountryDbo] = (name, code, id.?).<>(CountryDbo.apply.tupled, CountryDbo.unapply)
 
     // indexes
     def codeIndex = index("code_idx", code, unique = true)
@@ -78,7 +78,7 @@ trait SlickRepositories extends SlickRepository {
     def countryId: Rep[Long] = column[Long]("COUNTRY_ID")
 
     def * : ProvenShape[AirportDbo] =
-      (name, iataCode, icaoCode, countryId, id.?).<>(AirportDbo.tupled, AirportDbo.unapply)
+      (name, iataCode, icaoCode, countryId, id.?).<>(AirportDbo.apply.tupled, AirportDbo.unapply)
 
     // foreign keys
     def country = foreignKey("FK_COUNTRY_AIRPORT", countryId, countries)(_.id)

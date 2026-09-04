@@ -20,7 +20,7 @@ object ZioSlickIntegration {
     class Items(tag: Tag) extends Table[Item](tag, "ITEMS") {
       def id   = column[Long]("ID", O.PrimaryKey, O.AutoInc)
       def name = column[String]("NAME")
-      def *    = (id, name) <> ((Item.apply _).tupled, Item.unapply)
+      def *    = (id, name) <> (Item.apply.tupled, Item.unapply)
     }
 
     val items = TableQuery[Items]

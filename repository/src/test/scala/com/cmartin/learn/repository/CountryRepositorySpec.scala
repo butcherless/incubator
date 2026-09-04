@@ -13,7 +13,7 @@ abstract class CountryRepositorySpec(path: String)
   val unitedKingdom: Country        = Country(ukCountry._1, ukCountry._2)
   val countrySequence: Seq[Country] = Seq(spainCountry, unitedKingdom)
 
-  val dal = new DatabaseLayer(config) {
+  class Dal extends DatabaseLayer(config) {
     import profile.api._
 
     val countryRepo = new CountryRepository
@@ -26,6 +26,8 @@ abstract class CountryRepositorySpec(path: String)
       config.db.run(countries.schema.drop)
     }
   }
+
+  val dal = new Dal
 
   import dal.executeFromDb
 

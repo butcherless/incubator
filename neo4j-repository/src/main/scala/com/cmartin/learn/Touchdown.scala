@@ -152,7 +152,7 @@ object Touchdown {
   def extractCountry(record: Record): Task[Country] =
     (ZIO.attempt(record.get("code").asString()) <&>
       ZIO.attempt(record.get("name").asString()))
-      .map(Country.tupled)
+      .map(Country.apply.tupled)
 
   object Main {
 

@@ -39,7 +39,7 @@ trait Repositories extends RelationalInfrastructure {
 
     def code = column[String]("CODE")
 
-    def * = (name, code, id.?).<>(Country.tupled, Country.unapply)
+    def * = (name, code, id.?).<>(Country.apply.tupled, Country.unapply)
 
     // indexes
     def codeIndex = index("code_idx", code, unique = true)
@@ -60,7 +60,7 @@ trait Repositories extends RelationalInfrastructure {
     // foreign columns:
     def countryId = column[Long]("COUNTRY_ID")
 
-    def * = (name, foundationDate, countryId, id.?).<>(Airline.tupled, Airline.unapply)
+    def * = (name, foundationDate, countryId, id.?).<>(Airline.apply.tupled, Airline.unapply)
 
     // foreign keys
     def country = foreignKey("FK_COUNTRY_AIRLINE", countryId, countries)(_.id)
@@ -80,7 +80,7 @@ trait Repositories extends RelationalInfrastructure {
 
     def airlineId = column[Long]("AIRLINE_ID")
 
-    def * = (typeCode, registration, airlineId, id.?).<>(Aircraft.tupled, Aircraft.unapply)
+    def * = (typeCode, registration, airlineId, id.?).<>(Aircraft.apply.tupled, Aircraft.unapply)
 
     // foreign keys
     def airline = foreignKey("FK_AIRLINE_FLEET", airlineId, airlines)(_.id)
@@ -103,7 +103,7 @@ trait Repositories extends RelationalInfrastructure {
     // foreign columns:
     def countryId = column[Long]("COUNTRY_ID")
 
-    def * = (name, iataCode, icaoCode, countryId, id.?).<>(Airport.tupled, Airport.unapply)
+    def * = (name, iataCode, icaoCode, countryId, id.?).<>(Airport.apply.tupled, Airport.unapply)
 
     // foreign keys
     def country = foreignKey("FK_COUNTRY_AIRPORT", countryId, countries)(_.id)
@@ -127,7 +127,7 @@ trait Repositories extends RelationalInfrastructure {
 
     def destinationId = column[Long]("DESTINATION_ID")
 
-    def * = (distance, originId, destinationId, id.?).<>(Route.tupled, Route.unapply)
+    def * = (distance, originId, destinationId, id.?).<>(Route.apply.tupled, Route.unapply)
 
     // foreign keys
     def origin =
@@ -169,7 +169,7 @@ trait Repositories extends RelationalInfrastructure {
     def routeId = column[Long]("ROUTE_ID")
 
     def * = (code, alias, schedDeparture, schedArrival, airlineId, routeId, id.?)
-      .<>(Flight.tupled, Flight.unapply)
+      .<>(Flight.apply.tupled, Flight.unapply)
 
     // foreign keys
     def route = foreignKey("FK_ROUTE", routeId, routes)(_.id)
@@ -198,7 +198,7 @@ trait Repositories extends RelationalInfrastructure {
     def aircraftId = column[Long]("AIRCRAFT_ID")
 
     def * =
-      (departureDate, arrivalDate, flightId, aircraftId, id.?).<>(Journey.tupled, Journey.unapply)
+      (departureDate, arrivalDate, flightId, aircraftId, id.?).<>(Journey.apply.tupled, Journey.unapply)
 
     // foreign keys
     def flight = foreignKey("FK_FLIGHT_JOURNEY", flightId, flights)(_.id)
@@ -217,10 +217,10 @@ trait Repositories extends RelationalInfrastructure {
 
     def * = ((tenantId, assetId), predicates, id).shaped.<>(
       { case (businessId, pred_, id_) =>
-        Asset(AssetSeedId.tupled.apply(businessId), pred_, Option(id_))
+        Asset(AssetSeedId.apply.tupled.apply(businessId), pred_, Option(id_))
       },
-      { a: Asset =>
-        def f1(p: AssetSeedId) = AssetSeedId.unapply(p).get
+      { (a: Asset) =>
+        def f1(p: AssetSeedId): (Long, Long) = (p.tenantId, p.assetId)
         Some((f1(a.businessId), a.predicates, a.id.get))
       }
     )

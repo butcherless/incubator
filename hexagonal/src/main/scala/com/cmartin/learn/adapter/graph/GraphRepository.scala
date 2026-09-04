@@ -217,7 +217,7 @@ object GraphRepository {
     final class TaskNodesTable(tag: Tag) extends LongBasedTable[TaskNodeDbo](tag, TableNames.taskNodes) {
       // mapper function
       def * : ProvenShape[TaskNodeDbo] =
-        id.?.<>(TaskNodeDbo, TaskNodeDbo.unapply)
+        id.?.<>((o: Option[Long]) => TaskNodeDbo(o), (t: TaskNodeDbo) => Some(t.id))
     }
 
     /* TASK
@@ -229,7 +229,7 @@ object GraphRepository {
 
       // mapper function
       def * : ProvenShape[TaskDbo] =
-        (metadata, name, id.?).<>(TaskDbo.tupled, TaskDbo.unapply)
+        (metadata, name, id.?).<>(TaskDbo.apply.tupled, TaskDbo.unapply)
 
       // foreign keys
       def taskNodeFk: ForeignKeyQuery[TaskNodesTable, TaskNodeDbo] =
@@ -248,7 +248,7 @@ object GraphRepository {
 
       // mapper function
       def * : ProvenShape[NamedTaskDbo] =
-        (name, metadata, id.?).<>(NamedTaskDbo.tupled, NamedTaskDbo.unapply)
+        (name, metadata, id.?).<>(NamedTaskDbo.apply.tupled, NamedTaskDbo.unapply)
 
       // foreign keys
       def taskNodeFk: ForeignKeyQuery[TaskNodesTable, TaskNodeDbo] =
@@ -271,7 +271,7 @@ object GraphRepository {
 
       // mapper function
       def * : ProvenShape[TaskReferenceDbo] =
-        (taskName, alias, taskId, id.?).<>(TaskReferenceDbo.tupled, TaskReferenceDbo.unapply)
+        (taskName, alias, taskId, id.?).<>(TaskReferenceDbo.apply.tupled, TaskReferenceDbo.unapply)
 
       // foreign keys
       def taskNodeFk: ForeignKeyQuery[TaskNodesTable, TaskNodeDbo] =
@@ -287,7 +287,7 @@ object GraphRepository {
 
       // mapper function
       def * : ProvenShape[TaskGroupDbo] =
-        (name, id.?).<>(TaskGroupDbo.tupled, TaskGroupDbo.unapply)
+        (name, id.?).<>(TaskGroupDbo.apply.tupled, TaskGroupDbo.unapply)
 
       // foreign keys
       def taskNodeFk: ForeignKeyQuery[TaskNodesTable, TaskNodeDbo] =
@@ -307,7 +307,7 @@ object GraphRepository {
 
       // mapper function
       def * : ProvenShape[GroupTaskRelationDbo] =
-        (position, (left, right)).<>(GroupTaskRelationDbo.tupled, GroupTaskRelationDbo.unapply)
+        (position, (left, right)).<>(GroupTaskRelationDbo.apply.tupled, GroupTaskRelationDbo.unapply)
 
       def pk: PrimaryKey = primaryKey("pk_taskgroup_task", (left, right))
     }
@@ -321,7 +321,7 @@ object GraphRepository {
 
       // mapper function
       def * : ProvenShape[VertexDbo] =
-        (businessId, metadata, id.?).<>(VertexDbo.tupled, VertexDbo.unapply)
+        (businessId, metadata, id.?).<>(VertexDbo.apply.tupled, VertexDbo.unapply)
 
       // indexes
       def iataIndex: Index =
@@ -338,7 +338,7 @@ object GraphRepository {
 
       // mapper function
       def * : ProvenShape[EdgeDbo] =
-        (start, end, metadata, id.?).<>(EdgeDbo.tupled, EdgeDbo.unapply)
+        (start, end, metadata, id.?).<>(EdgeDbo.apply.tupled, EdgeDbo.unapply)
 
       // foreign keys
       def startFk: ForeignKeyQuery[VertexesTable, VertexDbo] =
@@ -356,7 +356,7 @@ object GraphRepository {
 
       // mapper function
       def * : ProvenShape[EdgeTaskNodeRelationDbo] =
-        (position, (left, right)).<>(EdgeTaskNodeRelationDbo.tupled, EdgeTaskNodeRelationDbo.unapply)
+        (position, (left, right)).<>(EdgeTaskNodeRelationDbo.apply.tupled, EdgeTaskNodeRelationDbo.unapply)
     }
 
     class TaskNodeRepository extends AbstractLongRepository[TaskNodeDbo, TaskNodesTable] {

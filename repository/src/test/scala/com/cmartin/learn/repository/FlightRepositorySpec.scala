@@ -8,7 +8,7 @@ import scala.concurrent.Await
 abstract class FlightRepositorySpec(path: String)
     extends BaseRepositorySpec(path) with OptionValues {
 
-  val dal = new DatabaseLayer(config) {
+  class Dal extends DatabaseLayer(config) {
     import profile.api._
 
     val countryRepo = new CountryRepository
@@ -31,6 +31,8 @@ abstract class FlightRepositorySpec(path: String)
       )
     }
   }
+
+  val dal = new Dal
 
   import dal.executeFromDb
 

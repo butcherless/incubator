@@ -23,7 +23,7 @@ object CountryTableDef
     def code: Rep[String] = column[String]("CODE")
 
     def * : ProvenShape[CountryDbo] =
-      (name, code, id).<>(CountryDbo.tupled, CountryDbo.unapply)
+      (name, code, id).<>(CountryDbo.apply.tupled, CountryDbo.unapply)
 
     // indexes
     def codeIndex: Index =

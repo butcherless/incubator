@@ -8,7 +8,8 @@ import scala.concurrent.Future
 
 object DatabaseUtils {
   val h2Config = DatabaseConfig.forConfig[JdbcProfile]("h2_dc")
-  val h2Dal    = new DatabaseLayer(h2Config) {
+
+  class H2Dal extends DatabaseLayer(h2Config) {
     import profile.api._
 
     val countryRepo = new CountrySlickRepository
@@ -24,5 +25,7 @@ object DatabaseUtils {
       )
     }
   }
+
+  val h2Dal = new H2Dal
 
 }
