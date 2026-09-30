@@ -7,7 +7,7 @@ object Versions {
   val playJson   = "2.10.6"
   val postgres   = "42.7.13"
   val scalatest  = "3.2.20"
-  val slf4j      = "2.0.19"
+  val slf4j      = "2.0.20"
   val slick      = "3.6.1"
   val zioConfig  = "4.1.0"
   val zioLogging = "2.5.3"
