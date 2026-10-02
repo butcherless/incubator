@@ -119,8 +119,8 @@ object ZioSlickIntegration {
           .map(_.db)
       )
 
-    val dbEnv: TaskLayer[ItemRepository with JdbcBackend#JdbcDatabaseDef] =
-      ZLayer.make[ItemRepository with JdbcBackend#JdbcDatabaseDef](
+    val dbEnv: TaskLayer[ItemRepository & JdbcBackend#JdbcDatabaseDef] =
+      ZLayer.make[ItemRepository & JdbcBackend#JdbcDatabaseDef](
         SlickItemRepository.live,
         dbLayer,
         Debug.mermaid
@@ -137,8 +137,8 @@ object ZioSlickIntegration {
       ).getOrThrowFiberFailure()
     }
 
-    val srvEnv: TaskLayer[ItemService with ItemRepository with JdbcBackend#JdbcDatabaseDef] =
-      ZLayer.make[ItemService with ItemRepository with JdbcBackend#JdbcDatabaseDef](
+    val srvEnv: TaskLayer[ItemService & ItemRepository & JdbcBackend#JdbcDatabaseDef] =
+      ZLayer.make[ItemService & ItemRepository & JdbcBackend#JdbcDatabaseDef](
         SlickItemRepository.live,
         dbLayer,
         LiveItemService.live

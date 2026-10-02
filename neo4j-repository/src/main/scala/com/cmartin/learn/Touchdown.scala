@@ -159,8 +159,8 @@ object Touchdown {
     val driverLayer: TaskLayer[Driver] =
       ZLayer.scoped(ZIO.acquireRelease(acquire(dbInput))(release))
 
-    val dbLayer: TaskLayer[CountryRepository with Driver] =
-      ZLayer.make[CountryRepository with Driver](
+    val dbLayer: TaskLayer[CountryRepository & Driver] =
+      ZLayer.make[CountryRepository & Driver](
         driverLayer,
         Neo4jCountryRepository.live,
         Debug.mermaid

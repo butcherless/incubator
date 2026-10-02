@@ -15,7 +15,7 @@ object CountryValidator {
     Validation.validateWith(
       validateName(name),
       validateCode(code)
-    )(Country)
+    )(Country.apply)
   }
 
   def validateName(name: String): Validation[RestValidationError, String] = {
