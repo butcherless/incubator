@@ -4,7 +4,6 @@ import org.neo4j.driver._
 import org.neo4j.driver.async.AsyncSession
 import org.neo4j.driver.async.ResultCursor
 import zio.Runtime.{default => runtime}
-import zio.ZLayer.Debug
 import zio._
 import zio.stream.ZStream
 import scala.jdk.CollectionConverters._
@@ -162,8 +161,7 @@ object Touchdown {
     val dbLayer: TaskLayer[CountryRepository & Driver] =
       ZLayer.make[CountryRepository & Driver](
         driverLayer,
-        Neo4jCountryRepository.live,
-        Debug.mermaid
+        Neo4jCountryRepository.live
       )
 
     val dbProgram: ZIO[CountryRepository, DatabaseError, Country] = for {

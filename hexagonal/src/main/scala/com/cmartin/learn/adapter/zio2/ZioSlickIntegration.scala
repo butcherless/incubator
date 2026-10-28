@@ -3,7 +3,6 @@ package com.cmartin.learn.adapter.zio2
 import slick.basic.DatabaseConfig
 import slick.jdbc._
 import zio.Runtime.{default => runtime}
-import zio.ZLayer.Debug
 import zio._
 
 object ZioSlickIntegration {
@@ -122,8 +121,7 @@ object ZioSlickIntegration {
     val dbEnv: TaskLayer[ItemRepository & JdbcBackend#JdbcDatabaseDef] =
       ZLayer.make[ItemRepository & JdbcBackend#JdbcDatabaseDef](
         SlickItemRepository.live,
-        dbLayer,
-        Debug.mermaid
+        dbLayer
       )
 
     val dbProgram: RIO[ItemRepository, Long] = for {
