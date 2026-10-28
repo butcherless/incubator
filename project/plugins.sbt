@@ -1,4 +1,4 @@
-addSbtPlugin("ch.epfl.scala"    % "sbt-bloop"     % "2.1.2")
+addSbtPlugin("ch.epfl.scala"    % "sbt-bloop"     % "2.1.3")
 addSbtPlugin("com.eed3si9n"     % "sbt-assembly"  % "2.5.0")
 addSbtPlugin("com.timushev.sbt" % "sbt-updates"   % "0.7.1")
 addSbtPlugin("org.scalameta"    % "sbt-scalafmt"  % "2.6.2")
