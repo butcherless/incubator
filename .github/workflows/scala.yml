@@ -44,8 +44,8 @@ jobs:
       - uses: sbt/setup-sbt@v1
       - name: compile main
         run: sbt compile
-      - name: compile unit tests
-        run: sbt  test
+      - name: tests
+        run: sbt testFull
       - name: compile integration tests
         run: echo "TODO"
         #    - name: tests with coverage
