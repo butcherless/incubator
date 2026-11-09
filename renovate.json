@@ -6,9 +6,18 @@
     "type: dependencies"
   ],
   "extends": [
-    "config:base"
+    "config:recommended"
   ],
   "sbt": {
     "enabled": true
-  }
+  },
+  "packageRules": [
+    {
+      "description": "sbt-bloop also publishes hash-named builds (e.g. 217-c2115241) that Renovate reads as a major; only plain x.y.z releases are real",
+      "matchPackageNames": [
+        "ch.epfl.scala:sbt-bloop"
+      ],
+      "allowedVersions": "/^[0-9]+\\.[0-9]+\\.[0-9]+$/"
+    }
+  ]
 }
