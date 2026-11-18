@@ -13,10 +13,10 @@ object Dependencies {
 
   lazy val slf4j     = "org.slf4j"            % "slf4j-api"      % Versions.slf4j
   lazy val slick     = ("com.typesafe.slick" %% "slick"          % Versions.slick)
-    .exclude("org.slf4j", "slf4j-api")
-    .exclude("com.typesafe", "config")
+    .exclude("org.slf4j" % "slf4j-api")
+    .exclude("com.typesafe" % "config")
   lazy val slickPool = ("com.typesafe.slick" %% "slick-hikaricp" % Versions.slick)
-    .exclude("org.slf4j", "slf4j-api")
+    .exclude("org.slf4j" % "slf4j-api")
 
   lazy val zio               = "dev.zio" %% "zio"                 % Versions.zio
   lazy val zioLogging        = "dev.zio" %% "zio-logging-slf4j"   % Versions.zioLogging
