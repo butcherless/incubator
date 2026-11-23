@@ -3,7 +3,7 @@ object Versions {
   val circe      = "1.15.0"
   val h2         = "2.5.252"
   val neo4j      = "6.3.0"
-  val postgres   = "42.7.14"
+  val postgres   = "42.7.15"
   val scalatest  = "3.2.20"
   val slf4j      = "2.0.20"
   val slick      = "3.6.1"
